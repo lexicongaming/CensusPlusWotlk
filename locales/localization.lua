@@ -1,6 +1,6 @@
 --[[
 	CensusPlusTBC for World of Warcraft(tm).
-	
+
 	Copyright 2005 - 2016 Cooper Sellers
 
 	License:
@@ -48,8 +48,8 @@ CENSUSPLUS_BLOODELF = "Blood Elf";
 
 -- Blizzard provided translations THESE MUST BE AFTER THE ENGLISH DEFINITIONS
 --.. right or wrong it must match what Blizzard provides
- 
- 
+
+
 -- deDE
 if ( GetLocale() == "deDE" ) then
 	CENSUSPLUS_DRUID = "Druide";
@@ -82,8 +82,8 @@ if ( GetLocale() == "deDE" ) then
 	CENSUSPLUS_TROLL = "Troll";
 	CENSUSPLUS_UNDEAD = "Untoter";
   CENSUSPlusFemale["Untote"] = "Untoter";
-  CENSUSPLUS_DRAENEI          = "Draenei";
-  CENSUSPLUS_BLOODELF         = "Blutelf";
+  CENSUSPLUS_DRAENEI = "Draenei";
+  CENSUSPLUS_BLOODELF = "Blutelf";
 end
 
 -- esES + esMX
@@ -153,8 +153,8 @@ if ( GetLocale() == "frFR" ) then
   CENSUSPlusFemale["Trollesse"] = "Troll";
 	CENSUSPLUS_UNDEAD = "Mort-vivant";
   CENSUSPlusFemale["Morte-vivante"] = "Mort-vivant";
-  	CENSUSPLUS_DRAENEI          = "Draeneï";
-	CENSUSPLUS_BLOODELF         = "Elfe de sang";
+  CENSUSPLUS_DRAENEI = "Draeneï";
+	CENSUSPLUS_BLOODELF = "Elfe de sang";
 end
 
 -- itIT
@@ -193,6 +193,8 @@ if ( GetLocale() == "itIT" ) then
 	CENSUSPLUS_TROLL = "Troll";
 	CENSUSPLUS_UNDEAD = "Non Morto";
 	CENSUSPlusFemale["Non Morta"] = "Non Morto";
+  CENSUSPLUS_DRAENEI = "Draenei";
+  CENSUSPLUS_BLOODELF = "Elfo del Sangue";
 end
 
 -- koKR
@@ -216,6 +218,8 @@ if ( GetLocale() == "koKR" ) then
 	CENSUSPLUS_TAUREN = "타우렌";
 	CENSUSPLUS_TROLL = "트롤";
 	CENSUSPLUS_UNDEAD = "언데드";
+  CENSUSPLUS_DRAENEI = "드레나이";
+  CENSUSPLUS_BLOODELF = "블러드 엘프";
 end
 
 -- ptBR
@@ -256,6 +260,8 @@ if ( GetLocale() == "ptBR" ) then
 	CENSUSPlusFemale["Taurena"] = "Tauren";
 	CENSUSPLUS_UNDEAD = "Morto-vivo";
 	CENSUSPlusFemale["Morta-viva"] = "Morto-vivo";
+  CENSUSPLUS_DRAENEI = "Draenei";
+  CENSUSPLUS_BLOODELF = "Elfo de Sangue";
 end
 
 -- ruRU
@@ -290,6 +296,7 @@ if ( GetLocale() == "ruRU" ) then
 	CENSUSPlusFemale["Тауренка"] = "Таурен";
 	CENSUSPLUS_TROLL = "Тролль";
 	CENSUSPLUS_UNDEAD = "Нежить";
+  CENSUSPLUS_BLOODELF = "Эльф крови";
 end
 
 -- zhCN
@@ -313,6 +320,8 @@ if ( GetLocale() == "zhCN" ) then
 	CENSUSPLUS_TAUREN = "牛头人";
 	CENSUSPLUS_TROLL = "巨魔";
 	CENSUSPLUS_UNDEAD = "亡灵";
+  CENSUSPLUS_DRAENEI = "德莱尼";
+  CENSUSPLUS_BLOODELF = "血精灵";
 end
 
 -- zhTW
@@ -336,6 +345,8 @@ if ( GetLocale() == "zhTW" ) then
 	CENSUSPLUS_TAUREN = "牛頭人";
 	CENSUSPLUS_TROLL = "食人妖";
 	CENSUSPLUS_UNDEAD = "不死族";
+  CENSUSPLUS_DRAENEI = "德萊尼";
+  CENSUSPLUS_BLOODELF = "血精靈";
 end
 
 CENSUSPLUS_ACCOUNT_WIDE = "Account wide"
@@ -393,7 +404,7 @@ CENSUSPLUS_LOCALEUNKNOWN = "Locale : Unknown";
 CENSUSPLUS_MAXXED = "MAXXED!";
 CENSUSPLUS_MSG1 = " Loaded - type /censusplus or /CensusPlusTBC  or /census for valid commands";
 CENSUSPLUS_NOCENSUS = "A Census is not currently in progress";
-CENSUSPLUS_NOTINFACTION = "Neutral faction - census not allowed"; 
+CENSUSPLUS_NOTINFACTION = "Neutral faction - census not allowed";
 CENSUSPLUS_NOW = " now ";
 CENSUSPLUS_OBSOLETEDATAFORMATTEXT = "Old Database format found, Database purged."
 CENSUSPLUS_OPTIONS_HEADER = "CensusPlusTBC Options";
