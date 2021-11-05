@@ -56,7 +56,7 @@ local CensusPlus_Version_Major = "0"; -- changing this number will force a saved
 local CensusPlus_Version_Minor = "8"; -- changing this number will force a saved data purge
 local CensusPlus_Version_Maint = "9";
 --local CensusPlus_SubVersion = "2";
-local CensusPlus_VERSION = CensusPlus_Version_Major.."."..CensusPlus_Version_Minor .."."..CensusPlus_Version_Maint .."."..CensusPlus_SubVersion;
+local CensusPlus_VERSION = CensusPlus_Version_Major.."."..CensusPlus_Version_Minor .."."..CensusPlus_Version_Maint;
 local CensusPlus_VERSION_FULL = CensusPlus_VERSION --.."."..CensusPlus_SubVersion ;
 local CensusPlus_PTR = GetCVar("portal") == "public-test" and "PTR";	-- enable true for PTR testing  enable false for live use
 local CensusPlus_MAXBARHEIGHT = 128;			-- Length of blue bars
@@ -483,7 +483,7 @@ end
 function CensusPlus_OnLoad(self)
 	-- Update the version number
 	CensusPlusText:SetText(
-		"CensusPlusTBC v" .. CensusPlus_VERSION .. CensusPlus_SubVersion
+		"CensusPlusTBC v" .. CensusPlus_VERSION
 	)
 	CensusPlusText2:SetText(CENSUSPLUS_UPLOAD)
 
