@@ -56,7 +56,7 @@ local CensusPlus_Version_Major = "0"; -- changing this number will force a saved
 local CensusPlus_Version_Minor = "8"; -- changing this number will force a saved data purge
 local CensusPlus_Version_Maint = "8";
 local CensusPlus_SubVersion = "1";
-d local CensusPlus_VERSION = CensusPlus_Version_Major.."."..CensusPlus_Version_Minor .."."..CensusPlus_Version_Maint .."."..CensusPlus_SubVersion;
+local CensusPlus_VERSION = CensusPlus_Version_Major.."."..CensusPlus_Version_Minor .."."..CensusPlus_Version_Maint .."."..CensusPlus_SubVersion;
 local CensusPlus_VERSION_FULL = CensusPlus_VERSION --.."."..CensusPlus_SubVersion ;
 local CensusPlus_PTR = GetCVar("portal") == "public-test" and "PTR";	-- enable true for PTR testing  enable false for live use
 local CensusPlus_MAXBARHEIGHT = 128;			-- Length of blue bars
