@@ -1,5 +1,5 @@
 ## Interface: 20501
-## Version: v0.8.9
+## Version: v0.8.10
 ## Title: CensusPlusTBC
 ## Notes: This AddOn is licenced under the GNU GPL, see GPL.txt for details.
 ## Notes: Collects and displays census information.
