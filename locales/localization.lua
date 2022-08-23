@@ -1,5 +1,5 @@
 --[[
-	CensusPlusTBC for World of Warcraft(tm).
+	CensusPlusWotlk for World of Warcraft(tm).
 
 	Copyright 2005 - 2016 Cooper Sellers
 
@@ -19,7 +19,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 ]]
 
-CENSUS_OPTIONS_SOUNDFILEDEFAULT = "CensusPlusTBC\\Sounds\\CensusComplete" -- "Select default SoundFile number "; - DO NOT LOCALIZE
+CENSUS_OPTIONS_SOUNDFILEDEFAULT = "CensusPlusWotlk\\Sounds\\CensusComplete" -- "Select default SoundFile number "; - DO NOT LOCALIZE
 CENSUSPlusFemale = { };
 
 -- Translations start below
@@ -33,6 +33,7 @@ CENSUSPLUS_WARLOCK = "Warlock";
 CENSUSPLUS_WARRIOR = "Warrior";
 CENSUSPLUS_SHAMAN = "Shaman";
 CENSUSPLUS_PALADIN = "Paladin";
+CENSUSPLUS_DEATH_KNIGHT = "Death Knight";
 
 CENSUSPLUS_DWARF = "Dwarf";
 CENSUSPLUS_GNOME = "Gnome";
@@ -69,6 +70,7 @@ if ( GetLocale() == "deDE" ) then
 	CENSUSPLUS_SHAMAN = "Schamane";
 	CENSUSPlusFemale["Schamanin"] = "Schamane";
 	CENSUSPLUS_PALADIN = "Paladin";
+	CENSUSPLUS_DEATH_KNIGHT          = "Todesritter";
 
 	CENSUSPLUS_DWARF = "Zwerg";
   CENSUSPlusFemale["Zwergin"] = "Zwerg";
@@ -103,6 +105,7 @@ if ( GetLocale() == "esES" or GetLocale() == "esMX" ) then
 	CENSUSPlusFemale["Guerrera"] = "Guerrero";
 	CENSUSPLUS_SHAMAN = "Chamán";
 	CENSUSPLUS_PALADIN = "Paladín";
+	CENSUSPLUS_DEATH_KNIGHT         = "Caballero de la Muerte";
 
 	CENSUSPLUS_DWARF = "Enano";
 	CENSUSPlusFemale["Enana"] = "Enano";
@@ -137,6 +140,7 @@ if ( GetLocale() == "frFR" ) then
 	CENSUSPLUS_SHAMAN = "Chaman";
   CENSUSPlusFemale["Chamane"] = "Chaman";
 	CENSUSPLUS_PALADIN = "Paladin";
+	CENSUSPLUS_DEATH_KNIGHT          = "Chevalier de la mort";
 
 	CENSUSPLUS_DWARF = "Nain";
   CENSUSPlusFemale["Naine"] = "Nain";
@@ -177,6 +181,7 @@ if ( GetLocale() == "itIT" ) then
 	CENSUSPlusFemale["Sciamana"] = "Sciamano";
 	CENSUSPLUS_PALADIN = "Paladino";
 	CENSUSPlusFemale["Paladina"] = "Paladino";
+	CENSUSPLUS_DEATH_KNIGHT          = "Cavaliere della Morte";
 
 	CENSUSPLUS_DWARF = "Nano";
 	CENSUSPlusFemale["Nana"] = "Nano";
@@ -208,6 +213,7 @@ if ( GetLocale() == "koKR" ) then
 	CENSUSPLUS_WARRIOR = "전사";
 	CENSUSPLUS_SHAMAN = "주술사";
 	CENSUSPLUS_PALADIN = "성기사";
+	CENSUSPLUS_DEATH_KNIGHT = "죽음의 기사";
 
 	CENSUSPLUS_DWARF = "드워프";
 	CENSUSPLUS_GNOME = "노움";
@@ -241,7 +247,8 @@ if ( GetLocale() == "ptBR" ) then
 	CENSUSPLUS_SHAMAN = "Xamã";
 	CENSUSPLUS_PALADIN = "Paladino";
 	CENSUSPlusFemale["Paladina"] = "Paladino"
-
+	CENSUSPLUS_DEATH_KNIGHT = "Cavaleiro da Morte";
+	CENSUSPlusFemale["Cavaleira da Morte"] = "Cavaleiro da Morte";
 
 	CENSUSPLUS_DWARF = "Anão";
 	CENSUSPlusFemale["Anã"] = "Anão";
@@ -280,6 +287,7 @@ if ( GetLocale() == "ruRU" ) then
 	CENSUSPLUS_SHAMAN = "Шаман";
 	CENSUSPlusFemale["Шаманка"] = "Шаман";
 	CENSUSPLUS_PALADIN = "Паладин";
+	CENSUSPLUS_DEATH_KNIGHT = "Рыцарь смерти";
 
 	CENSUSPLUS_DWARF = "Дворф";
 	CENSUSPlusFemale["Дворфийка"] = "Дворф";
@@ -310,6 +318,7 @@ if ( GetLocale() == "zhCN" ) then
 	CENSUSPLUS_WARRIOR = "战士";
 	CENSUSPLUS_SHAMAN = "萨满祭司";
 	CENSUSPLUS_PALADIN = "圣骑士";
+	CENSUSPLUS_DEATH_KNIGHT = "死亡骑士";
 
 	CENSUSPLUS_DWARF = "矮人";
 	CENSUSPLUS_GNOME = "侏儒";
@@ -335,6 +344,7 @@ if ( GetLocale() == "zhTW" ) then
 	CENSUSPLUS_WARRIOR = "戰士";
 	CENSUSPLUS_SHAMAN = "薩滿";
 	CENSUSPLUS_PALADIN = "聖騎士";
+	CENSUSPLUS_DEATH_KNIGHT = "死亡騎士";
 
 	CENSUSPLUS_DWARF = "矮人";
 	CENSUSPLUS_GNOME = "地精";
@@ -383,8 +393,8 @@ CENSUSPLUS_FOUND_CAP = "Found ";
 CENSUSPLUS_GETGUILD = "Click Realm for Guild data";
 CENSUSPLUS_HELP_0 = " following command as shown below";
 CENSUSPLUS_HELP_1 = " _ Toggle verbose mode off/on";
-CENSUSPLUS_HELP_10 = " _ Does Census update of player only.. this is done automatically when /CensusPlusTBC take finishes.";
-CENSUSPLUS_HELP_11 = " _ Toggles stealth mode off/on - disables Verbose and all CensusPlusTBC chat messages.";
+CENSUSPLUS_HELP_10 = " _ Does Census update of player only.. this is done automatically when /CensusPlusWotlk take finishes.";
+CENSUSPLUS_HELP_11 = " _ Toggles stealth mode off/on - disables Verbose and all CensusPlusWotlk chat messages.";
 CENSUSPLUS_HELP_2 = " _ Brings up the Option window";
 CENSUSPLUS_HELP_3 = " _ Start a Census snapshot";
 CENSUSPLUS_HELP_4 = " _ Stop a Census snapshot";
@@ -394,7 +404,7 @@ CENSUSPLUS_HELP_7 = " _  Will display info that matches names.";
 CENSUSPLUS_HELP_8 = " _  Will list unguilded characters of that level.";
 CENSUSPLUS_HELP_9 = " _  Will set the autocensus timer (to X minutes).";
 CENSUSPLUS_ISINBG = "You are currently in a Battleground so a Census cannot be taken";
-CENSUSPLUS_ISINPROGRESS = "A CensusPlusTBC is in progress, try again later";
+CENSUSPLUS_ISINPROGRESS = "A CensusPlusWotlk is in progress, try again later";
 CENSUSPLUS_LANGUAGECHANGED = "Client Language changed, Database purged.";
 CENSUSPLUS_LASTSEEN = "Last Seen";
 CENSUSPLUS_LASTSEEN_COLON = " Last Seen: ";
@@ -402,13 +412,13 @@ CENSUSPLUS_LEVEL = "Levels";
 CENSUSPLUS_LOCALE = "Locale : %s";
 CENSUSPLUS_LOCALEUNKNOWN = "Locale : Unknown";
 CENSUSPLUS_MAXXED = "MAXXED!";
-CENSUSPLUS_MSG1 = " Loaded - type /censusplus or /CensusPlusTBC  or /census for valid commands. Looking to help build the addonor website? Check out the discord https://discord.gg/DjcXKtKr88";
+CENSUSPLUS_MSG1 = " Loaded - type /censusplus or /CensusPlusWotlk  or /census for valid commands. Looking to help build the addonor website? Check out the discord https://discord.gg/DjcXKtKr88";
 --CENSUSPLUS_MSG3 = "Looking to help build the addonor website? Check out the discord https://discord.gg/DjcXKtKr88";
 CENSUSPLUS_NOCENSUS = "A Census is not currently in progress";
 CENSUSPLUS_NOTINFACTION = "Neutral faction - census not allowed";
 CENSUSPLUS_NOW = " now ";
 CENSUSPLUS_OBSOLETEDATAFORMATTEXT = "Old Database format found, Database purged."
-CENSUSPLUS_OPTIONS_HEADER = "CensusPlusTBC Options";
+CENSUSPLUS_OPTIONS_HEADER = "CensusPlusWotlk Options";
 CENSUSPLUS_OPTIONS_OVERRIDE = "Override"
 CENSUSPLUS_OR = " or ";
 CENSUSPLUS_PAUSE = "Pause";
@@ -438,11 +448,11 @@ CENSUSPLUS_SENDING = "Sending /who %s";
 CENSUSPLUS_STEALTHOFF = "Stealth Mode : OFF";
 CENSUSPLUS_STEALTHON = "Stealth Mode : ON";
 CENSUSPLUS_STOP = "Stop";
-CENSUSPLUS_STOPCENSUS_TOOLTIP = "Stop the currently active CensusPlusTBC";
+CENSUSPLUS_STOPCENSUS_TOOLTIP = "Stop the currently active CensusPlusWotlk";
 CENSUSPLUS_TAKE = "Take";
 CENSUSPLUS_TAKECENSUS = "\nTake a census of players \ncurrently online on this server \nand in this faction";
 CENSUSPLUS_TAKINGONLINE = "Taking census of characters online...";
-CENSUSPLUS_TEXT = "CensusPlusTBC";
+CENSUSPLUS_TEXT = "CensusPlusWotlk";
 CENSUSPLUS_TOOMANY = "WARNING: Too many characters matching: %s";
 CENSUSPLUS_TOOSLOW = "Update too slow! Computer overloaded?Connection problems?";
 CENSUSPLUS_TOPGUILD = "Top Guilds By XP";
@@ -465,7 +475,7 @@ CENSUSPLUS_WAITING = "Waiting to send who request...";
 CENSUSPLUS_WAS = " was ";
 CENSUSPLUS_WHOQUERY = "Who query:"
 CENSUSPLUS_WRONGLOCAL_PURGE = "Locale differs from previous setting, purging database.";
-CENSUS_BUTTON_TOOLTIP = "Open CensusPlusTBC";
+CENSUS_BUTTON_TOOLTIP = "Open CensusPlusWotlk";
 CENSUS_OPTIONS_AUTOCENSUS = "Auto-Census";
 CENSUS_OPTIONS_AUTOSTART = "Auto-Start";
 CENSUS_OPTIONS_BACKGROUND_TRANSPARENCY_TOOLTIP = "Background transparency - ten steps"

@@ -1,4 +1,4 @@
---[[ CensusPlusTBC for World of Warcraft(tm).
+--[[ CensusPlusWotlk for World of Warcraft(tm).
 
 	Copyright 2005 - 2016 Cooper Sellers
 
@@ -31,7 +31,7 @@
 --[[	CensusPlus
 --		A WoW UI customization by Cooper Sellers
 --
---		CensusPlusTBC
+--		CensusPlusWotlk
 --		Modified by christophrus
 --		Updated for TBC by Lexie
 ]]
@@ -48,13 +48,13 @@ CPp.LocaleSet = false;  -- not used?
 CPp.TZWarningSent = false;  -- not used?
 
 -- Bindings
-BINDING_NAME_CENSUSPLUSTBC_MANUALWHO = 'Issue a manual /who request'
-BINDING_HEADER_CENSUSPLUSTBC = 'CensusPlusTBC'
+BINDING_NAME_CensusPlusWotlk_MANUALWHO = 'Issue a manual /who request'
+BINDING_HEADER_CensusPlusWotlk = 'CensusPlusWotlk'
 
 -- Constants
 local CensusPlus_Version_Major = "0"; -- changing this number will force a saved data purge
-local CensusPlus_Version_Minor = "8"; -- changing this number will force a saved data purge
-local CensusPlus_Version_Maint = "10";
+local CensusPlus_Version_Minor = "9"; -- changing this number will force a saved data purge
+local CensusPlus_Version_Maint = "0";
 local CensusPlus_SubVersion = "";
 local CensusPlus_VERSION = CensusPlus_Version_Major.."."..CensusPlus_Version_Minor.."."..CensusPlus_Version_Maint;
 local CensusPlus_VERSION_FULL = CensusPlus_VERSION --.."."..CensusPlus_SubVersion ;
@@ -63,7 +63,7 @@ local CensusPlus_MAXBARHEIGHT = 128;			-- Length of blue bars
 local CensusPlus_NUMGUILDBUTTONS = 10;			-- How many guild buttons are on the UI?
 
 
-local MAX_CHARACTER_LEVEL = 70;					-- Maximum level a PC can attain  testing only comment out for live
+local MAX_CHARACTER_LEVEL = 80;					-- Maximum level a PC can attain  testing only comment out for live
 local MIN_CHARACTER_LEVEL = 10;					-- Minimum observed level returned by /who command (undocumented and barely acknowledged.)
 local MAX_WHO_RESULTS = 49;						-- Maximum number of who results the server will return
 CensusPlus_GUILDBUTTONSIZEY = 16;				-- pixil height of guild name lines
@@ -86,7 +86,7 @@ local CP_g_queue_count = 0 					-- process speed checking avg time to process 1 
 
 
 -- Global scope variables
-CensusPlus_Database = {};						-- Database of all CensusPlusTBC results
+CensusPlus_Database = {};						-- Database of all CensusPlusWotlk results
 --removed CensusPlus_BGInfo   = {};				--  Battleground info
 CensusPlus_PerCharInfo = {};					--  Per character settings
 CensusPlus_Unhandled = {};
@@ -108,15 +108,15 @@ local g_Options_Scope = "AW"				-- options are AW or CO
 CPp.AutoStartTimer = 30						-- default Slider value in Options
 local g_FinishSoundNumber = 1				-- default finish sound..
 local g_PlayFinishSound = false				-- mode switch
-local g_CensusPlusInitialized = false;		-- Is CensusPlusTBC initialized?
+local g_CensusPlusInitialized = false;		-- Is CensusPlusWotlk initialized?
 local g_CurrentJob = {};					-- Current job being executed
-CPp.IsCensusPlusInProgress = false;			-- Is a CensusPlusTBC in progress?
-local g_CensusPlusPaused = false			-- Is CensusPlusTBC in progress paused?
-CPp.CensusPlusManuallyPaused = false;       -- Is CensusPlusTBC in progress manually paused?
+CPp.IsCensusPlusInProgress = false;			-- Is a CensusPlusWotlk in progress?
+local g_CensusPlusPaused = false			-- Is CensusPlusWotlk in progress paused?
+CPp.CensusPlusManuallyPaused = false;       -- Is CensusPlusWotlk in progress manually paused?
 local CensusPlayerOnly = false				-- true if player requests via /census me
 
-CensusPlus_JobQueue.g_NumNewCharacters = 0;					-- How many new characters found this CensusPlusTBC
-CensusPlus_JobQueue.g_NumUpdatedCharacters = 0;				-- How many characters were updated during this CensusPlusTBC
+CensusPlus_JobQueue.g_NumNewCharacters = 0;					-- How many new characters found this CensusPlusWotlk
+CensusPlus_JobQueue.g_NumUpdatedCharacters = 0;				-- How many characters were updated during this CensusPlusWotlk
 
 local g_MobXPByLevel = {};						-- XP earned for killing
 local g_CharacterXPByLevel = {};				-- XP required to advance through the given level
@@ -193,6 +193,7 @@ g_RaceClassList[CENSUSPLUS_WARLOCK]	    = 15;
 g_RaceClassList[CENSUSPLUS_WARRIOR]	    = 16;
 g_RaceClassList[CENSUSPLUS_SHAMAN]		= 17;
 g_RaceClassList[CENSUSPLUS_PALADIN]	    = 18;
+g_RaceClassList[CENSUSPLUS_DEATH_KNIGHT]= 30;
 
 g_RaceClassList[CENSUSPLUS_DWARF]		= 20;
 g_RaceClassList[CENSUSPLUS_GNOME]		= 21;
@@ -218,6 +219,7 @@ local function CensusPlus_Zero_g_TimeDatabase()
 	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARRIOR]	    = 0;
 	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_SHAMAN]		= 0;
 	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PALADIN]	    = 0;
+	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DEATH_KNIGHT]	    = 0;
 end
 CensusPlus_Zero_g_TimeDatabase();
 
@@ -385,10 +387,10 @@ function CensusPlus_GetFactionClasses(faction)
 	local ret = {};
 	if (faction == CENSUSPlus_HORDE) then
 		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN,
-		CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DRUID};
+		CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DRUID, CENSUSPLUS_DEATH_KNIGHT};
 	elseif (faction == CENSUSPlus_ALLIANCE) then
 		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST,
-		CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DRUID};
+		CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DRUID, CENSUSPLUS_DEATH_KNIGHT};
 	end
 	return ret;
 end
@@ -397,25 +399,25 @@ end
 local function GetRaceClasses(race)
 	local ret = {};
 	if (race == CENSUSPLUS_ORC) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_SHAMAN, CENSUSPLUS_WARLOCK}
+		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_SHAMAN, CENSUSPLUS_WARLOCK, CENSUSPLUS_DEATH_KNIGHT}
 	elseif (race == CENSUSPLUS_TAUREN) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_SHAMAN, CENSUSPLUS_DRUID}
+		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_SHAMAN, CENSUSPLUS_DRUID, CENSUSPLUS_DEATH_KNIGHT}
 	elseif (race == CENSUSPLUS_TROLL) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE}
+		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE, CENSUSPLUS_DEATH_KNIGHT}
 	elseif (race == CENSUSPLUS_UNDEAD) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK}
+		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DEATH_KNIGHT}
 	elseif (race == CENSUSPLUS_BLOODELF) then
-		ret = {CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK}
+		ret = {CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DEATH_KNIGHT}
 	elseif (race == CENSUSPLUS_DWARF) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST}
+		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_DEATH_KNIGHT}
 	elseif (race == CENSUSPLUS_GNOME) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_ROGUE, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK}
+		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_ROGUE, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DEATH_KNIGHT}
 	elseif (race == CENSUSPLUS_HUMAN) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK}
+		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DEATH_KNIGHT}
 	elseif (race == CENSUSPLUS_NIGHTELF) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_DRUID}
+		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_DRUID, CENSUSPLUS_DEATH_KNIGHT}
 	elseif (race == CENSUSPLUS_DRAENEI) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN, CENSUSPLUS_DRUID}
+		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN, CENSUSPLUS_DRUID, CENSUSPLUS_DEATH_KNIGHT}
 	end
 	return ret
 end
@@ -451,7 +453,7 @@ local function GetNameLetters2()
 end
 
 -- Called when the main window is shown
-function CensusPlus_OnShow() -- referenced by CensusPlusTBC.xml
+function CensusPlus_OnShow() -- referenced by CensusPlusWotlk.xml
 	-- Initialize if this is the first OnShow event
 	if g_CensusPlusInitialized and g_VariablesLoaded then
 		CensusPlus_UpdateView()
@@ -460,30 +462,30 @@ end
 
 -- Toggle hidden status
 function CensusPlus_Toggle()
-	if CensusPlusTBC:IsVisible() then
-		CensusPlusTBC:Hide()
+	if CensusPlusWotlk:IsVisible() then
+		CensusPlusWotlk:Hide()
 	else
-		CensusPlusTBC:Show()
+		CensusPlusWotlk:Show()
 	end
 end
 
 -- Toggle options pane
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CensusPlus_ToggleOptions(self)
 	PlaySound(856, "Master")
 
 	if not InterfaceOptionsFrame:IsShown() then
 		InterfaceOptionsFrame:Show()
 	end
-	InterfaceOptionsFrame_OpenToCategory("CensusPlusTBC")
+	InterfaceOptionsFrame_OpenToCategory("CensusPlusWotlk")
 	--		CensusPlusSetCheckButtonState()
 end
 
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CensusPlus_OnLoad(self)
 	-- Update the version number
 	CensusPlusText:SetText(
-		"CensusPlusTBC v" .. CensusPlus_VERSION
+		"CensusPlusWotlk v" .. CensusPlus_VERSION
 	)
 	CensusPlusText2:SetText(CENSUSPLUS_UPLOAD)
 
@@ -498,7 +500,7 @@ function CensusPlus_OnLoad(self)
 	-- Called once on load
 	-- SLASH_CensusPlusVerbose1 = "/censusverbose";
 	-- SlashCmdList["CensusPlusVerbose"] = CensusPlus_Verbose_toggle("alter");
-	SLASH_CensusPlusCMD1 = "/CensusPlusTBC"
+	SLASH_CensusPlusCMD1 = "/CensusPlus"
 	SLASH_CensusPlusCMD2 = "/Census+"
 	SLASH_CensusPlusCMD3 = "/Census"
 	SlashCmdList["CensusPlusCMD"] = CensusPlus_Command
@@ -662,7 +664,7 @@ function CP_ProcessWhoEvent(query, result, complete)
 end
 
 
--- CensusPlusTBC command
+-- CensusPlusWotlk command
 function CensusPlus_Command(param)
 	local jcmdend = 0
 	local jvalend = 0
@@ -969,7 +971,7 @@ function CensusPlus_FinishSound_toggle(state)
 	end
 end
 
--- CensusPlusTBC Auto Census set flag
+-- CensusPlusWotlk Auto Census set flag
 local function CensusPlus_SetAutoCensus(self)
 	--print(CensusPlus_Database["Info"]["AutoCensus"])
 	--print(CensusPlus_PerCharInfo["AutoCensus"])
@@ -1010,37 +1012,37 @@ function CensusPlus_AutoCensus_toggle(state)
 	end
 end
 
--- CensusPlusTBC Display Usage
+-- CensusPlusWotlk Display Usage
 function CensusPlus_DisplayUsage()
-	CensusPlusTBC:Show()
+	CensusPlusWotlk:Show()
 	local stealthUsage = g_stealth
 	g_stealth = false
 	CensusPlus_Msg(
-		CENSUSPLUS_USAGE .. "\n  /CensusPlusTBC" .. CENSUSPLUS_OR .. "/Census+ " .. CENSUSPLUS_OR .. "/Census" .. CENSUSPLUS_AND .. CENSUSPLUS_HELP_0
+		CENSUSPLUS_USAGE .. "\n  /CensusPlus" .. CENSUSPLUS_OR .. "/Census+ " .. CENSUSPLUS_OR .. "/Census" .. CENSUSPLUS_AND .. CENSUSPLUS_HELP_0
 	)
 	CensusPlus_Msg(
-		"  /CensusPlusTBC " .. CENSUS_OPTIONS_VERBOSE .. CENSUSPLUS_HELP_1
+		"  /CensusPlus " .. CENSUS_OPTIONS_VERBOSE .. CENSUSPLUS_HELP_1
 	)
 	CensusPlus_Msg(
-		"  /CensusPlusTBC " .. CENSUS_OPTIONS_STEALTH .. CENSUSPLUS_HELP_11
+		"  /CensusPlus " .. CENSUS_OPTIONS_STEALTH .. CENSUSPLUS_HELP_11
 	)
 	CensusPlus_Msg(
-		"  /CensusPlusTBC " .. CENSUSPLUS_BUTTON_OPTIONS .. CENSUSPLUS_HELP_2
+		"  /CensusPlus " .. CENSUSPLUS_BUTTON_OPTIONS .. CENSUSPLUS_HELP_2
 	)
 	CensusPlus_Msg(
-		"  /CensusPlusTBC " .. CENSUSPLUS_TAKE .. CENSUSPLUS_HELP_3
+		"  /CensusPlus " .. CENSUSPLUS_TAKE .. CENSUSPLUS_HELP_3
 	)
 	CensusPlus_Msg(
-		"  /CensusPlusTBC " .. CENSUSPLUS_STOP .. CENSUSPLUS_HELP_4
+		"  /CensusPlus " .. CENSUSPLUS_STOP .. CENSUSPLUS_HELP_4
 	)
 	CensusPlus_Msg(
-		"  /CensusPlusTBC " .. CENSUSPLUS_PRUNE .. CENSUSPLUS_HELP_5
+		"  /CensusPlus " .. CENSUSPLUS_PRUNE .. CENSUSPLUS_HELP_5
 	)
-	CensusPlus_Msg("  /CensusPlusTBC serverprune" .. CENSUSPLUS_HELP_6)
-	CensusPlus_Msg("  /CensusPlusTBC who name" .. CENSUSPLUS_HELP_7)
-	CensusPlus_Msg("  /CensusPlusTBC who unguilded 70" .. CENSUSPLUS_HELP_8)
-	CensusPlus_Msg("  /CensusPlusTBC timer X " .. CENSUSPLUS_HELP_9)
-	CensusPlus_Msg("  /CensusPlusTBC me" .. CENSUSPLUS_HELP_10)
+	CensusPlus_Msg("  /CensusPlus serverprune" .. CENSUSPLUS_HELP_6)
+	CensusPlus_Msg("  /CensusPlus who name" .. CENSUSPLUS_HELP_7)
+	CensusPlus_Msg("  /CensusPlus who unguilded 80" .. CENSUSPLUS_HELP_8)
+	CensusPlus_Msg("  /CensusPlus timer X " .. CENSUSPLUS_HELP_9)
+	CensusPlus_Msg("  /CensusPlus me" .. CENSUSPLUS_HELP_10)
 	g_stealth = stealthUsage
 end
 
@@ -1105,25 +1107,25 @@ end
 
 
 -- Minimize the window
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CensusPlus_OnClickMinimize(self)
-    if( CensusPlusTBC:IsVisible() ) then
+    if( CensusPlusWotlk:IsVisible() ) then
 	    --MiniCensusPlus:Show();
-        CensusPlusTBC:Hide();
+        CensusPlusWotlk:Hide();
     end
 end
 
 -- Minimize the window
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CensusPlus_OnClickMaximize(self)
 	if MiniCensusPlus:IsVisible() then
 		MiniCensusPlus:Hide()
-		CensusPlusTBC:Show()
+		CensusPlusWotlk:Show()
 	end
 end
 
 -- Take or pause a census depending on current status
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CENSUSPLUS_TAKE_OnClick(self)
 	if CPp.IsCensusPlusInProgress then
 		--CensusPlus_Msg(CENSUSPLUS_ISINPROGRESS);
@@ -1134,7 +1136,7 @@ function CENSUSPLUS_TAKE_OnClick(self)
 end
 
 -- Display a tooltip for the take button
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CENSUSPLUS_TAKE_OnEnter(self, motion)
 	if (motion == true) then
 		if CPp.IsCensusPlusInProgress then
@@ -1157,7 +1159,7 @@ function CENSUSPLUS_TAKE_OnEnter(self, motion)
 	end
 end
 
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CENSUSPLUS_STOP_OnEnter(self, motion)
 	if (motion == true) then
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -1168,7 +1170,7 @@ function CENSUSPLUS_STOP_OnEnter(self, motion)
 	end
 end
 
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CENSUSPLUS_MANUALWHO_OnEnter(self, motion)
 	if (motion == true) then
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
@@ -1217,7 +1219,7 @@ function CensusPlus_TogglePause()
 end
 
 -- Purge the database for this realm and faction
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CENSUSPLUS_PURGE_OnClick()
 	StaticPopup_Show ("CP_PURGE_CONFIRM");
 end
@@ -1251,7 +1253,7 @@ function CensusPlus_DoPurge()
 	end
 end
 
--- Take a CensusPlusTBC
+-- Take a CensusPlusWotlk
 function CensusPlus_StartCensus()
 	CensusPlusTakeButton:SetText(CENSUSPLUS_PAUSE)
 
@@ -1309,7 +1311,7 @@ function CensusPlus_StartCensus()
 		--  CPp.CensusPlusManuallyPaused = false;
 		--  CensusPlusPauseButton:SetText( CENSUSPLUS_PAUSE );
 		--else
-		-- D.o not initiate a new CensusPlusTBC whi.le one is in progress
+		-- D.o not initiate a new CensusPlusWotlk whi.le one is in progress
 		CensusPlus_Msg(
 			"Census in progress but this message should not have shown"
 		)
@@ -1431,8 +1433,8 @@ function CensusPlus_Load_JobQueue()
 	--InsertJobIntoQueue(job);
 end
 
--- Stop a CensusPlusTBC
--- referenced by CensusPlusTBC.xml
+-- Stop a CensusPlusWotlk
+-- referenced by CensusPlusWotlk.xml
 function CENSUSPLUS_STOPCENSUS()
 	if CPp.IsCensusPlusInProgress then
 		CensusPlusTakeButton:SetText(CENSUSPLUS_TAKE)
@@ -1610,7 +1612,7 @@ end
 local whoMsg
 
 -- Called on events
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CensusPlus_OnEvent(self, event, ...)
 	local arg1, arg2, arg3, arg4 = ...
 	if (arg1 == nil) then
@@ -1628,7 +1630,7 @@ function CensusPlus_OnEvent(self, event, ...)
 
 	-- If we have not been initialized,  nothing
 	if (g_CensusPlusInitialized == false) then
-		if ((event == "ADDON_LOADED") and (arg1 == "CensusPlusTBC")) then
+		if ((event == "ADDON_LOADED") and (arg1 == "CensusPlusWotlk")) then
 			self:UnregisterEvent("ADDON_LOADED") -- need this or we get hit on all preceeding addon loaded.. including the LOD's
 			--  Initialize our variables
 			g_addon_loaded = true
@@ -1648,7 +1650,7 @@ function CensusPlus_OnEvent(self, event, ...)
 
 	-- WHO_LIST_UPDATE
 	if (event == "WHO_LIST_UPDATE") then
-		CensusPlusTBC:UnregisterEvent("WHO_LIST_UPDATE")
+		CensusPlusWotlk:UnregisterEvent("WHO_LIST_UPDATE")
 		C_FriendList.SetWhoToUi(false)
 		if WhoFrame:IsShown() then
 		  FriendsFrameCloseButton:Click()
@@ -1680,7 +1682,7 @@ function CensusPlus_OnEvent(self, event, ...)
 			CP_updatingGuild  = nil;
 		end
 
-	elseif (( event == "ADDON_LOADED") and (arg1 == "CensusPlusTBC")) then
+	elseif (( event == "ADDON_LOADED") and (arg1 == "CensusPlusWotlk")) then
 		self:UnregisterEvent("ADDON_LOADED")   -- need this or we get hit on all preceeding addon loaded.. including the LOD's
 
 		--  Initialize our variables
@@ -1830,7 +1832,7 @@ function CensusPlus_CollectSightingData(unit)
 	end
 end
 
--- Initialize our primary save variables --  called when CensusPlusTBC ADDON_LOADED event is fired
+-- Initialize our primary save variables --  called when CensusPlusWotlk ADDON_LOADED event is fired
 function CensusPlus_InitializeVariables()
 	if (CensusPlus_Database["Servers"] == nil) then
 		CensusPlus_Database["Servers"] = {}
@@ -1999,7 +2001,7 @@ function CensusPlus_AutoStart()
 end
 
 
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CensusPlus_OnUpdate()
 	if g_FirstRun then
 		CensusButton:SetText("C+")
@@ -2054,11 +2056,11 @@ function CensusPlus_OnUpdate()
 							CensusPlus_PerCharInfo["SoundFile"]
 					end
 					local CPSoundFile =
-						"Interface\\AddOns\\CensusPlusTBC\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".ogg"
+						"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".ogg"
 					local willplay = PlaySoundFile(CPSoundFile, "Master")
 					if not willplay then
 						local CPSoundFile =
-							"Interface\\AddOns\\CensusPlusTBC\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".mp3"
+							"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".mp3"
 						PlaySoundFile(CPSoundFile, "Master")
 					end
 				elseif ((CensusPlus_PerCharInfo["PlayFinishSound"] == nil) and CensusPlus_Database["Info"]["PlayFinishSound"]) then
@@ -2069,11 +2071,11 @@ function CensusPlus_OnUpdate()
 							CensusPlus_Database["Info"]["SoundFile"]
 					end
 					local CPSoundFile =
-						"Interface\\AddOns\\CensusPlusTBC\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".ogg"
+						"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".ogg"
 					local willplay = PlaySoundFile(CPSoundFile, "Master")
 					if not willplay then
 						local CPSoundFile =
-							"Interface\\AddOns\\CensusPlusTBC\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".mp3"
+							"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".mp3"
 						PlaySoundFile(CPSoundFile, "Master")
 					end
 				end
@@ -2182,7 +2184,7 @@ function CensusPlus_DoTimeCounts()
 
 	if CensusPLus_DEBUGWRITES then
 		CensusPlus_Database["TimesPlus"][realmName][factionGroup] =
-			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DRUID] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_HUNTER] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_MAGE] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PRIEST] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_ROGUE] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARLOCK] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARRIOR] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_SHAMAN] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PALADIN] .. "&" .. CensusPlus_WHOPROCESSOR .. ":" .. CensusPlus_JobQueue.g_NumNewCharacters .. "," .. CensusPlus_JobQueue.g_NumUpdatedCharacters .. "," .. total_time
+			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DRUID] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_HUNTER] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_MAGE] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PRIEST] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_ROGUE] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARLOCK] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARRIOR] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_SHAMAN] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PALADIN] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DEATH_KNIGHT] .. "&" .. CensusPlus_WHOPROCESSOR .. ":" .. CensusPlus_JobQueue.g_NumNewCharacters .. "," .. CensusPlus_JobQueue.g_NumUpdatedCharacters .. "," .. total_time
 	else
 		local TimeDataTime = date("!%Y-%m-%d&%H:%M:%S", GetServerTime())
 
@@ -2195,7 +2197,8 @@ function CensusPlus_DoTimeCounts()
 			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARLOCK] .. "&" ..
 			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARRIOR] .. "&" ..
 			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_SHAMAN] .. "&" ..
-			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PALADIN]
+			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PALADIN] .. "&" ..
+			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DEATH_KNIGHT]
 
 		CensusPlus_Database["TimesPlus"][realmName][factionGroup][TimeDataTime] =
 			CensusPlus_Database["TimesPlus"][realmName][factionGroup][TimeDataTime] .. ":" ..
@@ -2753,7 +2756,7 @@ end
 function CensusPlus_UpdateView()
 
 	--  No need to do anything if the window is not open
-	if not CensusPlusTBC:IsVisible() then return end
+	if not CensusPlusWotlk:IsVisible() then return end
 
 	-- Get realm and faction
 	local realmName = CensusPlus_GetUniqueRealmName()
@@ -2896,7 +2899,7 @@ function CensusPlus_UpdateView()
 		else
 			button:Hide();
 		end
-		local normalTextureName= "Interface\\AddOns\\CensusPlusTBC\\skins\\CensusPlus_" .. g_RaceClassList[race]
+		local normalTextureName= "Interface\\AddOns\\CensusPlusWotlk\\skins\\CensusPlus_" .. g_RaceClassList[race]
 		local legendName = "CensusPlusRaceLegend"..i;
 		local legend = _G[legendName]
 		legend:SetNormalTexture(normalTextureName);
@@ -2944,7 +2947,7 @@ function CensusPlus_UpdateView()
 			button:Hide();
 		end
 
-		local normalTextureName="Interface\\AddOns\\CensusPlusTBC\\skins\\CensusPlus_" .. g_RaceClassList[class]
+		local normalTextureName="Interface\\AddOns\\CensusPlusWotlk\\skins\\CensusPlus_" .. g_RaceClassList[class]
 		local legendName = "CensusPlusClassLegend"..i;
 		local legend = _G[legendName]
 		legend:SetNormalTexture(normalTextureName);
@@ -3045,7 +3048,7 @@ function CensusPlus_ForAllCharacters(realmKey, factionKey, raceKey, classKey, gu
 end
 
 -- Race legend clicked
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CensusPlus_OnClickRace(self )
 	--  default click is "LeftButton" and up .. no RegisterForClicks used
 	local id = self:GetID()
@@ -3058,7 +3061,7 @@ function CensusPlus_OnClickRace(self )
 end
 
 -- Class legend clicked
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CensusPlus_OnClickClass(self)
 	--  default click is "LeftButton" and up .. no RegisterForClicks used
 	local id = self:GetID()
@@ -3071,13 +3074,13 @@ function CensusPlus_OnClickClass(self)
 end
 
 -- Level bar loaded
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CensusPlus_OnLoadLevel(self)
 	self:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 end
 
 -- Level bar clicked
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CensusPlus_OnClickLevel(self, CP_button)
 	-- both right and left buttons up registered.
 	local id = self:GetID()
@@ -3092,7 +3095,7 @@ function CensusPlus_OnClickLevel(self, CP_button)
 end
 
 -- Race tooltip
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CensusPlus_OnEnterRace(self, motion)
 	if motion then
 		local factionGroup = UnitFactionGroup("player")
@@ -3120,7 +3123,7 @@ function CensusPlus_OnEnterRace(self, motion)
 end
 
 -- Class tooltip
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CensusPlus_OnEnterClass(self, motion)
 	if motion then
 		local factionGroup = UnitFactionGroup("player")
@@ -3148,7 +3151,7 @@ function CensusPlus_OnEnterClass(self, motion)
 end
 
 -- Level tooltip
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CensusPlus_OnEnterLevel(self, motion )
 	if motion then
 		local id = self:GetID()
@@ -3173,7 +3176,7 @@ function CensusPlus_OnEnterLevel(self, motion )
 end
 
 -- Clicked a guild button
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CensusPlus_GuildButton_OnClick(self )
 	local id = self:GetID();
 	local offset = FauxScrollFrame_GetOffset(CensusPlusGuildScrollFrame);
@@ -3236,7 +3239,7 @@ function CensusPlus_UpdateGuildButtons()
 end
 
 -- Walk the character database prune all characters entries that are older than X days
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CENSUSPLUS_PRUNEData(nDays, sServer)
 
 	local pruneTime = 24 * 60 * 60 * nDays
@@ -3518,7 +3521,7 @@ function ManualWho()
       if (whoquery_active) then
         FriendsFrame:UnregisterEvent("WHO_LIST_UPDATE")
         C_FriendList.SetWhoToUi(true)
-        CensusPlusTBC:RegisterEvent("WHO_LIST_UPDATE")
+        CensusPlusWotlk:RegisterEvent("WHO_LIST_UPDATE")
         C_FriendList.SendWho(whoMsg)
       end
     end
@@ -3661,7 +3664,7 @@ end
 -- this function not correctly setup.. in fact the mini window isn't setup {acutally i5 is but hidden and off screen}
 function CensusPlus_Mini_OnMouseDown(
 self,
-	mCP_button -- referenced by CensusPlusTBC.xml
+	mCP_button -- referenced by CensusPlusWotlk.xml
 )
 	if ((not self.isLocked or (self.isLocked == 0)) and (mCP_button == "LeftButton")) then
 		self:StartMoving()
@@ -3669,7 +3672,7 @@ self,
 	end
 end
 
--- referenced by CensusPlusTBC.xml
+-- referenced by CensusPlusWotlk.xml
 function CensusPlus_Census_OnMouseDown(self, CP_button)
 	if (not self.isLocked or (self.isLocked == 0)) then
 		self:StartMoving()
@@ -3680,7 +3683,7 @@ end
 function CensusPlusBlizzardOptions()
 	-- Create main frame for information text
 	CensusPlusOptions = CreateFrame("FRAME", "CensusPlusOptions")
-	CensusPlusOptions.name = GetAddOnMetadata("CensusPlusTBC", "Title")
+	CensusPlusOptions.name = GetAddOnMetadata("CensusPlusWotlk", "Title")
 	CensusPlusOptions.default = function(self)
 		CensusPlus_ResetConfig()
 	end
@@ -4155,7 +4158,7 @@ function CensusPlusBlizzardOptions()
 	CensusPlusCheckButton3Text:SetText(CENSUS_OPTIONS_BUTSHOW)
 	CensusPlusCheckButton3.tooltipText = CENSUS_OPTIONS_BUTSHOW
 
-	-- Create Frame tri-selector button (CO - CensusPlusTBC Button - enable)
+	-- Create Frame tri-selector button (CO - CensusPlusWotlk Button - enable)
 	CensusPlusOptionsRadioButton_C3a =
 		CreateFrame(
 			"CheckButton",
@@ -4209,7 +4212,7 @@ function CensusPlusBlizzardOptions()
 	end)
 	CensusPlusOptionsRadioButton_C3a.tooltipText = ENABLE
 
-	--Create Frame tri-selector button (CO - CensusPlusTBC Button - disable)
+	--Create Frame tri-selector button (CO - CensusPlusWotlk Button - disable)
 	CensusPlusOptionsRadioButton_C3b =
 		CreateFrame(
 			"CheckButton",
@@ -4264,7 +4267,7 @@ function CensusPlusBlizzardOptions()
 	end)
 	CensusPlusOptionsRadioButton_C3b.tooltipText = DISABLE
 
-	--Create Frame tri-selector button (CO - CensusPlusTBC Button - remove)
+	--Create Frame tri-selector button (CO - CensusPlusWotlk Button - remove)
 	CensusPlusOptionsRadioButton_C3c =
 		CreateFrame(
 			"CheckButton",
@@ -4950,12 +4953,12 @@ function CensusPlusBlizzardOptions()
 	CensusPlusSoundFile1Button:SetScript("OnClick", function(self)
 		local willplay =
 			PlaySoundFile(
-				"Interface\\AddOns\\CensusPlusTBC\\sounds\\CensusComplete1.ogg",
+				"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete1.ogg",
 				"Master"
 			)
 		if not willplay then
 			PlaySoundFile(
-				"Interface\\AddOns\\CensusPlusTBC\\sounds\\CensusComplete1.mp3",
+				"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete1.mp3",
 				"Master"
 			)
 		end
@@ -4967,7 +4970,7 @@ function CensusPlusBlizzardOptions()
 		end
 	end)
 	--CensusPlusSoundFile1Button:SetScript("OnMouseUp", function(self)
-	--	PlaySoundFile("Interface\\AddOns\\CensusPlusTBC\\sounds\\CensusComplete1.ogg")
+	--	PlaySoundFile("Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete1.ogg")
 	--end)
 	CensusPlusSoundFile1Button.tooltipText =
 		CENSUS_OPTIONS_SOUNDFILEDEFAULT .. "1"
@@ -4993,12 +4996,12 @@ function CensusPlusBlizzardOptions()
 	CensusPlusSoundFile2Button:SetScript("OnClick", function(self)
 		local willplay =
 			PlaySoundFile(
-				"Interface\\AddOns\\CensusPlusTBC\\sounds\\CensusComplete2.ogg",
+				"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete2.ogg",
 				"Master"
 			)
 		if not willplay then
 			PlaySoundFile(
-				"Interface\\AddOns\\CensusPlusTBC\\sounds\\CensusComplete2.mp3",
+				"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete2.mp3",
 				"Master"
 			)
 		end
@@ -5010,7 +5013,7 @@ function CensusPlusBlizzardOptions()
 		end
 	end)
 	--CensusPlusSoundFile2Button:SetScript("OnMouseUp", function(self)
-	--	PlaySoundFile("Interface\\AddOns\\CensusPlusTBC\\sounds\\CensusComplete2.ogg")
+	--	PlaySoundFile("Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete2.ogg")
 	--end)
 	CensusPlusSoundFile2Button.tooltipText =
 		CENSUS_OPTIONS_SOUNDFILEDEFAULT .. "2"
@@ -5036,12 +5039,12 @@ function CensusPlusBlizzardOptions()
 	CensusPlusSoundFile3Button:SetScript("OnClick", function(self)
 		local willplay =
 			PlaySoundFile(
-				"Interface\\AddOns\\CensusPlusTBC\\sounds\\CensusComplete3.ogg",
+				"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete3.ogg",
 				"Master"
 			)
 		if not willplay then
 			PlaySoundFile(
-				"Interface\\AddOns\\CensusPlusTBC\\sounds\\CensusComplete3.mp3",
+				"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete3.mp3",
 				"Master"
 			)
 		end
@@ -5053,7 +5056,7 @@ function CensusPlusBlizzardOptions()
 		end
 	end)
 	--CensusPlusSoundFile3Button:SetScript("OnMouseUp", function(self)
-	--	PlaySoundFile("Interface\\AddOns\\CensusPlusTBC\\sounds\\CensusComplete3.ogg")
+	--	PlaySoundFile("Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete3.ogg")
 	--end)
 	CensusPlusSoundFile3Button.tooltipText =
 		CENSUS_OPTIONS_SOUNDFILEDEFAULT .. "3"
@@ -5101,7 +5104,7 @@ function CensusPlusBlizzardOptions()
 	CensusPlusCheckButton7Text:SetText(CENSUS_OPTIONS_LOG_BARS) --
 	CensusPlusCheckButton7.tooltipText = CENSUS_OPTIONS_LOG_BARSTEXT
 
-	--Create CensusPlusTBC.Background:alpha Slider
+	--Create CensusPlusWotlk.Background:alpha Slider
 	local g_CPWin_background_alpha = 0.5
 	CensusPlusSlider2 =
 		CreateFrame(
