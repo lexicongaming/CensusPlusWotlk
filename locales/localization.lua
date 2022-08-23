@@ -33,6 +33,7 @@ CENSUSPLUS_WARLOCK = "Warlock";
 CENSUSPLUS_WARRIOR = "Warrior";
 CENSUSPLUS_SHAMAN = "Shaman";
 CENSUSPLUS_PALADIN = "Paladin";
+CENSUSPLUS_DEATHKNIGHT = "Death Knight";
 
 CENSUSPLUS_DWARF = "Dwarf";
 CENSUSPLUS_GNOME = "Gnome";
@@ -69,6 +70,7 @@ if ( GetLocale() == "deDE" ) then
 	CENSUSPLUS_SHAMAN = "Schamane";
 	CENSUSPlusFemale["Schamanin"] = "Schamane";
 	CENSUSPLUS_PALADIN = "Paladin";
+	CENSUSPLUS_DEATHKNIGHT          = "Todesritter";
 
 	CENSUSPLUS_DWARF = "Zwerg";
   CENSUSPlusFemale["Zwergin"] = "Zwerg";
@@ -103,6 +105,7 @@ if ( GetLocale() == "esES" or GetLocale() == "esMX" ) then
 	CENSUSPlusFemale["Guerrera"] = "Guerrero";
 	CENSUSPLUS_SHAMAN = "Chamán";
 	CENSUSPLUS_PALADIN = "Paladín";
+	CENSUSPLUS_DEATHKNIGHT         = "Caballero de la Muerte";
 
 	CENSUSPLUS_DWARF = "Enano";
 	CENSUSPlusFemale["Enana"] = "Enano";
@@ -137,6 +140,7 @@ if ( GetLocale() == "frFR" ) then
 	CENSUSPLUS_SHAMAN = "Chaman";
   CENSUSPlusFemale["Chamane"] = "Chaman";
 	CENSUSPLUS_PALADIN = "Paladin";
+	CENSUSPLUS_DEATHKNIGHT          = "Chevalier de la mort";
 
 	CENSUSPLUS_DWARF = "Nain";
   CENSUSPlusFemale["Naine"] = "Nain";
@@ -177,6 +181,7 @@ if ( GetLocale() == "itIT" ) then
 	CENSUSPlusFemale["Sciamana"] = "Sciamano";
 	CENSUSPLUS_PALADIN = "Paladino";
 	CENSUSPlusFemale["Paladina"] = "Paladino";
+	CENSUSPLUS_DEATHKNIGHT          = "Cavaliere della Morte";
 
 	CENSUSPLUS_DWARF = "Nano";
 	CENSUSPlusFemale["Nana"] = "Nano";
@@ -208,6 +213,7 @@ if ( GetLocale() == "koKR" ) then
 	CENSUSPLUS_WARRIOR = "전사";
 	CENSUSPLUS_SHAMAN = "주술사";
 	CENSUSPLUS_PALADIN = "성기사";
+	CENSUSPLUS_DEATHKNIGHT = "죽음의 기사";
 
 	CENSUSPLUS_DWARF = "드워프";
 	CENSUSPLUS_GNOME = "노움";
@@ -241,7 +247,8 @@ if ( GetLocale() == "ptBR" ) then
 	CENSUSPLUS_SHAMAN = "Xamã";
 	CENSUSPLUS_PALADIN = "Paladino";
 	CENSUSPlusFemale["Paladina"] = "Paladino"
-
+	CENSUSPLUS_DEATHKNIGHT = "Cavaleiro da Morte";
+	CENSUSPlusFemale["Cavaleira da Morte"] = "Cavaleiro da Morte";
 
 	CENSUSPLUS_DWARF = "Anão";
 	CENSUSPlusFemale["Anã"] = "Anão";
@@ -280,6 +287,7 @@ if ( GetLocale() == "ruRU" ) then
 	CENSUSPLUS_SHAMAN = "Шаман";
 	CENSUSPlusFemale["Шаманка"] = "Шаман";
 	CENSUSPLUS_PALADIN = "Паладин";
+	CENSUSPLUS_DEATHKNIGHT = "Рыцарь смерти";
 
 	CENSUSPLUS_DWARF = "Дворф";
 	CENSUSPlusFemale["Дворфийка"] = "Дворф";
@@ -310,6 +318,7 @@ if ( GetLocale() == "zhCN" ) then
 	CENSUSPLUS_WARRIOR = "战士";
 	CENSUSPLUS_SHAMAN = "萨满祭司";
 	CENSUSPLUS_PALADIN = "圣骑士";
+	CENSUSPLUS_DEATHKNIGHT = "死亡骑士";
 
 	CENSUSPLUS_DWARF = "矮人";
 	CENSUSPLUS_GNOME = "侏儒";
@@ -335,6 +344,7 @@ if ( GetLocale() == "zhTW" ) then
 	CENSUSPLUS_WARRIOR = "戰士";
 	CENSUSPLUS_SHAMAN = "薩滿";
 	CENSUSPLUS_PALADIN = "聖騎士";
+	CENSUSPLUS_DEATHKNIGHT = "死亡騎士";
 
 	CENSUSPLUS_DWARF = "矮人";
 	CENSUSPLUS_GNOME = "地精";

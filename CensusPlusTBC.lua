@@ -63,7 +63,7 @@ local CensusPlus_MAXBARHEIGHT = 128;			-- Length of blue bars
 local CensusPlus_NUMGUILDBUTTONS = 10;			-- How many guild buttons are on the UI?
 
 
-local MAX_CHARACTER_LEVEL = 70;					-- Maximum level a PC can attain  testing only comment out for live
+local MAX_CHARACTER_LEVEL = 80;					-- Maximum level a PC can attain  testing only comment out for live
 local MIN_CHARACTER_LEVEL = 10;					-- Minimum observed level returned by /who command (undocumented and barely acknowledged.)
 local MAX_WHO_RESULTS = 49;						-- Maximum number of who results the server will return
 CensusPlus_GUILDBUTTONSIZEY = 16;				-- pixil height of guild name lines
@@ -193,6 +193,7 @@ g_RaceClassList[CENSUSPLUS_WARLOCK]	    = 15;
 g_RaceClassList[CENSUSPLUS_WARRIOR]	    = 16;
 g_RaceClassList[CENSUSPLUS_SHAMAN]		= 17;
 g_RaceClassList[CENSUSPLUS_PALADIN]	    = 18;
+g_RaceClassList[CENSUSPLUS_DEATHKNIGHT] = 30;
 
 g_RaceClassList[CENSUSPLUS_DWARF]		= 20;
 g_RaceClassList[CENSUSPLUS_GNOME]		= 21;
@@ -218,6 +219,7 @@ local function CensusPlus_Zero_g_TimeDatabase()
 	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARRIOR]	    = 0;
 	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_SHAMAN]		= 0;
 	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PALADIN]	    = 0;
+	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DEATHKNIGHT]  = 0;
 end
 CensusPlus_Zero_g_TimeDatabase();
 
@@ -384,10 +386,10 @@ function CensusPlus_GetFactionClasses(faction)
 	-- this is last in first out list... add new classes to front of list.
 	local ret = {};
 	if (faction == CENSUSPlus_HORDE) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN,
+		ret = {CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN,
 		CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DRUID};
 	elseif (faction == CENSUSPlus_ALLIANCE) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST,
+		ret = {CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST,
 		CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DRUID};
 	end
 	return ret;
@@ -397,25 +399,25 @@ end
 local function GetRaceClasses(race)
 	local ret = {};
 	if (race == CENSUSPLUS_ORC) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_SHAMAN, CENSUSPLUS_WARLOCK}
+		ret = {CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_SHAMAN, CENSUSPLUS_WARLOCK}
 	elseif (race == CENSUSPLUS_TAUREN) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_SHAMAN, CENSUSPLUS_DRUID}
+		ret = {CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_SHAMAN, CENSUSPLUS_DRUID}
 	elseif (race == CENSUSPLUS_TROLL) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE}
+		ret = {CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE}
 	elseif (race == CENSUSPLUS_UNDEAD) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK}
+		ret = {CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_WARRIOR, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK}
 	elseif (race == CENSUSPLUS_BLOODELF) then
-		ret = {CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK}
+		ret = {CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK}
 	elseif (race == CENSUSPLUS_DWARF) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST}
+		ret = {CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST}
 	elseif (race == CENSUSPLUS_GNOME) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_ROGUE, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK}
+		ret = {CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_WARRIOR, CENSUSPLUS_ROGUE, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK}
 	elseif (race == CENSUSPLUS_HUMAN) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK}
+		ret = {CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK}
 	elseif (race == CENSUSPLUS_NIGHTELF) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_DRUID}
+		ret = {CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_DRUID}
 	elseif (race == CENSUSPLUS_DRAENEI) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN, CENSUSPLUS_DRUID}
+		ret = {CENSUSPLUS_DEATHKNIGHT, CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN, CENSUSPLUS_DRUID}
 	end
 	return ret
 end
@@ -2182,7 +2184,7 @@ function CensusPlus_DoTimeCounts()
 
 	if CensusPLus_DEBUGWRITES then
 		CensusPlus_Database["TimesPlus"][realmName][factionGroup] =
-			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DRUID] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_HUNTER] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_MAGE] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PRIEST] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_ROGUE] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARLOCK] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARRIOR] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_SHAMAN] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PALADIN] .. "&" .. CensusPlus_WHOPROCESSOR .. ":" .. CensusPlus_JobQueue.g_NumNewCharacters .. "," .. CensusPlus_JobQueue.g_NumUpdatedCharacters .. "," .. total_time
+			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DRUID] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_HUNTER] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_MAGE] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PRIEST] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_ROGUE] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARLOCK] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARRIOR] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_SHAMAN] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PALADIN]  .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DEATHKNIGHT] .. "&" .. CensusPlus_WHOPROCESSOR .. ":" .. CensusPlus_JobQueue.g_NumNewCharacters .. "," .. CensusPlus_JobQueue.g_NumUpdatedCharacters .. "," .. total_time
 	else
 		local TimeDataTime = date("!%Y-%m-%d&%H:%M:%S", GetServerTime())
 
@@ -2195,7 +2197,8 @@ function CensusPlus_DoTimeCounts()
 			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARLOCK] .. "&" ..
 			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARRIOR] .. "&" ..
 			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_SHAMAN] .. "&" ..
-			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PALADIN]
+			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PALADIN] .. "&" ..
+			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DEATHKNIGHT]
 
 		CensusPlus_Database["TimesPlus"][realmName][factionGroup][TimeDataTime] =
 			CensusPlus_Database["TimesPlus"][realmName][factionGroup][TimeDataTime] .. ":" ..
