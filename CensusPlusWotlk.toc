@@ -1,9 +1,8 @@
-## Interface: 20501
-## Version: v0.8.10
-## Title: CensusPlusTBC
-## Notes: This AddOn is licenced under the GNU GPL, see GPL.txt for details.
+## Interface: 30400
+## Version: v0.9.0
+## Title: CensusPlusWotlk
 ## Notes: Collects and displays census information.
-## Original Author: Ian Pieragostini
+## Author: Scarecr0w12
 ## Modified By: Cooper Sellers - www.warcraftrealms.com
 ## Modified By: sylvanaar - LibWho integration
 ## Modified By: Bringoutyourdead with support from Balgair both at www.warcraftrealms.com
@@ -11,7 +10,9 @@
 ## Modified By: Christophrus - WoWClassicPopulation.com
 ## Modified BY: Scarecr0w12 - WowClassicPop.com
 ## Modified By: Lexie
+## Modified BY: Seidelma - Localization support for Wotlk
 ## OptionalDeps: LibWho-2.0, LibStub, CallbackHandler-1.0, LibChecksum-1.0
+## Original Author: Ian Pieragostini
 ## SavedVariables: CensusPlus_Database, CensusPlus_CRealms, CensusPlus_Guilds, CensusPlus_JobQueue
 ## SavedVariablesPerCharacter: CensusPlus_PerCharInfo
 ## X-Website: WowClassicPop.com
@@ -23,6 +24,6 @@ libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
 libs\LibRealmID\LibRealmID.lua
 #@end-no-lib-strip@
 
-CensusPlusTBC.xml
+CensusPlusWotlk.xml
 modules\CensusButton.xml
 modules\CensusPlayerList.xml

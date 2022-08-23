@@ -1,5 +1,5 @@
 <Bindings>
-	<Binding name="CENSUSPLUSTBC_MANUALWHO" header="CENSUSPLUSTBC" category="ADDONS">
+	<Binding name="CENSUSPLUSWOTLK_MANUALWHO" header="CENSUSPLUSWOTLK" category="ADDONS">
 		ManualWho();
 	</Binding>
 </Bindings>

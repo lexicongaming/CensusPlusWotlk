@@ -1,4 +1,4 @@
-﻿--[[--------------------------------------------------------------------
+--[[--------------------------------------------------------------------
 	LibReamID a fork by bringoutyourdead@warcraftrealms.com from
 	LibRealmInfo
 	World of Warcraft library for obtaining information about realms.
