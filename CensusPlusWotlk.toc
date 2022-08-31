@@ -16,6 +16,8 @@
 ## SavedVariables: CensusPlus_Database, CensusPlus_CRealms, CensusPlus_Guilds, CensusPlus_JobQueue
 ## SavedVariablesPerCharacter: CensusPlus_PerCharInfo
 ## X-Website: WowClassicPop.com
+## X-Curse-Project-ID: 487957
+## X-WoWI-ID: 26385
 
 #@no-lib-strip@
 libs\LibStub\LibStub.lua
