@@ -1,6 +1,7 @@
 package-as: CensusPlusWotlk
 enable-nolib-creation: no
-
+url: https://github.com/scarecr0w12/CensusPlusWotlk.git       
+tag: v0.9.0 
 manual-changelog:
     filename: CHANGELOG.txt
     markup-type: plain
