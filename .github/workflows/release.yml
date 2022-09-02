@@ -18,6 +18,6 @@ jobs:
         with:
           fetch-depth: 0  # gets git history for changelogs
       - name: WoW Packager
-          uses: BigWigsMods/packager@v2.0.3
+        uses: BigWigsMods/packager@v2.0.3
 
 
