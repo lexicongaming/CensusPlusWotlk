@@ -274,6 +274,17 @@
 					</Anchors>
 					<TexCoords left="0.5" right="1" top="0.5" bottom="1" />
 				</Texture>
+				<Texture file="Interface\Dialogframe\Dialogframe-Corners">
+					<Size>
+						<AbsDimension x="32" y="29" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset x="992" y="4" />
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.5" right="1" top="0" bottom="0.5" />
+				</Texture>
 				<Texture file="Interface\Dialogframe\Dialogframe-Left">
 					<Size>
 						<AbsDimension x="16" y="488" />
@@ -296,16 +307,6 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture file="Interface\Dialogframe\Dialogframe-Top">
-					<Size>
-						<AbsDimension x="1015" y="16" />
-					</Size>
-					<Anchors>
-						<Anchor point="TOPLEFT">
-							<Offset x="9" y="6" />
-						</Anchor>
-					</Anchors>
-				</Texture>
 				<Texture file="Interface\Dialogframe\Dialogframe-Bot">
 					<Size>
 						<AbsDimension x="1005" y="16" />
@@ -318,11 +319,11 @@
 				</Texture>
 				<Texture file="Interface\AddOns\CensusPlusWotlk\skins\CensusPlus_Window_Top_Shader">
 					<Size>
-						<AbsDimension x="1004" y="64" />
+						<AbsDimension x="1009" y="64" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
-							<Offset x="3" y="-6" />
+							<Offset x="8" y="-3" />
 						</Anchor>
 					</Anchors>
 				</Texture>
@@ -383,6 +384,16 @@
 							<Offset>
 								<AbsDimension x="9" y="-322" />
 							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<Texture file="Interface\Dialogframe\Dialogframe-Right">
+					<Size>
+						<AbsDimension x="16" y="114" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset x="991" y="-328" />
 						</Anchor>
 					</Anchors>
 				</Texture>
@@ -797,6 +808,16 @@
 						</Anchor>
 					</Anchors>
 				</FontString>
+				<Texture file="Interface\Dialogframe\Dialogframe-Top">
+					<Size>
+						<AbsDimension x="1015" y="16" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset x="9" y="6" />
+						</Anchor>
+					</Anchors>
+				</Texture>
 			</Layer>
 		</Layers>
 		<Frames>
@@ -957,21 +978,6 @@
 					</OnLeave>
 				</Scripts>
 			</Button>
-			<ScrollFrame name="CensusPlusGuildScrollFrame" inherits="FauxScrollFrameTemplate">
-				<Size>
-					<AbsDimension x="271" y="160" />
-				</Size>
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="CensusPlusGuildButton1" relativePoint="TOPLEFT">
-						<Offset />
-					</Anchor>
-				</Anchors>
-				<Scripts>
-					<OnVerticalScroll>
-						FauxScrollFrame_OnVerticalScroll(self, offset, CensusPlus_GUILDBUTTONSIZEY, CensusPlus_UpdateGuildButtons);
-					</OnVerticalScroll>
-				</Scripts>
-			</ScrollFrame>
 			<Button name="CensusPlusGuildButton1" inherits="CensusPlusGuildButtonTemplate" id="1">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="CensusPlusWotlk">
@@ -1060,6 +1066,21 @@
 					</Anchor>
 				</Anchors>
 			</Button>
+			<ScrollFrame name="CensusPlusGuildScrollFrame" inherits="FauxScrollFrameTemplate">
+				<Size>
+					<AbsDimension x="275" y="157" />
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="CensusPlusGuildButton1" relativePoint="TOPLEFT">
+						<Offset x="-6" />
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnVerticalScroll>
+						FauxScrollFrame_OnVerticalScroll(self, offset, CensusPlus_GUILDBUTTONSIZEY, CensusPlus_UpdateGuildButtons);
+					</OnVerticalScroll>
+				</Scripts>
+			</ScrollFrame>
 			<Button name="CP_DisplayCharactersButton" inherits="UIPanelButtonTemplate" text="CENSUSPLUS_BUTTON_CHARACTERS">
 				<Size>
 					<AbsDimension x="138" y="21" />
