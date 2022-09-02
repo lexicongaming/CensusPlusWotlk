@@ -1,5 +1,5 @@
 ## Interface: 30400
-## Version: v0.9.0
+## Version: v0.9.1
 ## Title: CensusPlusWotlk
 ## Notes: Collects and displays census information.
 ## Author: Scarecr0w12
