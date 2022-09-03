@@ -11,7 +11,7 @@ if ( GetLocale() == "itIT" ) then
 	CENSUSPLUS_AUTOSTARTTEXT = "Auto Start on login when timer less then "
 	CENSUSPLUS_BADLOCAL_1 = "You appear to have a US Census version, yet your localization is set to French or German or Italian.";
 	CENSUSPLUS_BADLOCAL_2 = "Please do not upload data to WarcraftRealms until this has been resolved.";
-	CENSUSPLUS_BADLOCAL_3 = "If this is incorrect, please let Bringoutyourdead know at WoWClassicPopulation.com about your situation so he can make corrections.";
+	CENSUSPLUS_BADLOCAL_3 = "If this is incorrect, please let Bringoutyourdead know at WowClassicPop.com about your situation so he can make corrections.";
 	CENSUSPLUS_BUTTON_CHARACTERS = "Show Chars";
 	CENSUSPLUS_BUTTON_OPTIONS = "Options";
 	CENSUSPLUS_CCO_OPTIONOVERRIDES = "Option overrides for this character only"
@@ -34,8 +34,8 @@ if ( GetLocale() == "itIT" ) then
 	CENSUSPLUS_GETGUILD = "Click Realm for Guild data";
 	CENSUSPLUS_HELP_0 = " following command as shown below";
 	CENSUSPLUS_HELP_1 = " _ Toggle verbose mode off/on";
-	CENSUSPLUS_HELP_10 = " _ Does Census update of player only.. this is done automatically when /CensusPlusClassic take finishes.";
-	CENSUSPLUS_HELP_11 = " _ Toggles stealth mode off/on - disables Verbose and all CensusPlusClassic chat messages.";
+	CENSUSPLUS_HELP_10 = " _ Does Census update of player only.. this is done automatically when /CensusPlusWotlk take finishes.";
+	CENSUSPLUS_HELP_11 = " _ Toggles stealth mode off/on - disables Verbose and all CensusPlusWotlk chat messages.";
 	CENSUSPLUS_HELP_2 = " _ Brings up the Option window";
 	CENSUSPLUS_HELP_3 = " _ Start a Census snapshot";
 	CENSUSPLUS_HELP_4 = " _ Stop a Census snapshot";
@@ -45,7 +45,7 @@ if ( GetLocale() == "itIT" ) then
 	CENSUSPLUS_HELP_8 = " _  Will list unguilded characters of that level.";
 	CENSUSPLUS_HELP_9 = " _  Will set the autocensus timer (to X minutes).";
 	CENSUSPLUS_ISINBG = "You are currently in a Battleground so a Census cannot be taken";
-	CENSUSPLUS_ISINPROGRESS = "A CensusPlusClassic is in progress, try again later";
+	CENSUSPLUS_ISINPROGRESS = "A CensusPlusWotlk is in progress, try again later";
 	CENSUSPLUS_LANGUAGECHANGED = "Client Language changed, Database purged.";
 	CENSUSPLUS_LASTSEEN = "Last Seen";
 	CENSUSPLUS_LASTSEEN_COLON = " Last Seen: ";
@@ -53,12 +53,12 @@ if ( GetLocale() == "itIT" ) then
 	CENSUSPLUS_LOCALE = "Locale : %s";
 	CENSUSPLUS_LOCALEUNKNOWN = "Locale : Unknown";
 	CENSUSPLUS_MAXXED = "MAXXED!";
-	CENSUSPLUS_MSG1 = " Loaded - type /censusplus or /CensusPlusClassic  or /census for valid commands";
+	CENSUSPLUS_MSG1 = " Loaded - type /censusplus or /CensusPlusWotlk  or /census for valid commands";
 	CENSUSPLUS_NOCENSUS = "A Census is not currently in progress";
 	CENSUSPLUS_NOTINFACTION = "Neutral faction - census not allowed"; 
 	CENSUSPLUS_NOW = " now ";
 	CENSUSPLUS_OBSOLETEDATAFORMATTEXT = "Old Database format found, Database purged."
-	CENSUSPLUS_OPTIONS_HEADER = "CensusPlusClassic Options";
+	CENSUSPLUS_OPTIONS_HEADER = "CensusPlusWotlk Options";
 	CENSUSPLUS_OPTIONS_OVERRIDE = "Override"
 	CENSUSPLUS_OR = " or ";
 	CENSUSPLUS_PAUSE = "Pause";
@@ -88,11 +88,11 @@ if ( GetLocale() == "itIT" ) then
 	CENSUSPLUS_STEALTHOFF = "Stealth Mode : OFF";
 	CENSUSPLUS_STEALTHON = "Stealth Mode : ON";
 	CENSUSPLUS_STOP = "Stop";
-	CENSUSPLUS_STOPCENSUS_TOOLTIP = "Stop the currently active CensusPlusClassic";
+	CENSUSPLUS_STOPCENSUS_TOOLTIP = "Stop the currently active CensusPlusWotlk";
 	CENSUSPLUS_TAKE = "Take";
 	CENSUSPLUS_TAKECENSUS = "\nTake a census of players \ncurrently online on this server \nand in this faction";
 	CENSUSPLUS_TAKINGONLINE = "Taking census of characters online...";
-	CENSUSPLUS_TEXT = "CensusPlusClassic";
+	CENSUSPLUS_TEXT = "CensusPlusWotlk";
 	CENSUSPLUS_TOOMANY = "WARNING: Too many characters matching: %s";
 	CENSUSPLUS_TOOSLOW = "Update too slow! Computer overloaded?Connection problems?";
 	CENSUSPLUS_TOPGUILD = "Top Guilds By XP";
@@ -101,7 +101,7 @@ if ( GetLocale() == "itIT" ) then
 	CENSUSPLUS_TRANSPARENCY = "Census window transparency"
 	CENSUSPLUS_UNGUILDED = "(Unguilded)";
 	CENSUSPLUS_UNKNOWNRACE = "Found an unknown race ( ";
-	CENSUSPLUS_UNKNOWNRACE_ACTION = " ), please tell christophrus at WoWClassicPopulation.com";
+	CENSUSPLUS_UNKNOWNRACE_ACTION = " ), please tell christophrus at WowClassicPop.com";
 	CENSUSPLUS_UNPAUSE = "Resume";
 	CENSUSPLUS_UNPAUSECENSUS = "Resume the current census";
 	CENSUSPLUS_UPLOAD = "Al momento non esiste un sito Web del censimento in cui caricare i dati del censimento.";
@@ -115,7 +115,7 @@ if ( GetLocale() == "itIT" ) then
 	CENSUSPLUS_WAS = " was ";
 	CENSUSPLUS_WHOQUERY = "Who query:"
 	CENSUSPLUS_WRONGLOCAL_PURGE = "Locale differs from previous setting, purging database.";
-	CENSUS_BUTTON_TOOLTIP = "Open CensusPlusClassic";
+	CENSUS_BUTTON_TOOLTIP = "Open CensusPlusWotlk";
 	CENSUS_OPTIONS_AUTOCENSUS = "Auto-Census";
 	CENSUS_OPTIONS_AUTOSTART = "Auto-Start";
 	CENSUS_OPTIONS_BACKGROUND_TRANSPARENCY_TOOLTIP = "Background transparency - ten steps"

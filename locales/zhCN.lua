@@ -1,23 +1,7 @@
---[[
-	CensusPlusClassic for World of Warcraft(tm).
-	
-	Copyright 2005 - 2016 Cooper Sellers
-	License:
-		This program is free software; you can redistribute it and/or
-		modify it under the terms of the GNU General Public License
-		as published by the Free Software Foundation; either version 2
-		of the License, or (at your option) any later version.
-		This program is distributed in the hope that it will be useful,
-		but WITHOUT ANY WARRANTY; without even the implied warranty of
-		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-		GNU General Public License for more details.
-		You should have received a copy of the GNU General Public License
-		along with this program(see GLP.txt); if not, write to the Free Software
-		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-]]
 -- initial translations provided by oumu323@curseforge   many phrases need translation .. and review.
 -- updated translation provided by utherzt@curseforge
 -- lastest translations provided by fyhcslb@curseforge
+-- updated translation provided by scarecr0w12@curseforge
 
 if ( GetLocale() == "zhCN" ) then
 	CENSUSPLUS_ACCOUNT_WIDE = "账号通用"
@@ -29,9 +13,9 @@ if ( GetLocale() == "zhCN" ) then
 	CENSUSPLUS_AUTOCENSUS_DELAYTIME = "延迟分钟数"
 	CENSUSPLUS_AUTOCLOSEWHO = "自动关闭 /who 命令"
 	CENSUSPLUS_AUTOSTARTTEXT = "登录后自动开始统计，当计时器小于 "
-	CENSUSPLUS_BADLOCAL_1 = "你似乎安装了英文版本的CensusPlus，但你的语言设置为了法语或德语或意大利语。"
-	CENSUSPLUS_BADLOCAL_2 = "在问题解决之前请不要将数据上传到WarcraftRealms。"
-	CENSUSPLUS_BADLOCAL_3 = "如果这不正确，请将你的情况反馈给WoWClassicPopulation.com的Bringoutyourdead，他能修正这些错误。"
+	CENSUSPLUS_BADLOCAL_1 = "您似乎擁有美國人口普查版本，但您的本地化設置為法語、德語、西班牙語、意大利語、韓語或俄語（操普京）。"
+	CENSUSPLUS_BADLOCAL_2 = "在此問題解決之前，請不要將數據上傳到 WoWClassicPop.com。"
+	CENSUSPLUS_BADLOCAL_3 = "如果這不正確，請讓 Scarecr0w12 在 wowclassicpop.com 上了解您的情況，以便他們進行更正。"
 	CENSUSPLUS_BUTTON_CHARACTERS = "显示角色名单"
 	CENSUSPLUS_BUTTON_OPTIONS = "选项"
 	CENSUSPLUS_CCO_OPTIONOVERRIDES = "为当前角色覆盖的选项"
@@ -61,9 +45,9 @@ if ( GetLocale() == "zhCN" ) then
 	CENSUSPLUS_HELP_1 = " _ 启用/禁用冗余模式"
 	
 	-- translation needed
-	CENSUSPLUS_HELP_10	= " _ Does Census update of player only.. this is done automatically when /CensusPlusClassic take finishes.";
+	CENSUSPLUS_HELP_10	= " _ Does Census update of player only.. this is done automatically when /CensusPlusWotlk take finishes.";
 	
-	CENSUSPLUS_HELP_11 = " _ 启用/禁用隐身模式，启用会关闭冗余模式并不显示 CensusPlusClassic 所有的聊天信息。"
+	CENSUSPLUS_HELP_11 = " _ 启用/禁用隐身模式，启用会关闭冗余模式并不显示 CensusPlusWotlk 所有的聊天信息。"
 	CENSUSPLUS_HELP_2 = " _ 打开选项窗口"
 	CENSUSPLUS_HELP_3 = " _ 开始 Census 快照"
 	CENSUSPLUS_HELP_4 = " _ 停止 Census 快照"
@@ -81,12 +65,12 @@ if ( GetLocale() == "zhCN" ) then
 	CENSUSPLUS_LOCALE = "地区: %s"
 	CENSUSPLUS_LOCALEUNKNOWN = "地区: 未知"
 	CENSUSPLUS_MAXXED = "最大值！"
-	CENSUSPLUS_MSG1 = "加载完成——输入 /censusplus 或者 /CensusPlusClassic 或者 /census 获取更多有效的命令"
+	CENSUSPLUS_MSG1 = "已加載 - 輸入 /censusplus 或 /CensusPlusWotlk 或 /census 以獲取有效命令。希望幫助構建插件或網站？查看不和諧 https://discord.gg/DjcXKtKr88"
 	CENSUSPLUS_NOCENSUS = "当前没有正在进行的人口普查"
 	CENSUSPLUS_NOTINFACTION = "中立阵营 - 无法进行人口普查"
 	CENSUSPLUS_NOW = " 现在 "
 	CENSUSPLUS_OBSOLETEDATAFORMATTEXT = "数据库格式过时，数据库已清空。"
-	CENSUSPLUS_OPTIONS_HEADER = "CensusPlusClassic 选项"
+	CENSUSPLUS_OPTIONS_HEADER = "CensusPlusWotlk 选项"
 	CENSUSPLUS_OPTIONS_OVERRIDE = "覆盖"
 	CENSUSPLUS_OR = " 或 "
 	CENSUSPLUS_PAUSE = "暂停"
@@ -120,7 +104,7 @@ if ( GetLocale() == "zhCN" ) then
 	CENSUSPLUS_TAKE = "开始"
 	CENSUSPLUS_TAKECENSUS = "统计玩家\n当前服务器在线 \n并且处于该阵营"
 	CENSUSPLUS_TAKINGONLINE = "进行当前在线角色的人口普查"
-	CENSUSPLUS_TEXT = "CensusPlusClassic"
+	CENSUSPLUS_TEXT = "CensusPlusWotlk"
 	CENSUSPLUS_TOOMANY = "警告: 相匹配的角色太多: %s"
 	CENSUSPLUS_TOOSLOW = "更新过慢！电脑不给力？网络连接有问题？"
 	CENSUSPLUS_TOPGUILD = "Top Guilds By XP"
@@ -129,10 +113,10 @@ if ( GetLocale() == "zhCN" ) then
 	CENSUSPLUS_TRANSPARENCY = "统计窗口透明度"
 	CENSUSPLUS_UNGUILDED = "(无公会)"
 	CENSUSPLUS_UNKNOWNRACE = "发现未知种族 ( "
-	CENSUSPLUS_UNKNOWNRACE_ACTION = " )，请告知WowClassicPopulation.com 的christophrus"
+	CENSUSPLUS_UNKNOWNRACE_ACTION = " )，請在 curseforge 頁面上對此發表評論"
 	CENSUSPLUS_UNPAUSE = "继续"
 	CENSUSPLUS_UNPAUSECENSUS = "继续当前的人口统计"
-	CENSUSPLUS_UPLOAD = "当前没有可将人口普查数据上传到的人口普查网站。"
+	CENSUSPLUS_UPLOAD = "請務必將您的 CensusPlusWotlk 數據上傳到 WoWClassicPop.com！"
 	CENSUSPLUS_USAGE = "用法:"
 	CENSUSPLUS_USING_WHOLIB = "使用 WhoLib"
 	CENSUSPLUS_VERBOSEOFF = "冗余模式 : 禁用"

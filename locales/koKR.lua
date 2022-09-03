@@ -1,5 +1,5 @@
 --[[
-	CensusPlusClassic for World of Warcraft(tm).
+	CensusPlusWotlk for World of Warcraft(tm).
 	
 	Copyright 2005 - 2012 Cooper Sellers and WarcraftRealms.com
 	License:
@@ -44,7 +44,7 @@ if ( GetLocale() == "koKR" ) then
 	CENSUSPLUS_AUTOSTARTTEXT = "Auto Start on login when timer less then "
 	CENSUSPLUS_BADLOCAL_1 = "You appear to have a US Census version, yet your localization is set to French or German or Italian."
 	CENSUSPLUS_BADLOCAL_2 = "Please do not upload data to WarcraftRealms until this has been resolved."
-	CENSUSPLUS_BADLOCAL_3 = "If this is incorrect, please let Bringoutyourdead know at WoWClassicPopulation.com about your situation so he can make corrections."
+	CENSUSPLUS_BADLOCAL_3 = "If this is incorrect, please let Bringoutyourdead know at WowClassicPop.com about your situation so he can make corrections."
 	CENSUSPLUS_BUTTON_CHARACTERS = "캐릭터 보기"
 	CENSUSPLUS_BUTTON_OPTIONS = "설정"
 	
@@ -100,10 +100,10 @@ if ( GetLocale() == "koKR" ) then
 	CENSUSPLUS_HELP_1 = " _ Toggle verbose mode off/on"
 	
 	-- translation needed
-	CENSUSPLUS_HELP_10 = " _ Does Census update of player only.. this is done automatically when /CensusPlusClassic take finishes."
+	CENSUSPLUS_HELP_10 = " _ Does Census update of player only.. this is done automatically when /CensusPlusWotlk take finishes."
 	
 	-- translation needed
-	CENSUSPLUS_HELP_11 = " _ Toggles stealth mode off/on - disables Verbose and all CensusPlusClassic chat messages."
+	CENSUSPLUS_HELP_11 = " _ Toggles stealth mode off/on - disables Verbose and all CensusPlusWotlk chat messages."
 	
 	-- translation needed
 	CENSUSPLUS_HELP_2 = " _ Brings up the Option window"
@@ -145,7 +145,7 @@ if ( GetLocale() == "koKR" ) then
 	CENSUSPLUS_LOCALE = "지역 : %s"
 	CENSUSPLUS_LOCALEUNKNOWN = "지역 : 알수없음"
 	CENSUSPLUS_MAXXED = "최대화 된!"
-	CENSUSPLUS_MSG1 = "센서스+ 로드됨 - /censusplus 나 /CensusPlusClassic 를 입력해 메인 창을 띄울 수 있습니다."
+	CENSUSPLUS_MSG1 = "센서스+ 로드됨 - /censusplus 나 /CensusPlusWotlk 를 입력해 메인 창을 띄울 수 있습니다."
 	CENSUSPLUS_NOCENSUS = "센서스가 현재 진행중이 아닙니다."
 	CENSUSPLUS_NOTINFACTION = "중립 진영 -  캐릭터가 없습니다."
 	CENSUSPLUS_NOW = " 지금 "
@@ -219,7 +219,7 @@ if ( GetLocale() == "koKR" ) then
 	-- translation needed
 	CENSUSPLUS_UNKNOWNRACE = "Found an unknown race ( "
 	
-	CENSUSPLUS_UNKNOWNRACE_ACTION = " ), please tell christophrus at WoWClassicPopulation.com"
+	CENSUSPLUS_UNKNOWNRACE_ACTION = " ), please tell christophrus at WowClassicPop.com"
 	CENSUSPLUS_UNPAUSE = "계속"
 	CENSUSPLUS_UNPAUSECENSUS = "일시중지된 센서스를 계속 진행합니다."
 	CENSUSPLUS_UPLOAD = "현재 인구 조사 데이터를 업로드 할 인구 조사 웹 사이트가 없습니다."

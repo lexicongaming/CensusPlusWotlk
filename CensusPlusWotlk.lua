@@ -54,7 +54,7 @@ BINDING_HEADER_CensusPlusWotlk = 'CensusPlusWotlk'
 -- Constants
 local CensusPlus_Version_Major = "0"; -- changing this number will force a saved data purge
 local CensusPlus_Version_Minor = "9"; -- changing this number will force a saved data purge
-local CensusPlus_Version_Maint = "0";
+local CensusPlus_Version_Maint = "2"; -- changing this number will force a saved data purge
 local CensusPlus_SubVersion = "";
 local CensusPlus_VERSION = CensusPlus_Version_Major.."."..CensusPlus_Version_Minor.."."..CensusPlus_Version_Maint;
 local CensusPlus_VERSION_FULL = CensusPlus_VERSION --.."."..CensusPlus_SubVersion ;

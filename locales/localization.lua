@@ -73,19 +73,19 @@ if ( GetLocale() == "deDE" ) then
 	CENSUSPLUS_DEATH_KNIGHT          = "Todesritter";
 
 	CENSUSPLUS_DWARF = "Zwerg";
-  CENSUSPlusFemale["Zwergin"] = "Zwerg";
+	CENSUSPlusFemale["Zwergin"] = "Zwerg";
 	CENSUSPLUS_GNOME = "Gnom";
 	CENSUSPLUS_HUMAN = "Mensch";
 	CENSUSPLUS_NIGHTELF = "Nachtelf";
-  CENSUSPlusFemale["Nachtelfe"] = "Nachtelf";
+	CENSUSPlusFemale["Nachtelfe"] = "Nachtelf";
 
 	CENSUSPLUS_ORC = "Orc";
 	CENSUSPLUS_TAUREN = "Tauren";
 	CENSUSPLUS_TROLL = "Troll";
 	CENSUSPLUS_UNDEAD = "Untoter";
-  CENSUSPlusFemale["Untote"] = "Untoter";
-  CENSUSPLUS_DRAENEI = "Draenei";
-  CENSUSPLUS_BLOODELF = "Blutelf";
+	CENSUSPlusFemale["Untote"] = "Untoter";
+	CENSUSPLUS_DRAENEI = "Draenei";
+	CENSUSPLUS_BLOODELF = "Blutelf";
 end
 
 -- esES + esMX
@@ -126,38 +126,38 @@ end
 -- frFR
 if ( GetLocale() == "frFR" ) then
 	CENSUSPLUS_DRUID = "Druide";
-  CENSUSPlusFemale["Druidesse"] = "Druide";
+	CENSUSPlusFemale["Druidesse"] = "Druide";
 	CENSUSPLUS_HUNTER = "Chasseur";
-  CENSUSPlusFemale["Chasseresse"] = "Chasseur";
+	CENSUSPlusFemale["Chasseresse"] = "Chasseur";
 	CENSUSPLUS_MAGE = "Mage";
 	CENSUSPLUS_PRIEST = "Prêtre";
-  CENSUSPlusFemale["Prêtresse"] = "Prêtre";
+	CENSUSPlusFemale["Prêtresse"] = "Prêtre";
 	CENSUSPLUS_ROGUE = "Voleur";
-  CENSUSPlusFemale["Voleuse"] = "Voleur";
+	CENSUSPlusFemale["Voleuse"] = "Voleur";
 	CENSUSPLUS_WARLOCK = "Démoniste";
 	CENSUSPLUS_WARRIOR = "Guerrier";
-  CENSUSPlusFemale["Guerrière"] = "Guerrier";
+	CENSUSPlusFemale["Guerrière"] = "Guerrier";
 	CENSUSPLUS_SHAMAN = "Chaman";
-  CENSUSPlusFemale["Chamane"] = "Chaman";
+	CENSUSPlusFemale["Chamane"] = "Chaman";
 	CENSUSPLUS_PALADIN = "Paladin";
 	CENSUSPLUS_DEATH_KNIGHT          = "Chevalier de la mort";
 
 	CENSUSPLUS_DWARF = "Nain";
-  CENSUSPlusFemale["Naine"] = "Nain";
+	CENSUSPlusFemale["Naine"] = "Nain";
 	CENSUSPLUS_GNOME = "Gnome";
 	CENSUSPLUS_HUMAN = "Humain";
-  CENSUSPlusFemale["Humaine"] = "Humain";
+	CENSUSPlusFemale["Humaine"] = "Humain";
 	CENSUSPLUS_NIGHTELF = "Elfe de la nuit";
 
 	CENSUSPLUS_ORC = "Orc";
-  CENSUSPlusFemale["Orque"] = "Orc";
+	CENSUSPlusFemale["Orque"] = "Orc";
 	CENSUSPLUS_TAUREN = "Tauren";
-  CENSUSPlusFemale["Taurène"] = "Tauren";
+	CENSUSPlusFemale["Taurène"] = "Tauren";
 	CENSUSPLUS_TROLL = "Troll";
-  CENSUSPlusFemale["Trollesse"] = "Troll";
+	CENSUSPlusFemale["Trollesse"] = "Troll";
 	CENSUSPLUS_UNDEAD = "Mort-vivant";
-  CENSUSPlusFemale["Morte-vivante"] = "Mort-vivant";
-  CENSUSPLUS_DRAENEI = "Draeneï";
+	CENSUSPlusFemale["Morte-vivante"] = "Mort-vivant";
+	CENSUSPLUS_DRAENEI = "Draeneï";
 	CENSUSPLUS_BLOODELF = "Elfe de sang";
 end
 
@@ -198,8 +198,8 @@ if ( GetLocale() == "itIT" ) then
 	CENSUSPLUS_TROLL = "Troll";
 	CENSUSPLUS_UNDEAD = "Non Morto";
 	CENSUSPlusFemale["Non Morta"] = "Non Morto";
-  CENSUSPLUS_DRAENEI = "Draenei";
-  CENSUSPLUS_BLOODELF = "Elfo del Sangue";
+	CENSUSPLUS_DRAENEI = "Draenei";
+	CENSUSPLUS_BLOODELF = "Elfo del Sangue";
 end
 
 -- koKR
@@ -224,8 +224,8 @@ if ( GetLocale() == "koKR" ) then
 	CENSUSPLUS_TAUREN = "타우렌";
 	CENSUSPLUS_TROLL = "트롤";
 	CENSUSPLUS_UNDEAD = "언데드";
-  CENSUSPLUS_DRAENEI = "드레나이";
-  CENSUSPLUS_BLOODELF = "블러드 엘프";
+	CENSUSPLUS_DRAENEI = "드레나이";
+	CENSUSPLUS_BLOODELF = "블러드 엘프";
 end
 
 -- ptBR
@@ -267,8 +267,8 @@ if ( GetLocale() == "ptBR" ) then
 	CENSUSPlusFemale["Taurena"] = "Tauren";
 	CENSUSPLUS_UNDEAD = "Morto-vivo";
 	CENSUSPlusFemale["Morta-viva"] = "Morto-vivo";
-  CENSUSPLUS_DRAENEI = "Draenei";
-  CENSUSPLUS_BLOODELF = "Elfo de Sangue";
+	CENSUSPLUS_DRAENEI = "Draenei";
+	CENSUSPLUS_BLOODELF = "Elfo de Sangue";
 end
 
 -- ruRU
@@ -329,8 +329,8 @@ if ( GetLocale() == "zhCN" ) then
 	CENSUSPLUS_TAUREN = "牛头人";
 	CENSUSPLUS_TROLL = "巨魔";
 	CENSUSPLUS_UNDEAD = "亡灵";
-  CENSUSPLUS_DRAENEI = "德莱尼";
-  CENSUSPLUS_BLOODELF = "血精灵";
+	CENSUSPLUS_DRAENEI = "德莱尼";
+	CENSUSPLUS_BLOODELF = "血精灵";
 end
 
 -- zhTW
@@ -355,8 +355,8 @@ if ( GetLocale() == "zhTW" ) then
 	CENSUSPLUS_TAUREN = "牛頭人";
 	CENSUSPLUS_TROLL = "食人妖";
 	CENSUSPLUS_UNDEAD = "不死族";
-  CENSUSPLUS_DRAENEI = "德萊尼";
-  CENSUSPLUS_BLOODELF = "血精靈";
+	CENSUSPLUS_DRAENEI = "德萊尼";
+	CENSUSPLUS_BLOODELF = "血精靈";
 end
 
 CENSUSPLUS_ACCOUNT_WIDE = "Account wide"
@@ -368,7 +368,7 @@ CENSUSPLUS_AUTOCENSUSTEXT = "Start Census after initial delay"
 CENSUSPLUS_AUTOCENSUS_DELAYTIME = "Delay in minutes";
 CENSUSPLUS_AUTOCLOSEWHO = "Automatically Close Who";
 CENSUSPLUS_AUTOSTARTTEXT = "Auto Start on login when timer less then "
-CENSUSPLUS_BADLOCAL_1 = "You appear to have a US Census version, yet your localization is set to French or German or Italian.";
+CENSUSPLUS_BADLOCAL_1 = "You appear to have a US Census version, yet your localization is set to French, German, Spanish, italian, Korean, or Russian(Fuck Putin).";
 CENSUSPLUS_BADLOCAL_2 = "Please do not upload data to WoWClassicPop.com until this has been resolved.";
 CENSUSPLUS_BADLOCAL_3 = "If this is incorrect, please let Scarecr0w12 know at wowclassicpop.com about your situation so they can make corrections.";
 CENSUSPLUS_BUTTON_CHARACTERS = "Show Chars";
@@ -412,7 +412,7 @@ CENSUSPLUS_LEVEL = "Levels";
 CENSUSPLUS_LOCALE = "Locale : %s";
 CENSUSPLUS_LOCALEUNKNOWN = "Locale : Unknown";
 CENSUSPLUS_MAXXED = "MAXXED!";
-CENSUSPLUS_MSG1 = " Loaded - type /censusplus or /CensusPlusWotlk  or /census for valid commands. Looking to help build the addonor website? Check out the discord https://discord.gg/DjcXKtKr88";
+CENSUSPLUS_MSG1 = " Loaded - type /censusplus or /CensusPlusWotlk  or /census for valid commands. Looking to help build the addon or website? Check out the discord https://discord.gg/DjcXKtKr88";
 --CENSUSPLUS_MSG3 = "Looking to help build the addonor website? Check out the discord https://discord.gg/DjcXKtKr88";
 CENSUSPLUS_NOCENSUS = "A Census is not currently in progress";
 CENSUSPLUS_NOTINFACTION = "Neutral faction - census not allowed";
@@ -464,7 +464,7 @@ CENSUSPLUS_UNKNOWNRACE = "Found an unknown race ( ";
 CENSUSPLUS_UNKNOWNRACE_ACTION = " ), please comment about it on the curseforge page";
 CENSUSPLUS_UNPAUSE = "Resume";
 CENSUSPLUS_UNPAUSECENSUS = "Resume the current census";
-CENSUSPLUS_UPLOAD = "Be sure to upload your CensusPlusClassic data to WoWClassicPop.com!";
+CENSUSPLUS_UPLOAD = "Be sure to upload your CensusPlusWotlk data to WoWClassicPop.com!";
 CENSUSPLUS_USAGE = "Usage:";
 CENSUSPLUS_USING_WHOLIB = "Using WhoLib";
 CENSUSPLUS_US_LOCALE = "Select if you play on US Servers";
