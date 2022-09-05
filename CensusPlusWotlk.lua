@@ -1,8 +1,10 @@
---[[ CensusPlusWotlk for World of Warcraft(tm).]]--
---[[	CensusPlusWotlk is a World of Warcraft(tm) addon that gathers information about the players in the world.
---
---		Modified by christophrus
---		Updated for TBC by Lexie
+--[[ CensusPlusWotlk for World of Warcraft(tm).]]
+--local regionKey = GetCVar("portal") == "public-test" and "PTR" or GetCVar("portal")
+--Note: file layout structured for use with NotePad++ as editor using Lua(WoW) language definition
+
+--[[	CensusPlusWotlk
+--A WoW UI customization Originally by Cooper Sellers
+--Current Development Scarecr0w12(Jacob Bowen)
 ]]
 
 local	addon_name, addon_tableID = ...   		-- Addon_name contains the Addon name which must be the same as the container folder name... addon_tableID is a common private table for all .lua files in the directory.
@@ -23,7 +25,7 @@ BINDING_HEADER_CensusPlusWotlk = 'CensusPlusWotlk'
 -- Constants
 local CensusPlus_Version_Major = "0"; -- changing this number will force a saved data purge
 local CensusPlus_Version_Minor = "9"; -- changing this number will force a saved data purge
-local CensusPlus_Version_Maint = "6"; -- changing this number will force a saved data purge
+local CensusPlus_Version_Maint = "7"; -- changing this number will force a saved data purge
 local CensusPlus_SubVersion = "";
 local CensusPlus_VERSION = CensusPlus_Version_Major.."."..CensusPlus_Version_Minor.."."..CensusPlus_Version_Maint;
 local CensusPlus_VERSION_FULL = CensusPlus_VERSION --.."."..CensusPlus_SubVersion ;
@@ -392,9 +394,9 @@ local function GetRaceClasses(race)
 end
 
 -- Return common letters found in zone names
--- only used for census splitting by zone.. not used
+-- only used for census splitting by zone
 local function GetZoneLetters()
-	return { "a", "e", "i", "o", "u", "z", "y", "w", "mountain", "lands", "gulch", "valley", "basin" };
+	return {"a", "e", "i", "o", "u", "z", "y", "w", "mountain", "lands", "gulch", "valley", "basin" }
 end
 
 -- Return common letters found in names, may override this for other languages
@@ -414,11 +416,11 @@ local function GetNameLetters()
 end
 
 local function GetNameLetters1()
-	return { "a", "e", "r", "i", "n", "o", "l", "s", "t", "h", "d", "u", "m", "k", "c" }
+	return {"a", "e", "r", "i", "n", "o", "l", "s", "t", "h", "d", "u", "m", "k", "c" }
 end
 
 local function GetNameLetters2()
-	return { "a", "e", "r", "i", "n", "o", "l", "s", "t", "h", "d", "u"}
+	return {"a", "e", "r", "i", "n", "o", "l", "s", "t", "h", "d", "u", "y"}
 end
 
 -- Called when the main window is shown
@@ -564,6 +566,7 @@ function CP_ProcessWhoEvent(query, result, complete)
 								level,
 								thisFactionRaces[i],
 								nil,
+								nil,
 								nil
 							)
 						InsertJobIntoQueue(job)
@@ -582,6 +585,7 @@ function CP_ProcessWhoEvent(query, result, complete)
 									level,
 									race,
 									thisRaceClasses[i],
+									nil,
 									nil
 								)
 							InsertJobIntoQueue(job)
@@ -636,7 +640,8 @@ function CP_ProcessWhoEvent(query, result, complete)
 						if (g_Verbose == true) then
 							CensusPlus_Msg(format(CENSUSPLUS_TOOMANY, whoText))
 						end
-					end
+		end
+		end
 				end
 			end
 		end
@@ -1410,10 +1415,10 @@ function CensusPlus_Load_JobQueue()
 		)
 	InsertJobIntoQueue(job)
 
-	--for counter = 60, MAX_CHARACTER_LEVEL, 1  do
-	--  local job = CensusPlus_CreateJob( counter, counter, nil, nil, nil );
-	--  InsertJobIntoQueue(job);
-	--end
+	for counter = 80, MAX_CHARACTER_LEVEL, 1  do
+	  local job = CensusPlus_CreateJob( counter, counter, nil, nil, nil );
+	  InsertJobIntoQueue(job);
+	end
 
 	--	Test inserts
 	--local job = CensusPlus_CreateJob( 11, 12, "Troll", nil, nil );
@@ -1547,7 +1552,7 @@ function CensusPlus_CreateWhoText(job)
 end
 
 -- Create a job
-function CensusPlus_CreateJob(minLevel, maxLevel, race, class, letter)
+function CensusPlus_CreateJob(minLevel, maxLevel, race, class, zoneLetter, letter)
 	local job = {}
 	job.m_MinLevel = minLevel
 	job.m_MaxLevel = maxLevel
@@ -1578,7 +1583,7 @@ function CensusPlus_DumpJob(job)
 	if (zoneLetter ~= nil) then
 		whoText = whoText .. " Z: " .. zoneLetter
 	end
-	
+
 	local letter = job.m_Letter
 	if (letter ~= nil) then
 		whoText = whoText .. " N: " .. letter
@@ -1593,6 +1598,7 @@ function CensusPlus_DumpJob(job)
 	if (maxLevel ~= nil and maxLevel ~= 0) then
 		whoText = whoText .. " max: " .. maxLevel
 	end
+
 
 	---CensusPlus_Msg( "JOB DUMP: " .. whoText );
 end
@@ -2213,7 +2219,7 @@ local function CensusPlus_ProcessGuildResults()
 	if (numOnline < 2) then
 		return -- only guild member online is player who is counted elsewhere
 	end
-	--	CensusPlus_Msg("Processing "..numOnline.." online of "..numGuildMembers.." total guild members.");
+	--CensusPlus_Msg("Processing "..numOnline.." online of "..numGuildMembers.." total guild members.");
 
 	local realmName = CensusPlus_GetUniqueRealmName()
 	CensusPlus_Database["Guilds"] = nil
