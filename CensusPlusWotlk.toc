@@ -1,17 +1,12 @@
 ## Interface: 30400
-## Version: v0.9.2
+## Version: v0.9.6
 ## Title: CensusPlusWotlk
 ## Notes: Collects and displays census information.
 ## Author: Scarecr0w12
-## Modified By: Cooper Sellers - www.warcraftrealms.com
-## Modified By: sylvanaar - LibWho integration
-## Modified By: Bringoutyourdead with support from Balgair both at www.warcraftrealms.com
-## Modified By: Bringoutyourdead with support from Padanfain both at www.warcraftrealms.com
-## Modified By: Christophrus - WoWClassicPopulation.com
 ## Modified BY: Scarecr0w12 - WowClassicPop.com
 ## Modified By: Lexie
 ## Modified BY: Seidelma - Localization support for Wotlk
-## OptionalDeps: LibWho-2.0, LibStub, CallbackHandler-1.0, LibChecksum-1.0
+## OptionalDeps: LibRealmID, LibStub, CallbackHandler-1.0, LibChecksum-1.0
 ## Original Author: Ian Pieragostini
 ## SavedVariables: CensusPlus_Database, CensusPlus_CRealms, CensusPlus_Guilds, CensusPlus_JobQueue
 ## SavedVariablesPerCharacter: CensusPlus_PerCharInfo

@@ -1,37 +1,6 @@
---[[ CensusPlusWotlk for World of Warcraft(tm).
-
-	Copyright 2005 - 2016 Cooper Sellers
-
-	License:
-		This program is free software; you can redistribute it and/or
-		modify it under the terms of the GNU General Public License
-		as published by the Free Software Foundation; either version 2
-		of the License, or (at your option) any later version.
-
-		This program is distributed in the hope that it will be useful,
-		but WITHOUT ANY WARRANTY; without even the implied warranty of
-		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-		GNU General Public License for more details.
-
-		You should have received a copy of the GNU General Public License
-		along with this program(see GLP.txt); if not, write to the Free Software
-		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-
-  Debugging/profiling note:
-  Global  CPp.EnableProfiling must be set to True
-  the appropriate profiling point must be set in code with
-  --CP_profiling_timerstart =	debugprofilestop()
-  don't use debugprofilestart() this does a reset of the timer...
-  if multiple code (addons) have profiling turned on.. then debugprofilestart()
-  will impact timing of the all the code profiles.
-]]
---local regionKey = GetCVar("portal") == "public-test" and "PTR" or GetCVar("portal")
---Note: file layout structured for use with NotePad++ as editor using Lua(WoW) language definition
-
---[[	CensusPlus
---		A WoW UI customization by Cooper Sellers
+--[[ CensusPlusWotlk for World of Warcraft(tm).]]--
+--[[	CensusPlusWotlk is a World of Warcraft(tm) addon that gathers information about the players in the world.
 --
---		CensusPlusWotlk
 --		Modified by christophrus
 --		Updated for TBC by Lexie
 ]]
@@ -54,7 +23,7 @@ BINDING_HEADER_CensusPlusWotlk = 'CensusPlusWotlk'
 -- Constants
 local CensusPlus_Version_Major = "0"; -- changing this number will force a saved data purge
 local CensusPlus_Version_Minor = "9"; -- changing this number will force a saved data purge
-local CensusPlus_Version_Maint = "2"; -- changing this number will force a saved data purge
+local CensusPlus_Version_Maint = "6"; -- changing this number will force a saved data purge
 local CensusPlus_SubVersion = "";
 local CensusPlus_VERSION = CensusPlus_Version_Major.."."..CensusPlus_Version_Minor.."."..CensusPlus_Version_Maint;
 local CensusPlus_VERSION_FULL = CensusPlus_VERSION --.."."..CensusPlus_SubVersion ;
@@ -76,7 +45,7 @@ local CP_MAX_TIMES = 50;
 
 -- debug flags for remote QA testing of version upgrades.
 local CP_api = "api"
-local CP_letterselect = 0					-- default letter selector pattern... valid options 1 and 2.. testing only
+local CP_letterselect = 2					-- default letter selector pattern... valid options 1 and 2.. testing only
 local CensusPlus_WHOPROCESSOR = CP_api      -- default processing of who request to full wholib  CP_api --
 local CensusPLus_DEBUGWRITES = false    	-- don't add debug into to censusplus.lua output.
 local CP_g_queue_count = 0 					-- process speed checking avg time to process 1 queue
@@ -425,7 +394,7 @@ end
 -- Return common letters found in zone names
 -- only used for census splitting by zone.. not used
 local function GetZoneLetters()
-	return {"t", "d", "g", "f", "h", "b", "x", "gulch", "valley", "basin" };
+	return { "a", "e", "i", "o", "u", "z", "y", "w", "mountain", "lands", "gulch", "valley", "basin" };
 end
 
 -- Return common letters found in names, may override this for other languages
@@ -445,11 +414,11 @@ local function GetNameLetters()
 end
 
 local function GetNameLetters1()
-	return {"a", "e", "r", "i", "n", "o", "l", "s", "t", "h", "d", "u", "m", "k", "c" }
+	return { "a", "e", "r", "i", "n", "o", "l", "s", "t", "h", "d", "u", "m", "k", "c" }
 end
 
 local function GetNameLetters2()
-	return {"a", "e", "r", "i", "n", "o", "l", "s", "t", "h", "d", "u"}
+	return { "a", "e", "r", "i", "n", "o", "l", "s", "t", "h", "d", "u"}
 end
 
 -- Called when the main window is shown
@@ -619,6 +588,24 @@ function CP_ProcessWhoEvent(query, result, complete)
 						end
 					end
 				else
+					if (zoneLetter == nil) then
+						--
+						-- This job does not specify zone, so split it that way, making more jobs
+						--
+						local zoneLetters = GetZoneLetters();
+						for i=1, table.getn(zoneLetters), 1 do
+							local job = 
+								CensusPlus_CreateJob(
+									level, 
+									level, 
+									race, 
+									class, 
+									zoneLetters[i],
+									nil
+								)
+							InsertJobIntoQueue(job);
+						end
+				else
 					if (letter == nil) then
 						-- There are too many characters with a single level, class and race
 						-- The work around we are going to pursue is to check by name for a,e,i,o,r,s,t,u
@@ -638,12 +625,12 @@ function CP_ProcessWhoEvent(query, result, complete)
 									level,
 									race,
 									class,
+									zoneLetter,
 									letters[i]
 								)
 							InsertJobIntoQueue(job)
 						end
-						-- Block of code removed that isn't currently or ever used.. splitting by zone
-					else
+				else
 						-- There are too many characters with a single level, class, race and letter, give up
 						local whoText = CensusPlus_CreateWhoText(g_CurrentJob)
 						if (g_Verbose == true) then
@@ -1528,6 +1515,15 @@ function CensusPlus_CreateWhoText(job)
 		end
 	end
 
+	local zoneLetter = job.m_zoneLetter
+	if (zoneLetter ~= nil) then
+		if (locale == "ruRU") then
+			whoText = whoText .. " з-" .. zoneLetter
+		else
+			whoText = whoText .. " z-" .. zoneLetter
+		end
+	end
+
 	local letter = job.m_Letter
 	if (letter ~= nil) then
 		if (locale == "ruRU") then
@@ -1547,15 +1543,6 @@ function CensusPlus_CreateWhoText(job)
 	end
 	whoText = whoText .. " " .. minLevel .. "-" .. maxLevel
 
-	local zoneLetter = job.m_zoneLetter
-	if (zoneLetter ~= nil) then
-		if (locale == "ruRU") then
-			whoText = whoText .. " з-" .. zoneLetter
-		else
-			whoText = whoText .. " z-" .. zoneLetter
-		end
-	end
-
 	return whoText
 end
 
@@ -1566,6 +1553,7 @@ function CensusPlus_CreateJob(minLevel, maxLevel, race, class, letter)
 	job.m_MaxLevel = maxLevel
 	job.m_Race = race
 	job.m_Class = class
+	job.m_zoneLetter = zoneLetter
 	job.m_Letter = letter
 
 	CensusPlus_DumpJob(job)
@@ -1586,6 +1574,11 @@ function CensusPlus_DumpJob(job)
 		whoText = whoText .. " C: " .. class
 	end
 
+	local zoneLetter = job.m_zoneLetter
+	if (zoneLetter ~= nil) then
+		whoText = whoText .. " Z: " .. zoneLetter
+	end
+	
 	local letter = job.m_Letter
 	if (letter ~= nil) then
 		whoText = whoText .. " N: " .. letter
@@ -1599,11 +1592,6 @@ function CensusPlus_DumpJob(job)
 	local maxLevel = job.m_MaxLevel
 	if (maxLevel ~= nil and maxLevel ~= 0) then
 		whoText = whoText .. " max: " .. maxLevel
-	end
-
-	local zoneLetter = job.m_zoneLetter
-	if (zoneLetter ~= nil) then
-		whoText = whoText .. " Z: " .. zoneLetter
 	end
 
 	---CensusPlus_Msg( "JOB DUMP: " .. whoText );
