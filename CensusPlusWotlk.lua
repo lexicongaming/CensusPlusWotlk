@@ -25,7 +25,7 @@ BINDING_HEADER_CensusPlusWotlk = 'CensusPlusWotlk'
 -- Constants
 local CensusPlus_Version_Major = "0"; -- changing this number will force a saved data purge
 local CensusPlus_Version_Minor = "9"; -- changing this number will force a saved data purge
-local CensusPlus_Version_Maint = "7"; -- changing this number will force a saved data purge
+local CensusPlus_Version_Maint = "8"; -- changing this number will force a saved data purge
 local CensusPlus_SubVersion = "";
 local CensusPlus_VERSION = CensusPlus_Version_Major.."."..CensusPlus_Version_Minor.."."..CensusPlus_Version_Maint;
 local CensusPlus_VERSION_FULL = CensusPlus_VERSION --.."."..CensusPlus_SubVersion ;
@@ -34,7 +34,9 @@ local CensusPlus_MAXBARHEIGHT = 128;			-- Length of blue bars
 local CensusPlus_NUMGUILDBUTTONS = 10;			-- How many guild buttons are on the UI?
 
 
-local MAX_CHARACTER_LEVEL = 80;					-- Maximum level a PC can attain  testing only comment out for live
+local MAX_CHARACTER_LEVEL = GetMaxPlayerLevel();					-- Maximum level a PC can attain  testing only comment out for live
+local EXPANSIONLEVEL = GetAccountExpansionLevel()
+local MAX_CHARACTER_LEVEL_EXP = MAX_PLAYER_LEVEL_TABLE[2];
 local MIN_CHARACTER_LEVEL = 10;					-- Minimum observed level returned by /who command (undocumented and barely acknowledged.)
 local MAX_WHO_RESULTS = 49;						-- Maximum number of who results the server will return
 CensusPlus_GUILDBUTTONSIZEY = 16;				-- pixil height of guild name lines
@@ -1415,10 +1417,10 @@ function CensusPlus_Load_JobQueue()
 		)
 	InsertJobIntoQueue(job)
 
-	for counter = 80, MAX_CHARACTER_LEVEL, 1  do
-	  local job = CensusPlus_CreateJob( counter, counter, nil, nil, nil );
-	  InsertJobIntoQueue(job);
-	end
+	--for counter = 80, MAX_CHARACTER_LEVEL, 1  do
+	--  local job = CensusPlus_CreateJob( counter, counter, nil, nil, nil );
+	--  InsertJobIntoQueue(job);
+	--end
 
 	--	Test inserts
 	--local job = CensusPlus_CreateJob( 11, 12, "Troll", nil, nil );
@@ -1445,7 +1447,7 @@ function CENSUSPLUS_STOPCENSUS()
 		CensusPlus_Msg(CENSUSPLUS_NOCENSUS)
 	end
 
-	-- Add revert CensusButton back to defauit
+	-- Add revert CensusButton back to default
 	CensusButton:SetNormalFontObject(GameFontNormal)
 	CensusButton:SetText("C+")
 end
@@ -2973,7 +2975,7 @@ function CensusPlus_UpdateView()
 	end
 
 	-- Update level bars
-	for i = 1, MAX_CHARACTER_LEVEL, 1 do
+	for i = 1, MAX_CHARACTER_LEVEL_EXP, 1 do
 		local buttonName = "CensusPlusLevelBar"..i;
 		local buttonEmptyName = "CensusPlusLevelBarEmpty"..i;
 		local button = getglobal(buttonName);
@@ -3236,7 +3238,7 @@ end
 -- referenced by CensusPlusWotlk.xml
 function CENSUSPLUS_PRUNEData(nDays, sServer)
 
-	local pruneTime = 24 * 60 * 60 * nDays
+	local pruneTime = (24 * 60 * 60) * nDays;
 
 	for realmName, realmDatabase in pairs(CensusPlus_Database["Servers"]) do
 		for factionName, factionDatabase in pairs(realmDatabase) do
@@ -3478,10 +3480,10 @@ function CensusPlus_CheckForBattleground()
 	local battlefieldTime = GetBattlefieldInstanceRunTime()
 	if (battlefieldTime > 0) then
 		--  We are in a battleground so cancel the current take
-		g_CurrentlyInBG = true -- if player in battlefield
+		g_CurrentlyInBG = false -- if player in battlefield
 	else
 		if (GetBattlefieldStatInfo(1) ~= nil) then
-			g_CurrentlyInBG = true
+			g_CurrentlyInBG = false
 		else
 			g_CurrentlyInBG = false
 		end
