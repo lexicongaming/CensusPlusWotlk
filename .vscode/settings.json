@@ -1,4 +1,7 @@
 {
     "translation.targetLanguage": "en-ES",
-    "translation.api": "google"
+    "translation.api": "google",
+    "Lua.diagnostics.globals": [
+        "GetLocale"
+    ]
 }
