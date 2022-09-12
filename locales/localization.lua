@@ -39,12 +39,12 @@ CENSUSPLUS_DWARF = "Dwarf";
 CENSUSPLUS_GNOME = "Gnome";
 CENSUSPLUS_HUMAN = "Human";
 CENSUSPLUS_NIGHTELF = "Night Elf";
+CENSUSPLUS_DRAENEI  = "Draenei";
 
 CENSUSPLUS_ORC = "Orc";
 CENSUSPLUS_TAUREN = "Tauren";
 CENSUSPLUS_TROLL = "Troll";
 CENSUSPLUS_UNDEAD = "Undead";
-CENSUSPLUS_DRAENEI  = "Draenei";
 CENSUSPLUS_BLOODELF = "Blood Elf";
 
 -- Blizzard provided translations THESE MUST BE AFTER THE ENGLISH DEFINITIONS
@@ -70,22 +70,27 @@ if ( GetLocale() == "deDE" ) then
 	CENSUSPLUS_SHAMAN = "Schamane";
 	CENSUSPlusFemale["Schamanin"] = "Schamane";
 	CENSUSPLUS_PALADIN = "Paladin";
-	CENSUSPLUS_DEATH_KNIGHT          = "Todesritter";
+	CENSUSPLUS_DEATH_KNIGHT = "Todesritter";
+	CENSUSPlusFemale["Todesritterin"] = "Todesritter";
 
 	CENSUSPLUS_DWARF = "Zwerg";
 	CENSUSPlusFemale["Zwergin"] = "Zwerg";
 	CENSUSPLUS_GNOME = "Gnom";
+	CENSUSPlusFemale["Gnomin"] = "Gnom";
 	CENSUSPLUS_HUMAN = "Mensch";
+	CENSUSPlusFemale["Menschin"] = "Mensch";
 	CENSUSPLUS_NIGHTELF = "Nachtelf";
 	CENSUSPlusFemale["Nachtelfe"] = "Nachtelf";
 
-	CENSUSPLUS_ORC = "Orc";
+	CENSUSPLUS_ORC = "Ork";
 	CENSUSPLUS_TAUREN = "Tauren";
 	CENSUSPLUS_TROLL = "Troll";
 	CENSUSPLUS_UNDEAD = "Untoter";
 	CENSUSPlusFemale["Untote"] = "Untoter";
 	CENSUSPLUS_DRAENEI = "Draenei";
+	CENSUSPlusFemale["Draenei"] = "Draenei";
 	CENSUSPLUS_BLOODELF = "Blutelf";
+	CENSUSPlusFemale["Blutelfe"] = "Blutelf";
 end
 
 -- esES + esMX
@@ -105,7 +110,7 @@ if ( GetLocale() == "esES" or GetLocale() == "esMX" ) then
 	CENSUSPlusFemale["Guerrera"] = "Guerrero";
 	CENSUSPLUS_SHAMAN = "Chamán";
 	CENSUSPLUS_PALADIN = "Paladín";
-	CENSUSPLUS_DEATH_KNIGHT         = "Caballero de la Muerte";
+	CENSUSPLUS_DEATH_KNIGHT = "Caballero de la Muerte";
 
 	CENSUSPLUS_DWARF = "Enano";
 	CENSUSPlusFemale["Enana"] = "Enano";
@@ -115,6 +120,9 @@ if ( GetLocale() == "esES" or GetLocale() == "esMX" ) then
 	CENSUSPlusFemale["Humana"] = "Humano";
 	CENSUSPLUS_NIGHTELF = "Elfo de la noche";
 	CENSUSPlusFemale["Elfa de la noche"] = "Elfo de la noche";
+	CENSUSPLUS_DRAENEI = "Draenei";
+	CENSUSPLUS_BLOODELF = "Elfo de sangre";
+	CENSUSPlusFemale["Elfa de sangre"] = "Elfo de sangre";
 
 	CENSUSPLUS_ORC = "Orco";
 	CENSUSPLUS_TAUREN = "Tauren";
@@ -182,6 +190,7 @@ if ( GetLocale() == "itIT" ) then
 	CENSUSPLUS_PALADIN = "Paladino";
 	CENSUSPlusFemale["Paladina"] = "Paladino";
 	CENSUSPLUS_DEATH_KNIGHT          = "Cavaliere della Morte";
+	CENSUSPlusFemale["Cavaliere della Morte"] = "Cavaliere della Morte";
 
 	CENSUSPLUS_DWARF = "Nano";
 	CENSUSPlusFemale["Nana"] = "Nano";
@@ -199,7 +208,9 @@ if ( GetLocale() == "itIT" ) then
 	CENSUSPLUS_UNDEAD = "Non Morto";
 	CENSUSPlusFemale["Non Morta"] = "Non Morto";
 	CENSUSPLUS_DRAENEI = "Draenei";
+	CENSUSPlusFemale["Draenei"] = "Draenei";
 	CENSUSPLUS_BLOODELF = "Elfo del Sangue";
+	CENSUSPlusFemale["Elfa del Sangue"] = "Elfo del Sangue";
 end
 
 -- koKR
