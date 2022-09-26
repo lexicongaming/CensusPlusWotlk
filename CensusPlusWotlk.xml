@@ -227,7 +227,7 @@
 			<Layer level="BACKGROUND">
 				<Texture name="CensusPlusBackground" file="Interface\Dialogframe\UI-DialogBox-Background-Dark">
 					<Size>
-						<AbsDimension x="1021" y="512" />
+						<AbsDimension x="1020" y="512" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
@@ -237,6 +237,7 @@
 				</Texture>
 			</Layer>
 			<Layer level="BORDER">
+				<!-- Top Left Outer Border Corner -->
 				<Texture file="Interface\Dialogframe\Dialogframe-Corners">
 					<Size>
 						<AbsDimension x="32" y="32" />
@@ -250,6 +251,7 @@
 					</Anchors>
 					<TexCoords left="0" right="0.5" top="0" bottom="0.5" />
 				</Texture>
+				<!-- Bottom Left Outer Border Corner -->
 				<Texture file="Interface\Dialogframe\Dialogframe-Corners">
 					<Size>
 						<AbsDimension x="32" y="32" />
@@ -263,28 +265,31 @@
 					</Anchors>
 					<TexCoords left="0" right="0.5" top="0.5" bottom="1" />
 				</Texture>
+				<!-- Bottom Right Outer Border Corner -->
 				<Texture file="Interface\Dialogframe\Dialogframe-Corners">
 					<Size>
 						<AbsDimension x="32" y="32" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
-							<Offset x="992" y="-489" />
+							<Offset x="1002" y="-488" />
 						</Anchor>
 					</Anchors>
 					<TexCoords left="0.5" right="1" top="0.5" bottom="1" />
 				</Texture>
+				<!-- Top Right Outer Border Corner -->
 				<Texture file="Interface\Dialogframe\Dialogframe-Corners">
 					<Size>
-						<AbsDimension x="32" y="29" />
+						<AbsDimension x="32" y="32" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
-							<Offset x="992" y="4" />
+							<Offset x="1002" y="7" />
 						</Anchor>
 					</Anchors>
 					<TexCoords left="0.5" right="1" top="0" bottom="0.5" />
 				</Texture>
+				<!-- Left Outer Border -->
 				<Texture file="Interface\Dialogframe\Dialogframe-Left">
 					<Size>
 						<AbsDimension x="16" y="488" />
@@ -297,19 +302,21 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
+				<!-- Right Outer Border -->
 				<Texture file="Interface\Dialogframe\Dialogframe-Right">
 					<Size>
-						<AbsDimension x="16" y="484" />
+						<AbsDimension x="14" y="484" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
-							<Offset x="1008" y="-18" />
+							<Offset x="1019" y="-18" />
 						</Anchor>
 					</Anchors>
 				</Texture>
+				<!-- Bottom Outer Border -->
 				<Texture file="Interface\Dialogframe\Dialogframe-Bot">
 					<Size>
-						<AbsDimension x="1005" y="16" />
+						<AbsDimension x="990" y="16" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
@@ -319,7 +326,7 @@
 				</Texture>
 				<Texture file="Interface\AddOns\CensusPlusWotlk\skins\CensusPlus_Window_Top_Shader">
 					<Size>
-						<AbsDimension x="1009" y="64" />
+						<AbsDimension x="1012" y="64" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
@@ -389,17 +396,17 @@
 				</Texture>
 				<Texture file="Interface\Dialogframe\Dialogframe-Right">
 					<Size>
-						<AbsDimension x="16" y="114" />
+						<AbsDimension x="15" y="92" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
-							<Offset x="991" y="-328" />
+							<Offset x="991" y="-340" />
 						</Anchor>
 					</Anchors>
 				</Texture>
 				<Texture file="Interface\Dialogframe\Dialogframe-Top">
 					<Size>
-						<AbsDimension x="983" y="16" />
+						<AbsDimension x="970" y="16" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
@@ -409,7 +416,7 @@
 				</Texture>
 				<Texture file="Interface\Dialogframe\Dialogframe-Bot">
 					<Size>
-						<AbsDimension x="982" y="16" />
+						<AbsDimension x="970" y="16" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
@@ -591,7 +598,7 @@
 				</Texture>
 				<Texture file="Interface\Dialogframe\Dialogframe-Top">
 					<Size>
-						<AbsDimension x="381" y="16" />
+						<AbsDimension x="376" y="16" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
@@ -679,7 +686,7 @@
 				</Texture>
 				<Texture file="Interface\Dialogframe\Dialogframe-Top">
 					<Size>
-						<AbsDimension x="262" y="16" />
+						<AbsDimension x="244" y="16" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
@@ -708,7 +715,7 @@
 						</Anchor>
 					</Anchors>
 				</FontString>
-				<FontString name="CensusPlusText2" inherits="GameFontHighlight" text="WarcraftRealms.com">
+				<FontString name="CensusPlusText2" inherits="GameFontHighlight" text="WoWClassicPop.com">
 					<Anchors>
 						<Anchor point="TOPLEFT" relativeTo="CensusPlusWotlk">
 							<Offset>
@@ -810,7 +817,7 @@
 				</FontString>
 				<Texture file="Interface\Dialogframe\Dialogframe-Top">
 					<Size>
-						<AbsDimension x="1015" y="16" />
+						<AbsDimension x="1010" y="16" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
@@ -1072,7 +1079,7 @@
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="CensusPlusGuildButton1" relativePoint="TOPLEFT">
-						<Offset x="-6" />
+						<Offset x="0" />
 					</Anchor>
 				</Anchors>
 				<Scripts>
@@ -2814,7 +2821,7 @@
 			<Button name="CensusPlusCloseButton" inherits="UIPanelCloseButton">
 				<Anchors>
 					<Anchor point="TOPRIGHT" relativeTo="CensusPlusWotlk" relativePoint="TOPRIGHT">
-						<Offset x="18" />
+						<Offset x="8" />
 					</Anchor>
 				</Anchors>
 			</Button>
