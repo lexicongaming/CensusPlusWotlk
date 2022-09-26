@@ -495,8 +495,20 @@ function InitializeExperimental()
 	hookWorldClicks = CensusPlus_Database["Info"]["UseWorldFrameClicks"]
 
 	if hookWorldClicks then
-		WorldFrame:HookScript("OnMouseDown", function(self,button)
-			ManualWho()
+		WorldFrame:HookScript("OnMouseDown", function(self,button) 
+			ManualWho() 
+		end)
+		WorldFrame:HookScript("OnMouseUp", function(self,button)
+			 ManualWho() 
+		end)
+		WorldFrame:HookScript("OnMouseWheel", function(self) 
+			ManualWho() 
+		end)
+		local f = Test or CreateFrame("Frame", "Test", UIParent)
+
+		f:SetScript("OnKeyDown", function(self,button) 
+			ManualWho() 
+			f:SetPropagateKeyboardInput(true)
 		end)
 	end
 end
