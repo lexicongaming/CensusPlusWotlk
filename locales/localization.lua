@@ -71,24 +71,24 @@ if ( GetLocale() == "deDE" ) then
 	CENSUSPlusFemale["Schamanin"] = "Schamane";
 	CENSUSPLUS_PALADIN = "Paladin";
 	CENSUSPLUS_DEATH_KNIGHT = "Todesritter";
-	CENSUSPlusFemale["Todesritterin"] = "Todesritter";
 
 	CENSUSPLUS_DWARF = "Zwerg";
 	CENSUSPlusFemale["Zwergin"] = "Zwerg";
 	CENSUSPLUS_GNOME = "Gnom";
 	CENSUSPlusFemale["Gnomin"] = "Gnom";
 	CENSUSPLUS_HUMAN = "Mensch";
-	CENSUSPlusFemale["Menschin"] = "Mensch";
 	CENSUSPLUS_NIGHTELF = "Nachtelf";
 	CENSUSPlusFemale["Nachtelfe"] = "Nachtelf";
-
-	CENSUSPLUS_ORC = "Ork";
+	CENSUSPLUS_DRAENEI = "Draenei";
+	
+	CENSUSPLUS_ORC = "Orc";
+	CENSUSPlusFemale["Orcin"] = "Orc";
 	CENSUSPLUS_TAUREN = "Tauren";
+	CENSUSPlusFemale["Taurenfrau"] = "Tauren";
 	CENSUSPLUS_TROLL = "Troll";
+	CENSUSPlusFemale["Trollfrau"] = "Troll";
 	CENSUSPLUS_UNDEAD = "Untoter";
 	CENSUSPlusFemale["Untote"] = "Untoter";
-	CENSUSPLUS_DRAENEI = "Draenei";
-	CENSUSPlusFemale["Draenei"] = "Draenei";
 	CENSUSPLUS_BLOODELF = "Blutelf";
 	CENSUSPlusFemale["Blutelfe"] = "Blutelf";
 end
