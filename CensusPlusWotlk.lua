@@ -25,7 +25,7 @@ BINDING_HEADER_CensusPlusWotlk = 'CensusPlusWotlk'
 -- Constants
 local CensusPlus_Version_Major = "0"; -- changing this number will force a saved data purge
 local CensusPlus_Version_Minor = "9"; -- changing this number will force a saved data purge
-local CensusPlus_Version_Maint = "12"; -- changing this number will force a saved data purge
+local CensusPlus_Version_Maint = "13"; -- changing this number will force a saved data purge
 local CensusPlus_SubVersion = "";
 local CensusPlus_VERSION = CensusPlus_Version_Major.."."..CensusPlus_Version_Minor.."."..CensusPlus_Version_Maint;
 local CensusPlus_VERSION_FULL = CensusPlus_VERSION --.."."..CensusPlus_SubVersion ;
@@ -501,12 +501,11 @@ function InitializeExperimental()
 		WorldFrame:HookScript("OnMouseUp", function(self,button)
 			 ManualWho() 
 		end)
-		WorldFrame:HookScript("OnMouseWheel", function(self) 
+		local f = Test or CreateFrame("Frame", "Test", UIParent)
+		f:HookScript("OnMouseWheel", function(self) 
 			ManualWho() 
 		end)
-		local f = Test or CreateFrame("Frame", "Test", UIParent)
-
-		f:SetScript("OnKeyDown", function(self,button) 
+		f:HookScript("OnKeyDown", function(self,button) 
 			ManualWho() 
 			f:SetPropagateKeyboardInput(true)
 		end)
