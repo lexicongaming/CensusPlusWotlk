@@ -25,7 +25,7 @@ BINDING_HEADER_CensusPlusWotlk = 'CensusPlusWotlk'
 -- Constants
 local CensusPlus_Version_Major = "0"; -- changing this number will force a saved data purge
 local CensusPlus_Version_Minor = "9"; -- changing this number will force a saved data purge
-local CensusPlus_Version_Maint = "15"; -- changing this number will force a saved data purge
+local CensusPlus_Version_Maint = "16"; -- changing this number will force a saved data purge
 local CensusPlus_SubVersion = "";
 local CensusPlus_VERSION = CensusPlus_Version_Major .. "." .. CensusPlus_Version_Minor .. "." .. CensusPlus_Version_Maint;
 local CensusPlus_VERSION_FULL = CensusPlus_VERSION --.."."..CensusPlus_SubVersion ;
@@ -2180,7 +2180,7 @@ function CensusPlus_DoTimeCounts()
 		local charClass = thisFactionClasss[i]
 		local classCount = 0
 
-		for realmKey, factionData in pairs(CensusPlus_JobQueue.g_TempCount) -- realmname, factionnamedo
+		for realmKey, factionData in pairs(CensusPlus_JobQueue.g_TempCount) do -- realmname, faction name do
 			for factionKey, classData in pairs(factionData) do
 				if (factionKey == factionGroup) then
 					for classKey, NameData in pairs(classData) do
@@ -3752,7 +3752,7 @@ function CensusPlusBlizzardOptions()
 	CensusPlusOptionsHeader:ClearAllPoints()
 	CensusPlusOptionsHeader:SetPoint("TOPLEFT", 16, -16)
 	CensusPlusOptionsHeader:SetText(
-		"CensusTBC v" .. CensusPlus_VERSION_FULL
+		"CensusPlusWotlk v" .. CensusPlus_VERSION_FULL
 	)
 
 	-- Create Top Text frame (section 1 header)
@@ -5338,6 +5338,7 @@ function CensusPlus_ResetConfig() -- reset to defaults
 	CensusPlus_Database["Info"]["UseLogBars"] = true
 	CensusPlus_Database["Info"]["UseWorldFrameClicks"] = true
 	CensusPlus_Database["Info"]["UseZoneSearch"] = true
+	CensusPlus_Database["Info"]["UseNameSearch"] = true
 	print("ResetConfig")
 	CensusPlusSetCheckButtonState()
 end
@@ -5514,6 +5515,8 @@ function CensusPlusSetCheckButtonState() -- set option check buttons and radio b
 
 	CensusPlusCheckButton9:SetChecked(CensusPlus_Database["Info"]["UseZoneSearch"]) -- Zone Search Button (CensusPlusCheckButton9)
 
+	CensusPlusCheckButton10:SetChecked(CensusPlus_Database["Info"]["UseNameSearch"]) -- CensusPlus Button (CensusPlusCheckButton10)
+
 	--	CensusPlusCheckButton8:SetChecked(CensusPlus2["WMZ party4"])
 	--	CensusPlusCheckButton9:SetChecked(CensusPlus2["show decimals"])
 end
@@ -5552,6 +5555,14 @@ function CensusPlusRestoreSettings() -- reset any changes to saved settings back
 	CPp.Options_Holder["AccountWide"]["SoundFile"]
 	CensusPlus_PerCharInfo["SoundFile"] =
 	CPp.Options_Holder["CCOverrides"]["SoundFile"]
+	CensusPlus_Database["Info"]["UseZoneSearch"] =
+	CPp.Options_Holder["AccountWide"]["UseZoneSearch"]
+	CensusPlus_PerCharInfo["UseZoneSearch"] =
+	CPp.Options_Holder["CCOverrides"]["UseZoneSearch"]
+	CensusPlus_Database["Info"]["UseNameSearch"] =
+	CPp.Options_Holder["AccountWide"]["UseNameSearch"]
+	CensusPlus_PerCharInfo["UseNameSearch"] =
+	CPp.Options_Holder["CCOverrides"]["UseNameSearch"]
 	-- account wide only
 	CensusPlus_Database["Info"]["CPWindow_Transparency"] =
 	CPp.Options_Holder["AccountWide"]["CPWindow_Transparency"]
