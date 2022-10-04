@@ -2,6 +2,7 @@
     "translation.targetLanguage": "en-ES",
     "translation.api": "google",
     "Lua.diagnostics.globals": [
-        "GetLocale"
+        "GetLocale",
+        "CENSUSPLUS_HELP_10"
     ]
 }

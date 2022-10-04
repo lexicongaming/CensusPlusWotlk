@@ -227,7 +227,7 @@
 			<Layer level="BACKGROUND">
 				<Texture name="CensusPlusBackground" file="Interface\Dialogframe\UI-DialogBox-Background-Dark">
 					<Size>
-						<AbsDimension x="1020" y="512" />
+						<AbsDimension x="1030" y="512" />
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
@@ -237,7 +237,6 @@
 				</Texture>
 			</Layer>
 			<Layer level="BORDER">
-				<!-- Top Left Outer Border Corner -->
 				<Texture file="Interface\Dialogframe\Dialogframe-Corners">
 					<Size>
 						<AbsDimension x="32" y="32" />
@@ -251,7 +250,6 @@
 					</Anchors>
 					<TexCoords left="0" right="0.5" top="0" bottom="0.5" />
 				</Texture>
-				<!-- Bottom Left Outer Border Corner -->
 				<Texture file="Interface\Dialogframe\Dialogframe-Corners">
 					<Size>
 						<AbsDimension x="32" y="32" />
@@ -265,7 +263,6 @@
 					</Anchors>
 					<TexCoords left="0" right="0.5" top="0.5" bottom="1" />
 				</Texture>
-				<!-- Bottom Right Outer Border Corner -->
 				<Texture file="Interface\Dialogframe\Dialogframe-Corners">
 					<Size>
 						<AbsDimension x="32" y="32" />
@@ -277,7 +274,6 @@
 					</Anchors>
 					<TexCoords left="0.5" right="1" top="0.5" bottom="1" />
 				</Texture>
-				<!-- Top Right Outer Border Corner -->
 				<Texture file="Interface\Dialogframe\Dialogframe-Corners">
 					<Size>
 						<AbsDimension x="32" y="32" />
@@ -289,7 +285,6 @@
 					</Anchors>
 					<TexCoords left="0.5" right="1" top="0" bottom="0.5" />
 				</Texture>
-				<!-- Left Outer Border -->
 				<Texture file="Interface\Dialogframe\Dialogframe-Left">
 					<Size>
 						<AbsDimension x="16" y="488" />
@@ -302,7 +297,6 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<!-- Right Outer Border -->
 				<Texture file="Interface\Dialogframe\Dialogframe-Right">
 					<Size>
 						<AbsDimension x="14" y="484" />
@@ -313,7 +307,6 @@
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<!-- Bottom Outer Border -->
 				<Texture file="Interface\Dialogframe\Dialogframe-Bot">
 					<Size>
 						<AbsDimension x="990" y="16" />
@@ -1079,7 +1072,7 @@
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="CensusPlusGuildButton1" relativePoint="TOPLEFT">
-						<Offset x="0" />
+						<Offset />
 					</Anchor>
 				</Anchors>
 				<Scripts>

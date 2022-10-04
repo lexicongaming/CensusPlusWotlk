@@ -7,16 +7,16 @@
 --Current Development Scarecr0w12(Jacob Bowen)
 ]]
 
-local	addon_name, addon_tableID = ...   		-- Addon_name contains the Addon name which must be the same as the container folder name... addon_tableID is a common private table for all .lua files in the directory.
+local addon_name, addon_tableID = ... -- Addon_name contains the Addon name which must be the same as the container folder name... addon_tableID is a common private table for all .lua files in the directory.
 
-local CPp = addon_tableID  						--short cut name for private shared table.
+local CPp = addon_tableID --short cut name for private shared table.
 
 local checksum = LibStub:GetLibrary("LibChecksum-1.0", true)
 
-CPp.InterfaceVersion = "Captain Placeholder";   -- random value.. must not match CensusPlus_VERSION string.
+CPp.InterfaceVersion = "Captain Placeholder"; -- random value.. must not match CensusPlus_VERSION string.
 local g_CensusPlusTZOffset = -999;
-CPp.LocaleSet = false;  -- not used?
-CPp.TZWarningSent = false;  -- not used?
+CPp.LocaleSet = false; -- not used?
+CPp.TZWarningSent = false; -- not used?
 
 -- Bindings
 BINDING_NAME_CensusPlusWotlk_MANUALWHO = 'Issue a manual /who request'
@@ -25,23 +25,23 @@ BINDING_HEADER_CensusPlusWotlk = 'CensusPlusWotlk'
 -- Constants
 local CensusPlus_Version_Major = "0"; -- changing this number will force a saved data purge
 local CensusPlus_Version_Minor = "9"; -- changing this number will force a saved data purge
-local CensusPlus_Version_Maint = "13"; -- changing this number will force a saved data purge
+local CensusPlus_Version_Maint = "15"; -- changing this number will force a saved data purge
 local CensusPlus_SubVersion = "";
-local CensusPlus_VERSION = CensusPlus_Version_Major.."."..CensusPlus_Version_Minor.."."..CensusPlus_Version_Maint;
+local CensusPlus_VERSION = CensusPlus_Version_Major .. "." .. CensusPlus_Version_Minor .. "." .. CensusPlus_Version_Maint;
 local CensusPlus_VERSION_FULL = CensusPlus_VERSION --.."."..CensusPlus_SubVersion ;
-local CensusPlus_PTR = GetCVar("portal") == "public-test" and "PTR";	-- enable true for PTR testing  enable false for live use
-local CensusPlus_MAXBARHEIGHT = 128;			-- Length of blue bars
-local CensusPlus_NUMGUILDBUTTONS = 10;			-- How many guild buttons are on the UI?
+local CensusPlus_PTR = GetCVar("portal") == "public-test" and "PTR"; -- enable true for PTR testing  enable false for live use
+local CensusPlus_MAXBARHEIGHT = 128; -- Length of blue bars
+local CensusPlus_NUMGUILDBUTTONS = 10; -- How many guild buttons are on the UI?
 
 
-local MAX_CHARACTER_LEVEL = GetMaxPlayerLevel();					-- Maximum level a PC can attain  testing only comment out for live
+local MAX_CHARACTER_LEVEL = 80; -- Maximum level a PC can attain  testing only comment out for live
 local EXPANSIONLEVEL = GetAccountExpansionLevel()
 local MAX_CHARACTER_LEVEL_EXP = MAX_PLAYER_LEVEL_TABLE[2];
-local MIN_CHARACTER_LEVEL = 10;					-- Minimum observed level returned by /who command (undocumented and barely acknowledged.)
-local MAX_WHO_RESULTS = 49;						-- Maximum number of who results the server will return
-CensusPlus_GUILDBUTTONSIZEY = 16;				-- pixil height of guild name lines
-local CensusPlus_UPDATEDELAY = 5;				-- Delay time between /who messages
-local CensusPlus_UPDATEDELAY2 = 10				-- Delay time from who request to database updated
+local MIN_CHARACTER_LEVEL = 10; -- Minimum observed level returned by /who command (undocumented and barely acknowledged.)
+local MAX_WHO_RESULTS = 49; -- Maximum number of who results the server will return
+CensusPlus_GUILDBUTTONSIZEY = 16; -- pixil height of guild name lines
+local CensusPlus_UPDATEDELAY = 5; -- Delay time between /who messages
+local CensusPlus_UPDATEDELAY2 = 10 -- Delay time from who request to database updated
 local CP_MAX_TIMES = 50;
 
 --local g_ServerPrefix = "";					--  US VERSION!!
@@ -49,23 +49,23 @@ local CP_MAX_TIMES = 50;
 
 -- debug flags for remote QA testing of version upgrades.
 local CP_api = "api"
-local CP_letterselect = 0					-- default letter selector pattern... valid options 1 and 2.. testing only
-local CensusPlus_WHOPROCESSOR = CP_api      -- default processing of who request to full wholib  CP_api --
-local CensusPLus_DEBUGWRITES = false    	-- don't add debug into to censusplus.lua output.
-local CP_g_queue_count = 0 					-- process speed checking avg time to process 1 queue
+local CP_letterselect = 2 -- default letter selector pattern... valid options 1 and 2.. testing only
+local CensusPlus_WHOPROCESSOR = CP_api -- default processing of who request to full wholib  CP_api --
+local CensusPLus_DEBUGWRITES = false -- don't add debug into to censusplus.lua output.
+local CP_g_queue_count = 0 -- process speed checking avg time to process 1 queue
 
 
 
 
 
 -- Global scope variables
-CensusPlus_Database = {};						-- Database of all CensusPlusWotlk results
+CensusPlus_Database = {}; -- Database of all CensusPlusWotlk results
 --removed CensusPlus_BGInfo   = {};				--  Battleground info
-CensusPlus_PerCharInfo = {};					--  Per character settings
+CensusPlus_PerCharInfo = {}; --  Per character settings
 CensusPlus_Unhandled = {};
-CensusPlus_JobQueue = {};						-- The queue of pending jobs
+CensusPlus_JobQueue = {}; -- The queue of pending jobs
 local g_TrackUnhandled = false;
-CPp.Options_Holder = {}							-- table is populated with existing option settings when Options panel is opened.. cancel resets live options to these settings.
+CPp.Options_Holder = {} -- table is populated with existing option settings when Options panel is opened.. cancel resets live options to these settings.
 CPp.Options_Holder["AccountWide"] = {}
 CPp.Options_Holder["CCOverrides"] = {}
 
@@ -73,61 +73,61 @@ CPp.Options_Holder["CCOverrides"] = {}
 local g_addon_loaded = false
 local g_player_loaded = false
 
-local g_stealth = false;					-- Stealth mode switch
-local g_Verbose = false;					-- Verbose mode switch
-local g_Options_confirm_txt = false;			-- enable chatty confirm of options until user no longer desires
-CPp.AutoCensus = false;						-- AutoCensus mode switch
-local g_Options_Scope = "AW"				-- options are AW or CO
-CPp.AutoStartTimer = 30						-- default Slider value in Options
-local g_FinishSoundNumber = 1				-- default finish sound..
-local g_PlayFinishSound = false				-- mode switch
-local g_CensusPlusInitialized = false;		-- Is CensusPlusWotlk initialized?
-local g_CurrentJob = {};					-- Current job being executed
-CPp.IsCensusPlusInProgress = false;			-- Is a CensusPlusWotlk in progress?
-local g_CensusPlusPaused = false			-- Is CensusPlusWotlk in progress paused?
-CPp.CensusPlusManuallyPaused = false;       -- Is CensusPlusWotlk in progress manually paused?
-local CensusPlayerOnly = false				-- true if player requests via /census me
+local g_stealth = false; -- Stealth mode switch
+local g_Verbose = false; -- Verbose mode switch
+local g_Options_confirm_txt = false; -- enable chatty confirm of options until user no longer desires
+CPp.AutoCensus = false; -- AutoCensus mode switch
+local g_Options_Scope = "AW" -- options are AW or CO
+CPp.AutoStartTimer = 30 -- default Slider value in Options
+local g_FinishSoundNumber = 1 -- default finish sound..
+local g_PlayFinishSound = false -- mode switch
+local g_CensusPlusInitialized = false; -- Is CensusPlusWotlk initialized?
+local g_CurrentJob = {}; -- Current job being executed
+CPp.IsCensusPlusInProgress = false; -- Is a CensusPlusWotlk in progress?
+local g_CensusPlusPaused = false -- Is CensusPlusWotlk in progress paused?
+CPp.CensusPlusManuallyPaused = false; -- Is CensusPlusWotlk in progress manually paused?
+local CensusPlayerOnly = false -- true if player requests via /census me
 
-CensusPlus_JobQueue.g_NumNewCharacters = 0;					-- How many new characters found this CensusPlusWotlk
-CensusPlus_JobQueue.g_NumUpdatedCharacters = 0;				-- How many characters were updated during this CensusPlusWotlk
+CensusPlus_JobQueue.g_NumNewCharacters = 0; -- How many new characters found this CensusPlusWotlk
+CensusPlus_JobQueue.g_NumUpdatedCharacters = 0; -- How many characters were updated during this CensusPlusWotlk
 
-local g_MobXPByLevel = {};						-- XP earned for killing
-local g_CharacterXPByLevel = {};				-- XP required to advance through the given level
-local g_TotalCharacterXPPerLevel = {};			-- Total XP required to attain the given level
+local g_MobXPByLevel = {}; -- XP earned for killing
+local g_CharacterXPByLevel = {}; -- XP required to advance through the given level
+local g_TotalCharacterXPPerLevel = {}; -- Total XP required to attain the given level
 
-CensusPlus_Guilds = {};							-- All known guild
+CensusPlus_Guilds = {}; -- All known guild
 
-local g_TotalCharacterXP = 0;					-- Total character XP for currently selected search
-local g_Consecutive = 0;						-- Current consecutive same realm/faction run count
-local g_TotalCount = 0;							-- Total number of characters which meet search criteria
-local g_RaceCount = {};							-- Totals for each race given search criteria
-local g_ClassCount = {};						-- Totals for each class given search criteria
-local g_LevelCount = {};						-- Totals for each level given search criteria
+local g_TotalCharacterXP = 0; -- Total character XP for currently selected search
+local g_Consecutive = 0; -- Current consecutive same realm/faction run count
+local g_TotalCount = 0; -- Total number of characters which meet search criteria
+local g_RaceCount = {}; -- Totals for each race given search criteria
+local g_ClassCount = {}; -- Totals for each class given search criteria
+local g_LevelCount = {}; -- Totals for each level given search criteria
 local g_AccumulatorCount = 0;
 local g_AccumulatorXPTotal = 0;
-local g_AccumulateGuildTotals = true;			-- switch for guild work when scanning characters
+local g_AccumulateGuildTotals = true; -- switch for guild work when scanning characters
 
-CensusPlus_JobQueue.g_TempCount  = {};
+CensusPlus_JobQueue.g_TempCount = {};
 
-CPp.GuildSelected = 0;						-- Search criteria: Currently selected guild, 0 indicates none
-CPp.RaceSelected = 0;						-- Search criteria: Currently selected race, 0 indicates none
-CPp.ClassSelected = 0;						-- Search criteria: Currently selected class, 0 indicates none
+CPp.GuildSelected = 0; -- Search criteria: Currently selected guild, 0 indicates none
+CPp.RaceSelected = 0; -- Search criteria: Currently selected race, 0 indicates none
+CPp.ClassSelected = 0; -- Search criteria: Currently selected class, 0 indicates none
 CPp.LevelSelected = 0;
 local current_realm = 0;
 
-local g_LastOnUpdateTime = 0;					-- Last time OnUpdate was called
-local g_WaitingForWhoUpdate = false;			-- Are we waiting for a who update event?
+local g_LastOnUpdateTime = 0; -- Last time OnUpdate was called
+local g_WaitingForWhoUpdate = false; -- Are we waiting for a who update event?
 
-local g_factionGroup = "Neutral"						-- Faction of character running census. used to select/verify correct faction of race
+local g_factionGroup = "Neutral" -- Faction of character running census. used to select/verify correct faction of race
 
-local g_WhoAttempts = 0;                        -- Counter for detecting stuck who results
-local g_MiniOnStart = 1;                        -- Flag to have the mini-censusP displayed on startup
+local g_WhoAttempts = 0; -- Counter for detecting stuck who results
+local g_MiniOnStart = 1; -- Flag to have the mini-censusP displayed on startup
 
-local g_CompleteCensusStarted = false;          -- Flag for counter
-local g_TakeHour = 0;                           -- Our timing hour
-local g_ResetHour = true;                       -- Rest hour
-local g_VariablesLoaded = false;                -- flag to tell us if vars are loaded
-CPp.FirstLoad = false						-- Flag to handle (hide) various database rebuild messages on initial database creation
+local g_CompleteCensusStarted = false; -- Flag for counter
+local g_TakeHour = 0; -- Our timing hour
+local g_ResetHour = true; -- Rest hour
+local g_VariablesLoaded = false; -- flag to tell us if vars are loaded
+CPp.FirstLoad = false -- Flag to handle (hide) various database rebuild messages on initial database creation
 local g_FirstRun = true;
 local g_wasPurged = false
 local whoquery_answered = false;
@@ -135,107 +135,108 @@ local whoquery_active = false
 CPp.LastCensusRun = time() -- (CPp.AutoStartTrigger * 60)	--  timer used if auto census is turned on
 CPp.LastManualWho = time()
 
-local g_Pre_SFX = nil;
-local CP_updatingGuild  = nil;
-local g_CurrentlyInBG = false;
-local g_CurrentlyInBG_Msg = false;
-local g_InternalSearchName = nil;
-local g_InternalSearchLevel = nil;
-local g_InternalSearchCount = 0;
-CPp.EnableProfiling = false;
-local CP_profiling_timerstart = 0
-local CP_profiling_timediff = 0
-local g_CensusPlus_StartTime = 0;
-local g_CensusWhoOverrideMsg = nil;
+local g_Pre_SFX                  = nil;
+local CP_updatingGuild           = nil;
+local g_CurrentlyInBG            = false;
+local g_CurrentlyInBG_Msg        = false;
+local g_InternalSearchName       = nil;
+local g_InternalSearchLevel      = nil;
+local g_InternalSearchCount      = 0;
+CPp.EnableProfiling              = false;
+local CP_profiling_timerstart    = 0
+local CP_profiling_timediff      = 0
+local g_CensusPlus_StartTime     = 0;
+local g_CensusWhoOverrideMsg     = nil;
 local g_WaitingForOverrideUpdate = false;
-local g_ProblematicMessageShown = false;
-local g_PratLoaded = false;
+local g_ProblematicMessageShown  = false;
+local g_PratLoaded               = false;
 
 --  Battleground info
 CENSUSPLUS_CURRENT_BATTLEFIELD_QUEUES = {};
 
 local g_AccumulatedPruneData = {};
 
-local g_RaceClassList = { };						-- Used to pick the right icon
-g_RaceClassList[CENSUSPLUS_DRUID]		= 10;
-g_RaceClassList[CENSUSPLUS_HUNTER]		= 11;
-g_RaceClassList[CENSUSPLUS_MAGE]		= 12;
-g_RaceClassList[CENSUSPLUS_PRIEST]		= 13;
-g_RaceClassList[CENSUSPLUS_ROGUE]		= 14;
-g_RaceClassList[CENSUSPLUS_WARLOCK]	    = 15;
-g_RaceClassList[CENSUSPLUS_WARRIOR]	    = 16;
-g_RaceClassList[CENSUSPLUS_SHAMAN]		= 17;
-g_RaceClassList[CENSUSPLUS_PALADIN]	    = 18;
-g_RaceClassList[CENSUSPLUS_DEATH_KNIGHT]= 30;
+local g_RaceClassList                    = {}; -- Used to pick the right icon
+g_RaceClassList[CENSUSPLUS_DRUID]        = 10;
+g_RaceClassList[CENSUSPLUS_HUNTER]       = 11;
+g_RaceClassList[CENSUSPLUS_MAGE]         = 12;
+g_RaceClassList[CENSUSPLUS_PRIEST]       = 13;
+g_RaceClassList[CENSUSPLUS_ROGUE]        = 14;
+g_RaceClassList[CENSUSPLUS_WARLOCK]      = 15;
+g_RaceClassList[CENSUSPLUS_WARRIOR]      = 16;
+g_RaceClassList[CENSUSPLUS_SHAMAN]       = 17;
+g_RaceClassList[CENSUSPLUS_PALADIN]      = 18;
+g_RaceClassList[CENSUSPLUS_DEATH_KNIGHT] = 30;
 
-g_RaceClassList[CENSUSPLUS_DWARF]		= 20;
-g_RaceClassList[CENSUSPLUS_GNOME]		= 21;
-g_RaceClassList[CENSUSPLUS_HUMAN]		= 22;
-g_RaceClassList[CENSUSPLUS_NIGHTELF]	= 23;
-g_RaceClassList[CENSUSPLUS_ORC]		    = 24;
-g_RaceClassList[CENSUSPLUS_TAUREN]		= 25;
-g_RaceClassList[CENSUSPLUS_TROLL]		= 26;
-g_RaceClassList[CENSUSPLUS_UNDEAD]		= 27;
-g_RaceClassList[CENSUSPLUS_DRAENEI]		= 28;
-g_RaceClassList[CENSUSPLUS_BLOODELF]	= 29;
+g_RaceClassList[CENSUSPLUS_DWARF]    = 20;
+g_RaceClassList[CENSUSPLUS_GNOME]    = 21;
+g_RaceClassList[CENSUSPLUS_HUMAN]    = 22;
+g_RaceClassList[CENSUSPLUS_NIGHTELF] = 23;
+g_RaceClassList[CENSUSPLUS_ORC]      = 24;
+g_RaceClassList[CENSUSPLUS_TAUREN]   = 25;
+g_RaceClassList[CENSUSPLUS_TROLL]    = 26;
+g_RaceClassList[CENSUSPLUS_UNDEAD]   = 27;
+g_RaceClassList[CENSUSPLUS_DRAENEI]  = 28;
+g_RaceClassList[CENSUSPLUS_BLOODELF] = 29;
 
-CensusPlus_JobQueue.g_TimeDatabase = {};                      -- Time database
+CensusPlus_JobQueue.g_TimeDatabase = {}; -- Time database
 local function CensusPlus_Zero_g_TimeDatabase()
-    CensusPlus_JobQueue.g_TimeDatabase = nil;
-	CensusPlus_JobQueue.g_TimeDatabase = {};
-	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DRUID]		= 0;
-	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_HUNTER]		= 0;
-	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_MAGE]			= 0;
-	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PRIEST]		= 0;
-	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_ROGUE]		= 0;
-	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARLOCK]	    = 0;
-	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARRIOR]	    = 0;
-	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_SHAMAN]		= 0;
-	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PALADIN]	    = 0;
-	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DEATH_KNIGHT]	    = 0;
+	CensusPlus_JobQueue.g_TimeDatabase                          = nil;
+	CensusPlus_JobQueue.g_TimeDatabase                          = {};
+	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DRUID]        = 0;
+	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_HUNTER]       = 0;
+	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_MAGE]         = 0;
+	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PRIEST]       = 0;
+	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_ROGUE]        = 0;
+	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARLOCK]      = 0;
+	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARRIOR]      = 0;
+	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_SHAMAN]       = 0;
+	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PALADIN]      = 0;
+	CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DEATH_KNIGHT] = 0;
 end
+
 CensusPlus_Zero_g_TimeDatabase();
 
 
 --  These two DO NOT need to be localized
-local CENSUSPlus_HORDE            = "Horde";
-local CENSUSPlus_ALLIANCE         = "Alliance";
+local CENSUSPlus_HORDE    = "Horde";
+local CENSUSPlus_ALLIANCE = "Alliance";
 
-local g_FactionCheck = {};
-g_FactionCheck[CENSUSPLUS_ORC]		= CENSUSPlus_HORDE;
-g_FactionCheck[CENSUSPLUS_TAUREN]	= CENSUSPlus_HORDE;
-g_FactionCheck[CENSUSPLUS_TROLL]	= CENSUSPlus_HORDE;
-g_FactionCheck[CENSUSPLUS_UNDEAD]	= CENSUSPlus_HORDE;
-g_FactionCheck[CENSUSPLUS_BLOODELF]	= CENSUSPlus_HORDE;
-g_FactionCheck[CENSUSPLUS_DWARF]	= CENSUSPlus_ALLIANCE;
-g_FactionCheck[CENSUSPLUS_GNOME]	= CENSUSPlus_ALLIANCE;
-g_FactionCheck[CENSUSPLUS_HUMAN]	= CENSUSPlus_ALLIANCE;
-g_FactionCheck[CENSUSPLUS_NIGHTELF]	= CENSUSPlus_ALLIANCE;
-g_FactionCheck[CENSUSPLUS_DRAENEI]	= CENSUSPlus_ALLIANCE;
+local g_FactionCheck                = {};
+g_FactionCheck[CENSUSPLUS_ORC]      = CENSUSPlus_HORDE;
+g_FactionCheck[CENSUSPLUS_TAUREN]   = CENSUSPlus_HORDE;
+g_FactionCheck[CENSUSPLUS_TROLL]    = CENSUSPlus_HORDE;
+g_FactionCheck[CENSUSPLUS_UNDEAD]   = CENSUSPlus_HORDE;
+g_FactionCheck[CENSUSPLUS_BLOODELF] = CENSUSPlus_HORDE;
+g_FactionCheck[CENSUSPLUS_DWARF]    = CENSUSPlus_ALLIANCE;
+g_FactionCheck[CENSUSPLUS_GNOME]    = CENSUSPlus_ALLIANCE;
+g_FactionCheck[CENSUSPLUS_HUMAN]    = CENSUSPlus_ALLIANCE;
+g_FactionCheck[CENSUSPLUS_NIGHTELF] = CENSUSPlus_ALLIANCE;
+g_FactionCheck[CENSUSPLUS_DRAENEI]  = CENSUSPlus_ALLIANCE;
 
 -- Print a string to the chat frame
 local function CensusPlus_Msg(msg)
-	if( msg == nil ) then
+	if (msg == nil) then
 		msg = " NIL ";
 	end
-	if(not(g_stealth) )then
-		ChatFrame1:AddMessage(CENSUSPLUS_TEXT.." "..msg, 1.0, 1.0, 0.5);
+	if (not (g_stealth)) then
+		ChatFrame1:AddMessage(CENSUSPLUS_TEXT .. " " .. msg, 1.0, 1.0, 0.5);
 	end
 end
 
 local function CensusPlus_WhoMsg(msg)
-	if( msg == nil ) then
+	if (msg == nil) then
 		msg = " NIL ";
 	end
-	ChatFrame1:AddMessage(CENSUSPLUS_TEXT.." "..WHO..": "..msg, 0.8, 0.8, 0.1);
+	ChatFrame1:AddMessage(CENSUSPLUS_TEXT .. " " .. WHO .. ": " .. msg, 0.8, 0.8, 0.1);
 end
 
-local function CensusPlus_Msg2( msg )
-	if( msg == nil ) then
+local function CensusPlus_Msg2(msg)
+	if (msg == nil) then
 		msg = " NIL ";
 	end
-	if(not(g_stealth) )then
-		ChatFrame2:AddMessage(CENSUSPLUS_TEXT..": "..msg, 0.5, 1.0, 1.0);
+	if (not (g_stealth)) then
+		ChatFrame2:AddMessage(CENSUSPLUS_TEXT .. ": " .. msg, 0.5, 1.0, 1.0);
 	end
 end
 
@@ -276,7 +277,7 @@ function CensusPlus_GetUniqueRealmName()
 
 	local realmname = GetRealmName()
 	local guid = UnitGUID("player")
-    local realmid = string.match(guid, "^Player%-(%d+)")
+	local realmid = string.match(guid, "^Player%-(%d+)")
 
 	return realmid .. "_" .. realmname
 
@@ -345,9 +346,9 @@ end
 function CensusPlus_GetFactionRaces(faction)
 	local ret = {};
 	if (faction == CENSUSPlus_HORDE) then
-		ret = {CENSUSPLUS_ORC, CENSUSPLUS_TAUREN, CENSUSPLUS_TROLL, CENSUSPLUS_UNDEAD, CENSUSPLUS_BLOODELF};
+		ret = { CENSUSPLUS_ORC, CENSUSPLUS_TAUREN, CENSUSPLUS_TROLL, CENSUSPLUS_UNDEAD, CENSUSPLUS_BLOODELF };
 	elseif (faction == CENSUSPlus_ALLIANCE) then
-		ret = {CENSUSPLUS_DWARF, CENSUSPLUS_GNOME, CENSUSPLUS_HUMAN, CENSUSPLUS_NIGHTELF, CENSUSPLUS_DRAENEI};
+		ret = { CENSUSPLUS_DWARF, CENSUSPLUS_GNOME, CENSUSPLUS_HUMAN, CENSUSPLUS_NIGHTELF, CENSUSPLUS_DRAENEI };
 	end
 	return ret;
 end
@@ -359,11 +360,12 @@ function CensusPlus_GetFactionClasses(faction)
 	-- this is last in first out list... add new classes to front of list.
 	local ret = {};
 	if (faction == CENSUSPlus_HORDE) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN,
-		CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DRUID, CENSUSPLUS_DEATH_KNIGHT};
+		ret = { CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST,
+			CENSUSPLUS_SHAMAN,
+			CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DRUID, CENSUSPLUS_DEATH_KNIGHT };
 	elseif (faction == CENSUSPlus_ALLIANCE) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST,
-		CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DRUID, CENSUSPLUS_DEATH_KNIGHT};
+		ret = { CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST,
+			CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DRUID, CENSUSPLUS_DEATH_KNIGHT };
 	end
 	return ret;
 end
@@ -372,25 +374,33 @@ end
 local function GetRaceClasses(race)
 	local ret = {};
 	if (race == CENSUSPLUS_ORC) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_SHAMAN, CENSUSPLUS_WARLOCK, CENSUSPLUS_DEATH_KNIGHT}
+		ret = { CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_SHAMAN, CENSUSPLUS_WARLOCK,
+			CENSUSPLUS_DEATH_KNIGHT }
 	elseif (race == CENSUSPLUS_TAUREN) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_SHAMAN, CENSUSPLUS_DRUID, CENSUSPLUS_DEATH_KNIGHT}
+		ret = { CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_SHAMAN, CENSUSPLUS_DRUID, CENSUSPLUS_DEATH_KNIGHT }
 	elseif (race == CENSUSPLUS_TROLL) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE, CENSUSPLUS_DEATH_KNIGHT}
+		ret = { CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN, CENSUSPLUS_MAGE,
+			CENSUSPLUS_DEATH_KNIGHT }
 	elseif (race == CENSUSPLUS_UNDEAD) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DEATH_KNIGHT}
+		ret = { CENSUSPLUS_WARRIOR, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK,
+			CENSUSPLUS_DEATH_KNIGHT }
 	elseif (race == CENSUSPLUS_BLOODELF) then
-		ret = {CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DEATH_KNIGHT}
+		ret = { CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK,
+			CENSUSPLUS_DEATH_KNIGHT }
 	elseif (race == CENSUSPLUS_DWARF) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_DEATH_KNIGHT}
+		ret = { CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST,
+			CENSUSPLUS_DEATH_KNIGHT }
 	elseif (race == CENSUSPLUS_GNOME) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_ROGUE, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DEATH_KNIGHT}
+		ret = { CENSUSPLUS_WARRIOR, CENSUSPLUS_ROGUE, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DEATH_KNIGHT }
 	elseif (race == CENSUSPLUS_HUMAN) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE, CENSUSPLUS_WARLOCK, CENSUSPLUS_DEATH_KNIGHT}
+		ret = { CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_MAGE,
+			CENSUSPLUS_WARLOCK, CENSUSPLUS_DEATH_KNIGHT }
 	elseif (race == CENSUSPLUS_NIGHTELF) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_DRUID, CENSUSPLUS_DEATH_KNIGHT}
+		ret = { CENSUSPLUS_WARRIOR, CENSUSPLUS_HUNTER, CENSUSPLUS_ROGUE, CENSUSPLUS_PRIEST, CENSUSPLUS_DRUID,
+			CENSUSPLUS_DEATH_KNIGHT }
 	elseif (race == CENSUSPLUS_DRAENEI) then
-		ret = {CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN, CENSUSPLUS_DRUID, CENSUSPLUS_DEATH_KNIGHT}
+		ret = { CENSUSPLUS_WARRIOR, CENSUSPLUS_PALADIN, CENSUSPLUS_HUNTER, CENSUSPLUS_PRIEST, CENSUSPLUS_SHAMAN,
+			CENSUSPLUS_MAGE, CENSUSPLUS_DEATH_KNIGHT }
 	end
 	return ret
 end
@@ -398,7 +408,7 @@ end
 -- Return common letters found in zone names
 -- only used for census splitting by zone
 local function GetZoneLetters()
-	return {"a", "e", "i", "o", "u", "z", "y", "w", "mountain", "lands", "gulch", "valley", "basin" }
+	return { "a", "e", "i", "o", "u", "z", "y", "w", "mountain", "lands", "gulch", "valley", "basin" }
 end
 
 -- Return common letters found in names, may override this for other languages
@@ -414,15 +424,20 @@ end
 	shortened alternate will generate duplicate name hit of 3.47 duplicates /unique name
 ]]
 local function GetNameLetters()
-	return { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" }
+	return { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v",
+		"w", "x", "y", "z" }
 end
 
 local function GetNameLetters1()
-	return {"a", "e", "r", "i", "n", "o", "l", "s", "t", "h", "d", "u", "m", "k", "c" }
+	return { "a", "e", "r", "i", "n", "o", "l", "s", "t", "h", "d", "u", "m", "k", "c" }
 end
 
 local function GetNameLetters2()
-	return {"a", "e", "r", "i", "n", "o", "l", "s", "t", "h", "d", "u", "y"}
+	return { "a", "e", "i", "o", "u", "z", "y" }
+end
+
+local function GetNameLetters3()
+	return { "a", "e", "r", "i", "n", "o", "l", "s", "t", "h", "d", "u", "m", "k", "c", "y" }
 end
 
 -- Called when the main window is shown
@@ -485,8 +500,8 @@ function CensusPlus_OnLoad(self)
 	updateFrame:SetScript("OnUpdate", CensusPlus_OnUpdate)
 
 	CensusPlusWhoButton:SetScript("OnClick", function(self, button, down)
-	-- As we have not specified the button argument to SetBindingClick,
-	-- the binding will be mapped to a LeftButton click.
+		-- As we have not specified the button argument to SetBindingClick,
+		-- the binding will be mapped to a LeftButton click.
 		ManualWho()
 	end)
 end
@@ -495,23 +510,22 @@ function InitializeExperimental()
 	hookWorldClicks = CensusPlus_Database["Info"]["UseWorldFrameClicks"]
 
 	if hookWorldClicks then
-		WorldFrame:HookScript("OnMouseDown", function(self,button) 
-			ManualWho() 
+		WorldFrame:HookScript("OnMouseDown", function(self, button)
+			ManualWho()
 		end)
-		WorldFrame:HookScript("OnMouseUp", function(self,button)
-			 ManualWho() 
+		WorldFrame:HookScript("OnMouseUp", function(self, button)
+			ManualWho()
 		end)
 		local f = Test or CreateFrame("Frame", "Test", UIParent)
-		f:HookScript("OnMouseWheel", function(self) 
-			ManualWho() 
+		f:HookScript("OnMouseWheel", function(self)
+			ManualWho()
 		end)
-		f:HookScript("OnKeyDown", function(self,button) 
-			ManualWho() 
+		f:HookScript("OnKeyDown", function(self, button)
+			ManualWho()
 			f:SetPropagateKeyboardInput(true)
 		end)
 	end
 end
-
 
 function CP_ProcessWhoEvent(query, result, complete)
 	if (CPp.IsCensusPlusInProgress ~= true) then return end
@@ -557,10 +571,10 @@ function CP_ProcessWhoEvent(query, result, complete)
 			-- The level range is greater than a single level, so split it in half and submit the two jobs
 			local pivot = floor((minLevel + maxLevel) / 2)
 			local jobLower =
-				CensusPlus_CreateJob(minLevel, pivot, nil, nil, nil)
+			CensusPlus_CreateJob(minLevel, pivot, nil, nil, nil)
 			InsertJobIntoQueue(jobLower)
 			local jobUpper =
-				CensusPlus_CreateJob(pivot + 1, maxLevel, nil, nil, nil)
+			CensusPlus_CreateJob(pivot + 1, maxLevel, nil, nil, nil)
 			InsertJobIntoQueue(jobUpper)
 		else
 			-- We cannot split the level range any more
@@ -569,19 +583,19 @@ function CP_ProcessWhoEvent(query, result, complete)
 			if (race == nil) then
 				-- This job does not specify race, so split it that way, making jobs for each race]
 				local thisFactionRaces =
-					CensusPlus_GetFactionRaces(factionGroup)
+				CensusPlus_GetFactionRaces(factionGroup)
 				local numRaces = #thisFactionRaces
 				for i = 1, numRaces, 1 do
 					if (CENSUSPLUS_LIGHTFORGED ~= thisFactionRaces[i]) and (CENSUSPLUS_HIGHMOUNTAIN ~= thisFactionRaces[i]) then
 						local job =
-							CensusPlus_CreateJob(
-								level,
-								level,
-								thisFactionRaces[i],
-								nil,
-								nil,
-								nil
-							)
+						CensusPlus_CreateJob(
+							level,
+							level,
+							thisFactionRaces[i],
+							nil,
+							nil,
+							nil
+						)
 						InsertJobIntoQueue(job)
 					end
 				end
@@ -593,21 +607,21 @@ function CP_ProcessWhoEvent(query, result, complete)
 					for i = 1, numClasses, 1 do
 						if CENSUSPLUS_DEMONHUNTER ~= thisRaceClasses[i] then
 							local job =
-								CensusPlus_CreateJob(
-									level,
-									level,
-									race,
-									thisRaceClasses[i],
-									nil,
-									nil
-								)
+							CensusPlus_CreateJob(
+								level,
+								level,
+								race,
+								thisRaceClasses[i],
+								nil,
+								nil
+							)
 							InsertJobIntoQueue(job)
 						end
 					end
 				else
-					if (letter == nil) then
+					useName = CensusPlus_Database["Info"]["UseNameSearch"];
+					if (letter == nil and useNAme) then
 						-- There are too many characters with a single level, class and race
-						-- The work around we are going to pursue is to check by name for a,e,i,o,r,s,t,u
 						local letters = {}
 						if CP_letterselect == 0 then
 							letters = GetNameLetters()
@@ -615,41 +629,44 @@ function CP_ProcessWhoEvent(query, result, complete)
 							letters = GetNameLetters1()
 						elseif CP_letterselect == 2 then
 							letters = GetNameLetters2()
+						elseif CP_letterselect == 3 then
+							letters = GetNameLetters3()
 						end
 
 						for i = 1, #letters, 1 do
 							local job =
-								CensusPlus_CreateJob(
-									level,
-									level,
-									race,
-									class,
-									letters[i],
-									nil
-								)
+							CensusPlus_CreateJob(
+								level,
+								level,
+								race,
+								class,
+								letters[i],
+								nil
+							)
 							InsertJobIntoQueue(job)
 						end
 					else
-						if (zoneLetter == nil) then
+						useZone = CensusPlus_Database["Info"]["UseZoneSearch"];
+						if (zoneLetter == nil and useZone) then
 							--
 							-- This job does not specify zone, so split it that way, making more jobs
 							--
 							local zoneLetters = GetZoneLetters();
 							for i = 1, #zoneLetters, 1 do
 								local job =
-									CensusPlus_CreateJob(
-										level,
-										level,
-										race,
-										class,
-										letter,
-										zoneLetters[i]
-									)
+								CensusPlus_CreateJob(
+									level,
+									level,
+									race,
+									class,
+									letter,
+									zoneLetters[i]
+								)
 								InsertJobIntoQueue(job);
 							end
 						else
-						-- There are too many characters with a single level, class, race and letter, give up
-						local whoText = CensusPlus_CreateWhoText(g_CurrentJob)
+							-- There are too many characters with a single level, class, race and letter, give up
+							local whoText = CensusPlus_CreateWhoText(g_CurrentJob)
 							if (g_Verbose == true) then
 								CensusPlus_Msg(format(CENSUSPLUS_TOOMANY, whoText))
 							end
@@ -666,7 +683,6 @@ function CP_ProcessWhoEvent(query, result, complete)
 		g_WaitingForWhoUpdate = false
 	end
 end
-
 
 -- CensusPlusWotlk command
 function CensusPlus_Command(param)
@@ -732,7 +748,7 @@ function CensusPlus_Command(param)
 				_, jfalend, followon = string.find(param, "(%a+)", jcmdend + 1) -- see if same match is found as alpha only
 				if (nameval == followon) then -- alpha world so get 3rd term
 					_, jfalend, followon =
-						string.find(param, "(%w+)", jvalend + 1) --alphanumeric selector used to give warning of bad input
+					string.find(param, "(%w+)", jvalend + 1) --alphanumeric selector used to give warning of bad input
 					if (followon == nil) then -- no 3rd term found
 						CensusPlus_InternalWho(string.lower(nameval), nil) -- 3rd term found
 					else
@@ -850,10 +866,12 @@ end
 local function CensusPlus_CensusButtonShown(self)
 	--print(CensusPlus_Database["Info"]["CensusButtonShown"])
 	--print(CensusPlus_PerCharInfo["CensusButtonShown"])
-	if ((CensusPlus_PerCharInfo["CensusButtonShown"] == nil) and (CensusPlus_Database["Info"]["CensusButtonShown"] == true)) then
+	if ((CensusPlus_PerCharInfo["CensusButtonShown"] == nil) and (CensusPlus_Database["Info"]["CensusButtonShown"] == true)
+		) then
 		CensusPlus_CensusButtonShown_toggle("On")
 		--_G[CensusButton:GetName().."Text"]:SetText("C+")
-	elseif ((CensusPlus_PerCharInfo["CensusButtonShown"] == nil) and (CensusPlus_Database["Info"]["CensusButtonShown"] == false)) then
+	elseif (
+		(CensusPlus_PerCharInfo["CensusButtonShown"] == nil) and (CensusPlus_Database["Info"]["CensusButtonShown"] == false)) then
 		CensusPlus_CensusButtonShown_toggle("Off")
 	elseif (CensusPlus_PerCharInfo["CensusButtonShown"] == true) then
 		--CensusButton:SetText("30")
@@ -893,10 +911,12 @@ end
 local function CensusPlus_CensusButtonAnimi(self)
 	--print(CensusPlus_Database["Info"]["CensusButtonAnimi"])
 	--print(CensusPlus_PerCharInfo["CensusButtonAnimi"])
-	if ((CensusPlus_PerCharInfo["CensusButtonAnimi"] == nil) and (CensusPlus_Database["Info"]["CensusButtonAnimi"] == true)) then
+	if ((CensusPlus_PerCharInfo["CensusButtonAnimi"] == nil) and (CensusPlus_Database["Info"]["CensusButtonAnimi"] == true)
+		) then
 		CensusPlus_CensusButtonAnimi_toggle("On")
 		--_G[CensusButton:GetName().."Text"]:SetText("C+")
-	elseif ((CensusPlus_PerCharInfo["CensusButtonAnimi"] == nil) and (CensusPlus_Database["Info"]["CensusButtonAnimi"] == false)) then
+	elseif (
+		(CensusPlus_PerCharInfo["CensusButtonAnimi"] == nil) and (CensusPlus_Database["Info"]["CensusButtonAnimi"] == false)) then
 		--print("CensusButtonAnimi 2")
 		CensusPlus_CensusButtonAnimi_toggle("Off")
 	elseif (CensusPlus_PerCharInfo["CensusButtonAnimi"] == true) then
@@ -942,7 +962,8 @@ function CensusPlus_FinishSound(state)
 	if ((CensusPlus_PerCharInfo["PlayFinishSound"] == nil) and (CensusPlus_Database["Info"]["PlayFinishSound"] == true)) then
 		CensusPlus_FinishSound_toggle("On")
 		--_G[CensusButton:GetName().."Text"]:SetText("C+")
-	elseif ((CensusPlus_PerCharInfo["PlayFinishSound"] == nil) and (CensusPlus_Database["Info"]["PlayFinishSound"] == false)) then
+	elseif (
+		(CensusPlus_PerCharInfo["PlayFinishSound"] == nil) and (CensusPlus_Database["Info"]["PlayFinishSound"] == false)) then
 		CensusPlus_FinishSound_toggle("Off")
 	elseif (CensusPlus_PerCharInfo["PlayFinishSound"] == true) then
 		--CensusButton:SetText("30")
@@ -985,7 +1006,7 @@ local function CensusPlus_SetAutoCensus(self)
 	elseif ((CensusPlus_PerCharInfo["AutoCensus"] == nil) and (CensusPlus_Database["Info"]["AutoCensus"] == false)) then
 		CensusPlus_AutoCensus_toggle("Off")
 	elseif (CensusPlus_PerCharInfo["AutoCensus"] == true) then
-	    --CensusButton:SetText("30")
+		--CensusButton:SetText("30")
 		CensusPlus_AutoCensus_toggle("On")
 	elseif (CensusPlus_PerCharInfo["AutoCensus"] == false) then
 		CensusPlus_AutoCensus_toggle("Off")
@@ -1022,7 +1043,8 @@ function CensusPlus_DisplayUsage()
 	local stealthUsage = g_stealth
 	g_stealth = false
 	CensusPlus_Msg(
-		CENSUSPLUS_USAGE .. "\n  /CensusPlus" .. CENSUSPLUS_OR .. "/Census+ " .. CENSUSPLUS_OR .. "/Census" .. CENSUSPLUS_AND .. CENSUSPLUS_HELP_0
+		CENSUSPLUS_USAGE ..
+		"\n  /CensusPlus" .. CENSUSPLUS_OR .. "/Census+ " .. CENSUSPLUS_OR .. "/Census" .. CENSUSPLUS_AND .. CENSUSPLUS_HELP_0
 	)
 	CensusPlus_Msg(
 		"  /CensusPlus " .. CENSUS_OPTIONS_VERBOSE .. CENSUSPLUS_HELP_1
@@ -1087,7 +1109,7 @@ function CensusPlus_InternalWhoResult(name, level, guild, race, class, lastSeen)
 			end
 			if (doit == 1) then
 				local out =
-					name .. " : " .. LEVEL .. " " .. level .. " " .. race .. " " .. " " .. class
+				name .. " : " .. LEVEL .. " " .. level .. " " .. race .. " " .. " " .. class
 				out = out .. CENSUSPLUS_LASTSEEN_COLON .. lastSeen
 				CensusPlus_WhoMsg(out)
 				g_InternalSearchCount = g_InternalSearchCount + 1
@@ -1099,7 +1121,7 @@ function CensusPlus_InternalWhoResult(name, level, guild, race, class, lastSeen)
 		g_InternalSearchName
 	)) then
 		local out =
-			name .. " : " .. LEVEL .. " " .. level .. " " .. race .. " " .. " " .. class
+		name .. " : " .. LEVEL .. " " .. level .. " " .. race .. " " .. " " .. class
 		if (guild ~= "") then
 			out = out .. " <" .. guild .. ">"
 		end
@@ -1109,14 +1131,13 @@ function CensusPlus_InternalWhoResult(name, level, guild, race, class, lastSeen)
 	end
 end
 
-
 -- Minimize the window
 -- referenced by CensusPlusWotlk.xml
 function CensusPlus_OnClickMinimize(self)
-    if( CensusPlusWotlk:IsVisible() ) then
-	    --MiniCensusPlus:Show();
-        CensusPlusWotlk:Hide();
-    end
+	if (CensusPlusWotlk:IsVisible()) then
+		--MiniCensusPlus:Show();
+		CensusPlusWotlk:Hide();
+	end
 end
 
 -- Minimize the window
@@ -1158,7 +1179,7 @@ function CENSUSPLUS_TAKE_OnEnter(self, motion)
 			GameTooltip:SetText(CENSUSPLUS_TAKECENSUS, 1.0, 1.0, 1.0)
 			GameTooltip:Show()
 		end
-	-- frame created underneath cursor.. not cursor movement to frame
+		-- frame created underneath cursor.. not cursor movement to frame
 	else
 	end
 end
@@ -1169,7 +1190,7 @@ function CENSUSPLUS_STOP_OnEnter(self, motion)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 		GameTooltip:SetText(CENSUSPLUS_STOPCENSUS_TOOLTIP, 1.0, 1.0, 1.0)
 		GameTooltip:Show()
-	-- frame created underneath cursor.. not cursor movement to frame
+		-- frame created underneath cursor.. not cursor movement to frame
 	else
 	end
 end
@@ -1180,11 +1201,10 @@ function CENSUSPLUS_MANUALWHO_OnEnter(self, motion)
 		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 		GameTooltip:SetText("Issues manual who request.", 1.0, 1.0, 1.0)
 		GameTooltip:Show()
-	-- frame created underneath cursor.. not cursor movement to frame
+		-- frame created underneath cursor.. not cursor movement to frame
 	else
 	end
 end
-
 
 function CensusPlus_TimerSet(self, minutes, ovrride)
 	if minutes == nil then
@@ -1200,7 +1220,7 @@ function CensusPlus_TimerSet(self, minutes, ovrride)
 	--CensusPlus_Msg( CENSUS_OPTIONS_AUTOCENSUS.." "..CENSUSPLUS_AUTOCENSUS_DELAYTIME .." ".. minutes);
 end
 
-local function CensusPlus_BackgroundAlpha(self,steps)
+local function CensusPlus_BackgroundAlpha(self, steps)
 	CensusPlus_Database["Info"]["CPWindow_Transparency"] = steps
 end
 
@@ -1225,7 +1245,7 @@ end
 -- Purge the database for this realm and faction
 -- referenced by CensusPlusWotlk.xml
 function CENSUSPLUS_PURGE_OnClick()
-	StaticPopup_Show ("CP_PURGE_CONFIRM");
+	StaticPopup_Show("CP_PURGE_CONFIRM");
 end
 
 -- CensusPlus_DoPurge
@@ -1290,7 +1310,10 @@ function CensusPlus_StartCensus()
 		CensusPlus_JobQueue.CensusPlus_LoginFaction = " "
 	end
 	--print(lastjobtimediff);
-	if (lastjobtimediff <= 300 and CensusPlus_JobQueue.CensusPlus_LoginFaction and CensusPlus_JobQueue.CensusPlus_LoginRealm and (CensusPlus_JobQueue.CensusPlus_LoginFaction == g_factionGroup) and (CensusPlus_JobQueue.CensusPlus_LoginRealm == realmName)) then
+	if (
+		lastjobtimediff <= 300 and CensusPlus_JobQueue.CensusPlus_LoginFaction and CensusPlus_JobQueue.CensusPlus_LoginRealm
+			and (CensusPlus_JobQueue.CensusPlus_LoginFaction == g_factionGroup) and
+			(CensusPlus_JobQueue.CensusPlus_LoginRealm == realmName)) then
 		--print ("continue last Census");
 		local queue_entry_count = #CensusPlus_JobQueue
 		--print (queue_entry_count);
@@ -1309,7 +1332,7 @@ function CensusPlus_StartCensus()
 	if (g_factionGroup == nil or g_factionGroup == CENSUSPlus_NEUTRAL) then
 		CensusPlus_Msg(CENSUSPLUS_NOTINFACTION)
 		CPp.LastCensusRun = time()
-	--return;
+		--return;
 	elseif CPp.IsCensusPlusInProgress then
 		--if( CPp.CensusPlusManuallyPaused == true ) then
 		--  CPp.CensusPlusManuallyPaused = false;
@@ -1319,7 +1342,7 @@ function CensusPlus_StartCensus()
 		CensusPlus_Msg(
 			"Census in progress but this message should not have shown"
 		)
-		  --return
+		--return
 		--end
 	elseif g_CurrentlyInBG then
 		CPp.LastCensusRun = time() - 600
@@ -1348,13 +1371,13 @@ function CensusPlus_StartCensus()
 			if (UnitLevel("player") >= MIN_CHARACTER_LEVEL) then
 				local meplayer = GetUnitName("player")
 				local job =
-					CensusPlus_CreateJob(
-						MIN_CHARACTER_LEVEL,
-						MAX_CHARACTER_LEVEL,
-						nil,
-						nil,
-						meplayer
-					)
+				CensusPlus_CreateJob(
+					MIN_CHARACTER_LEVEL,
+					MAX_CHARACTER_LEVEL,
+					nil,
+					nil,
+					meplayer
+				)
 				InsertJobIntoQueue(job)
 				CPp.IsCensusPlusInProgress = true
 				g_WaitingForWhoUpdate = false
@@ -1364,7 +1387,7 @@ function CensusPlus_StartCensus()
 				g_TakeHour = hour
 				g_ResetHour = true
 
-			-- queue who for player into job que
+				-- queue who for player into job que
 			elseif (UnitLevel("player") < MIN_CHARACTER_LEVEL) then
 				CensusPlus_Msg("Player is below level 10")
 				CensusPlayerOnly = false
@@ -1393,7 +1416,6 @@ function CensusPlus_StartCensus()
 	end
 end
 
-
 -- First we load the stack with our jobs... First in last out
 function CensusPlus_Load_JobQueue()
 	-- first load queue with jobs in increment of 10 from 1-10 thru max_character_level-19 - max_character_level-10
@@ -1401,34 +1423,36 @@ function CensusPlus_Load_JobQueue()
 		MAX_CHARACTER_LEVEL / 10
 	) - 1, 1 do
 		local job =
-			CensusPlus_CreateJob(counter * 10, counter * 10 + 9, nil, nil, nil)
+		CensusPlus_CreateJob(counter * 10 + 1, counter * 10 + 10, nil, nil, nil, nil)
 		InsertJobIntoQueue(job)
 	end
 	-- next to last job to load is Max_character_level-9 thrun Max_character_level-1  if Max_character_level modulo 10 = 0
 	local job =
-		CensusPlus_CreateJob(
-			MAX_CHARACTER_LEVEL - 9,
-			MAX_CHARACTER_LEVEL - 1,
-			nil,
-			nil,
-			nil
-		)
+	CensusPlus_CreateJob(
+		MAX_CHARACTER_LEVEL - 9,
+		MAX_CHARACTER_LEVEL - 1,
+		nil,
+		nil,
+		nil,
+		nil
+	)
 	InsertJobIntoQueue(job)
 
 	-- last job to load in last in first out queus is MAX_CHARACTER_LEVEL to MAX_CHARACTER_LEVEL
-	-- this is one job that will almost always en.d up having to be broken up and reloaded (depending on realm population)
+	-- this is one job that will almost always end up having to be broken up and reloaded (depending on realm population)
 	local job =
-		CensusPlus_CreateJob(
-			MAX_CHARACTER_LEVEL,
-			MAX_CHARACTER_LEVEL,
-			nil,
-			nil,
-			nil
-		)
+	CensusPlus_CreateJob(
+		MAX_CHARACTER_LEVEL,
+		MAX_CHARACTER_LEVEL,
+		nil,
+		nil,
+		nil,
+		nil
+	)
 	InsertJobIntoQueue(job)
 
 	--for counter = 80, MAX_CHARACTER_LEVEL, 1  do
-	--  local job = CensusPlus_CreateJob( counter, counter, nil, nil, nil );
+	--  local job = CensusPlus_CreateJob( counter, counter, nil, nil, nil, nil );
 	--  InsertJobIntoQueue(job);
 	--end
 
@@ -1493,10 +1517,10 @@ function CensusPlus_DisplayResults()
 				SecondsToTime(total_time)
 			)
 		)
-		--print( CP_g_queue_count);
+		print(CP_g_queue_count);
 		if (CP_g_queue_count > 0) then
 			local avg_Time_per_que = total_time / CP_g_queue_count
-			--print( avg_Time_per_que);
+			print(avg_Time_per_que);
 		end
 
 		realmslisttext = string.sub(realmslisttext, 3)
@@ -1659,41 +1683,45 @@ function CensusPlus_OnEvent(self, event, ...)
 		CensusPlusWotlk:UnregisterEvent("WHO_LIST_UPDATE")
 		C_FriendList.SetWhoToUi(false)
 		if WhoFrame:IsShown() then
-		  FriendsFrameCloseButton:Click()
+			FriendsFrameCloseButton:Click()
 		end
-    FriendsFrame:RegisterEvent("WHO_LIST_UPDATE")
+		FriendsFrame:RegisterEvent("WHO_LIST_UPDATE")
 		CP_ProcessWhoEvent(whoMsg)
 	end
 
-	if (event == "TRAINER_SHOW" or event == "MERCHANT_SHOW" or event == "TRADE_SHOW" or event == "GUILD_REGISTRAR_SHOW" or event == "AUCTION_HOUSE_SHOW" or event == "BANKFRAME_OPENED" or event == "QUEST_DETAIL") then
+	if (
+		event == "TRAINER_SHOW" or event == "MERCHANT_SHOW" or event == "TRADE_SHOW" or event == "GUILD_REGISTRAR_SHOW" or
+			event == "AUCTION_HOUSE_SHOW" or event == "BANKFRAME_OPENED" or event == "QUEST_DETAIL") then
 		print(" Event triggered = " .. event)
 		if CPp.IsCensusPlusInProgress then
 			g_CensusPlusPaused = true
 		end
-	elseif (event == "TRAINER_CLOSED" or event == "MERCHANT_CLOSED" or event == "TRADE_CLOSED" or event == "GUILD_REGISTRAR_CLOSED" or event == "AUCTION_HOUSE_CLOSED" or event == "BANKFRAME_CLOSED" or event == "QUEST_FINISHED") then
+	elseif (
+		event == "TRAINER_CLOSED" or event == "MERCHANT_CLOSED" or event == "TRADE_CLOSED" or event == "GUILD_REGISTRAR_CLOSED"
+			or event == "AUCTION_HOUSE_CLOSED" or event == "BANKFRAME_CLOSED" or event == "QUEST_FINISHED") then
 		print(" Event triggered = " .. event)
 		if CPp.IsCensusPlusInProgress then
 			g_CensusPlusPaused = false
 		end
 
-	--[[
-	-- Guild roster info not ready for release
-	elseif (event == "GUILD_ROSTER_UPDATE") th.en
+
+		-- Guild roster info not ready for release
+	elseif (event == "GUILD_ROSTER_UPDATE") then
 
 		--  Process Guild info
-		--CensusPlus_Msg( " UPDATE GUILD " );
-		if(not CP_updatingGuild ) th.en
-			CP_updatingGuild  = 1;
+		CensusPlus_Msg(" UPDATE GUILD ");
+		if (not CP_updatingGuild) then
+			CP_updatingGuild = 1;
 			CensusPlus_ProcessGuildResults();
-			CP_updatingGuild  = nil;
+			CP_updatingGuild = nil;
 		end
 
-	elseif (( event == "ADDON_LOADED") and (arg1 == "CensusPlusWotlk")) then
-		self:UnregisterEvent("ADDON_LOADED")   -- need this or we get hit on all preceeding addon loaded.. including the LOD's
+	elseif ((event == "ADDON_LOADED") and (arg1 == "CensusPlusWotlk")) then
+		self:UnregisterEvent("ADDON_LOADED") -- need this or we get hit on all preceeding addon loaded.. including the LOD's
 
 		--  Initialize our variables
 		CensusPlus_InitializeVariables()
-	--]]
+
 
 	elseif (event == "ZONE_CHANGED_NEW_AREA") then
 		--  We need to check to see if we entered a battleground
@@ -1731,7 +1759,7 @@ function CensusPlus_ProcessTarget(unit)
 			--RGK endblock
 		else
 			sightingData.guild =
-				PTR_Color_ProblemRealmGuilds_check(sightingData.guild)
+			PTR_Color_ProblemRealmGuilds_check(sightingData.guild)
 		end
 		--
 		-- Get the portion of the database for this server
@@ -1783,13 +1811,16 @@ function CensusPlus_ProcessTarget(unit)
 		entry[2] = sightingData.guild
 		entry[3] = sightingData.lastSeen
 		entry[4] =
-			checksum:generate(
-				realmName .. sightingData.faction .. sightingData.race .. sightingData.class .. sightingData.name .. sightingData.level .. sightingData.guild .. sightingData.lastSeen .. sightingData.sex
-			)
+		checksum:generate(
+			realmName ..
+			sightingData.faction ..
+			sightingData.race ..
+			sightingData.class ..
+			sightingData.name .. sightingData.level .. sightingData.guild .. sightingData.lastSeen .. sightingData.sex
+		)
 		entry[5] = sightingData.sex
 	end
 end
-
 
 -- Gather targeting data
 function CensusPlus_CollectSightingData(unit)
@@ -1871,7 +1902,7 @@ function CensusPlus_InitializeVariables()
 		local _, cpsubset = string.find(CensusPlus_VERSION, "%.")
 		local _, cpsubset2 = string.find(CensusPlus_VERSION, "%.", cpsubset + 1)
 		local CensusPlus_Version_subset =
-			string.sub(CensusPlus_VERSION, 1, cpsubset2 - 1)
+		string.sub(CensusPlus_VERSION, 1, cpsubset2 - 1)
 		--		print("coded interface version "..CensusPlus_Version_subset)
 		if (g_InterfaceVersion ~= CensusPlus_Version_subset) then
 			CensusPlus_Database["Info"] = {}
@@ -1895,7 +1926,7 @@ function CensusPlus_InitializeVariables()
 		CensusPlus_Msg(CENSUSPLUS_LANGUAGECHANGED)
 	end
 	CensusPlus_Database["Info"]["ClientLocale"] = GetLocale()
-	CensusPlusLocaleName:SetText( format(CENSUSPLUS_LOCALE, CensusPlus_Database["Info"]["ClientLocale"]) )
+	CensusPlusLocaleName:SetText(format(CENSUSPLUS_LOCALE, CensusPlus_Database["Info"]["ClientLocale"]))
 
 	CensusPlus_Database["Info"]["LoginServer"] = GetCVar("portal")
 	CensusPlus_Database["Info"]["LogVer"] = CensusPlus_VERSION_FULL
@@ -1904,7 +1935,7 @@ function CensusPlus_InitializeVariables()
 	wowVersion = format("%s (%s)", wowVersion, wowBuild)
 
 	CensusPlus_Database["Info"]["wowVersion"] = wowVersion
-	CensusPlus_Database["Info"]['versionChecksum'] = checksum:generate(CensusPlus_VERSION_FULL..wowVersion)
+	CensusPlus_Database["Info"]['versionChecksum'] = checksum:generate(CensusPlus_VERSION_FULL .. wowVersion)
 
 	if (CensusPlus_Database["Info"]["AutoCensus"] == nil) then
 		CensusPlus_Database["Info"]["AutoCensus"] = true
@@ -1927,7 +1958,7 @@ function CensusPlus_InitializeVariables()
 	end
 
 	if (CensusPlus_JobQueue["CensusPlus_last_time"] == nil) then
-		CensusPlus_JobQueue["CensusPlus_last_time"] = time() - (CPp.AutoStartTimer *60)
+		CensusPlus_JobQueue["CensusPlus_last_time"] = time() - (CPp.AutoStartTimer * 60)
 	end
 
 	if (CensusPlus_JobQueue["CensusPlus_LoginRealm_last"] == nil) then
@@ -1991,7 +2022,6 @@ function CensusPlus_InitializeVariables()
 
 end
 
-
 function CensusPlus_AutoStart()
 
 	local currentRealm = CensusPlus_GetUniqueRealmName()
@@ -2000,12 +2030,13 @@ function CensusPlus_AutoStart()
 	local lastFaction = CensusPlus_JobQueue["CensusPlus_LoginFaction_last"]
 	local lastRun = CensusPlus_JobQueue["CensusPlus_last_time"]
 
-	if (g_wasPurged or currentRealm ~= lastRealm or currentFaction ~= lastFaction or (lastRun < time() - (CPp.AutoStartTimer * 60))) then
+	if (
+		g_wasPurged or currentRealm ~= lastRealm or currentFaction ~= lastFaction or
+			(lastRun < time() - (CPp.AutoStartTimer * 60))) then
 		CENSUSPLUS_TAKE_OnClick()
 	end
 
 end
-
 
 -- referenced by CensusPlusWotlk.xml
 function CensusPlus_OnUpdate()
@@ -2014,7 +2045,9 @@ function CensusPlus_OnUpdate()
 		if (g_VariablesLoaded and not CPp.IsCensusPlusInProgress and CPp.AutoCensus == true) then
 			CensusPlus_AutoStart()
 		end
-	elseif (g_VariablesLoaded and not CPp.IsCensusPlusInProgress and CPp.AutoCensus == true and (CPp.LastCensusRun < time() - (CPp.AutoStartTimer * 60))) then
+	elseif (
+		g_VariablesLoaded and not CPp.IsCensusPlusInProgress and CPp.AutoCensus == true and
+			(CPp.LastCensusRun < time() - (CPp.AutoStartTimer * 60))) then
 		CENSUSPLUS_TAKE_OnClick()
 	end
 	if (CPp.IsCensusPlusInProgress and not g_CensusPlusPaused and not CPp.CensusPlusManuallyPaused) then
@@ -2059,14 +2092,14 @@ function CensusPlus_OnUpdate()
 						g_FinishSoundNumber = 1
 					else
 						g_FinishSoundNumber =
-							CensusPlus_PerCharInfo["SoundFile"]
+						CensusPlus_PerCharInfo["SoundFile"]
 					end
 					local CPSoundFile =
-						"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".ogg"
+					"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".ogg"
 					local willplay = PlaySoundFile(CPSoundFile, "Master")
 					if not willplay then
 						local CPSoundFile =
-							"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".mp3"
+						"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".mp3"
 						PlaySoundFile(CPSoundFile, "Master")
 					end
 				elseif ((CensusPlus_PerCharInfo["PlayFinishSound"] == nil) and CensusPlus_Database["Info"]["PlayFinishSound"]) then
@@ -2074,14 +2107,14 @@ function CensusPlus_OnUpdate()
 						g_FinishSoundNumber = 1
 					else
 						g_FinishSoundNumber =
-							CensusPlus_Database["Info"]["SoundFile"]
+						CensusPlus_Database["Info"]["SoundFile"]
 					end
 					local CPSoundFile =
-						"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".ogg"
+					"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".ogg"
 					local willplay = PlaySoundFile(CPSoundFile, "Master")
 					if not willplay then
 						local CPSoundFile =
-							"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".mp3"
+						"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete" .. g_FinishSoundNumber .. ".mp3"
 						PlaySoundFile(CPSoundFile, "Master")
 					end
 				end
@@ -2130,7 +2163,6 @@ function CensusPlus_OnUpdate()
 	end
 end
 
-
 -- Take final tally
 function CensusPlus_DoTimeCounts()
 	-- first zero counts in g_TimeDatabase each realm/faction
@@ -2148,16 +2180,12 @@ function CensusPlus_DoTimeCounts()
 		local charClass = thisFactionClasss[i]
 		local classCount = 0
 
-		for realmKey, factionData in
-			pairs(CensusPlus_JobQueue.g_TempCount) -- realmname, factionname
-		do
+		for realmKey, factionData in pairs(CensusPlus_JobQueue.g_TempCount) -- realmname, factionnamedo
 			for factionKey, classData in pairs(factionData) do
 				if (factionKey == factionGroup) then
 					for classKey, NameData in pairs(classData) do
 						if (charClass == classKey) then
-							for nameKey, charData in
-								pairs(NameData)
-							do
+							for nameKey, charData in pairs(NameData) do
 								--												if (HortonBug == true) then
 								--													s.ays("TempCount level 3");
 								--												end
@@ -2177,9 +2205,9 @@ function CensusPlus_DoTimeCounts()
 			charClass = CENSUSPlusFemale[class]
 		end
 		CensusPlus_JobQueue.g_TimeDatabase[charClass] =
-			CensusPlus_JobQueue.g_TimeDatabase[charClass] + classCount
+		CensusPlus_JobQueue.g_TimeDatabase[charClass] + classCount
 		CensusPlus_JobQueue.g_NumUpdatedCharacters =
-			CensusPlus_JobQueue.g_NumUpdatedCharacters + classCount
+		CensusPlus_JobQueue.g_NumUpdatedCharacters + classCount
 	end
 	if (CensusPlus_Database["TimesPlus"][realmName] == nil) then
 		CensusPlus_Database["TimesPlus"][realmName] = {}
@@ -2190,12 +2218,34 @@ function CensusPlus_DoTimeCounts()
 
 	if CensusPLus_DEBUGWRITES then
 		CensusPlus_Database["TimesPlus"][realmName][factionGroup] =
-			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DRUID] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_HUNTER] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_MAGE] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PRIEST] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_ROGUE] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARLOCK] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARRIOR] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_SHAMAN] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PALADIN] .. "&" .. CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DEATH_KNIGHT] .. "&" .. CensusPlus_WHOPROCESSOR .. ":" .. CensusPlus_JobQueue.g_NumNewCharacters .. "," .. CensusPlus_JobQueue.g_NumUpdatedCharacters .. "," .. total_time
+		CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DRUID] ..
+			"&" ..
+			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_HUNTER] ..
+			"&" ..
+			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_MAGE] ..
+			"&" ..
+			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PRIEST] ..
+			"&" ..
+			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_ROGUE] ..
+			"&" ..
+			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARLOCK] ..
+			"&" ..
+			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_WARRIOR] ..
+			"&" ..
+			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_SHAMAN] ..
+			"&" ..
+			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PALADIN] ..
+			"&" ..
+			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DEATH_KNIGHT] ..
+			"&" ..
+			CensusPlus_WHOPROCESSOR ..
+			":" ..
+			CensusPlus_JobQueue.g_NumNewCharacters .. "," .. CensusPlus_JobQueue.g_NumUpdatedCharacters .. "," .. total_time
 	else
 		local TimeDataTime = date("!%Y-%m-%d&%H:%M:%S", GetServerTime())
 
 		CensusPlus_Database["TimesPlus"][realmName][factionGroup][TimeDataTime] =
-			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DRUID] .. "&" ..
+		CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DRUID] .. "&" ..
 			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_HUNTER] .. "&" ..
 			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_MAGE] .. "&" ..
 			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_PRIEST] .. "&" ..
@@ -2207,7 +2257,7 @@ function CensusPlus_DoTimeCounts()
 			CensusPlus_JobQueue.g_TimeDatabase[CENSUSPLUS_DEATH_KNIGHT]
 
 		CensusPlus_Database["TimesPlus"][realmName][factionGroup][TimeDataTime] =
-			CensusPlus_Database["TimesPlus"][realmName][factionGroup][TimeDataTime] .. ":" ..
+		CensusPlus_Database["TimesPlus"][realmName][factionGroup][TimeDataTime] .. ":" ..
 			checksum:generate(
 				CensusPlus_Database["TimesPlus"][realmName][factionGroup][TimeDataTime] ..
 				realmName ..
@@ -2231,7 +2281,7 @@ local function CensusPlus_ProcessGuildResults()
 	if (numOnline < 2) then
 		return -- only guild member online is player who is counted elsewhere
 	end
-	--CensusPlus_Msg("Processing "..numOnline.." online of "..numGuildMembers.." total guild members.");
+	CensusPlus_Msg("Processing " .. numOnline .. " online of " .. numGuildMembers .. " total guild members.");
 
 	local realmName = CensusPlus_GetUniqueRealmName()
 	CensusPlus_Database["Guilds"] = nil
@@ -2294,16 +2344,15 @@ local function CensusPlus_ProcessGuildResults()
 
 	for index = 1, numGuildMembers, 1 do
 		local name,
-			rank,
-			rankIndex,
-			level,
-			class,
-			zone,
-			note,
-			officernote,
-			online,
-			status
-		= GetGuildRosterInfo(index)
+		rank,
+		rankIndex,
+		level,
+		class,
+		zone,
+		note,
+		officernote,
+		online,
+		status = GetGuildRosterInfo(index)
 
 		if (members[name] == nil) then
 			members[name] = {}
@@ -2489,7 +2538,7 @@ function CensusPlus_ProcessWhoResults(result, numWhoResults)
 			classDatabase[name] = {}
 			entry = classDatabase[name]
 			CensusPlus_JobQueue.g_NumNewCharacters =
-				CensusPlus_JobQueue.g_NumNewCharacters + 1
+			CensusPlus_JobQueue.g_NumNewCharacters + 1
 		end
 
 		lastSeen = CensusPlus_DetermineServerDate() .. ""
@@ -2500,9 +2549,9 @@ function CensusPlus_ProcessWhoResults(result, numWhoResults)
 		--local hour, minute = GetGameTime();
 		entry[3] = lastSeen
 		entry[4] =
-			checksum:generate(
-				realmName .. factionGroup .. race .. class .. name .. level .. guild .. lastSeen .. sex
-			)
+		checksum:generate(
+			realmName .. factionGroup .. race .. class .. name .. level .. guild .. lastSeen .. sex
+		)
 		entry[5] = sex
 
 		-- 5.3 g_TempCount[name] = class;
@@ -2621,7 +2670,7 @@ local function WR_ProcessSingleEntry(name, level, race, class, guild, zone)
 		classDatabase[name] = {}
 		entry = classDatabase[name]
 		CensusPlus_JobQueue.g_NumNewCharacters =
-			CensusPlus_JobQueue.g_NumNewCharacters + 1
+		CensusPlus_JobQueue.g_NumNewCharacters + 1
 	end
 
 	-- Update the information
@@ -2822,8 +2871,8 @@ function CensusPlus_UpdateView()
 		g_AccumulateGuildTotals = false;
 		CensusPlus_ForAllCharacters(realmName, factionGroup, raceKey, classKey, guildKey, levelKey, TotalsAccumulator);
 
-		if( CensusPlus_EnableProfiling ) then
-			CensusPlus_Msg( "PROFILE: Time to do calcs 1 " .. debugprofilestop() / 1000000000 );
+		if (CensusPlus_EnableProfiling) then
+			CensusPlus_Msg("PROFILE: Time to do calcs 1 " .. debugprofilestop() / 1000000000);
 			--debugprofilestart();
 		end
 
@@ -2833,8 +2882,8 @@ function CensusPlus_UpdateView()
 		g_AccumulateGuildTotals = true;
 		CensusPlus_ForAllCharacters(realmName, factionGroup, nil, nil, nil, nil, TotalsAccumulator);
 
-		if( CensusPlus_EnableProfiling ) then
-			CensusPlus_Msg( "PROFILE: Time to do calcs 1 " .. debugprofilestop() / 1000000000 );
+		if (CensusPlus_EnableProfiling) then
+			CensusPlus_Msg("PROFILE: Time to do calcs 1 " .. debugprofilestop() / 1000000000);
 			--debugprofilestart();
 		end
 
@@ -2843,21 +2892,21 @@ function CensusPlus_UpdateView()
 			table.sort(CensusPlus_Guilds, GuildPredicate);
 		end
 
-		if( CensusPlus_EnableProfiling ) then
-			CensusPlus_Msg( "PROFILE: Time to sort guilds " .. debugprofilestop() / 1000000000 );
+		if (CensusPlus_EnableProfiling) then
+			CensusPlus_Msg("PROFILE: Time to sort guilds " .. debugprofilestop() / 1000000000);
 			--debugprofilestart();
 		end
 	end
 
 	local levelSearch = nil;
 	if (levelKey ~= nil) then
-		levelSearch = "  ("..CENSUSPLUS_LEVEL..": ";
+		levelSearch = "  (" .. CENSUSPLUS_LEVEL .. ": ";
 		local level = levelKey;
 		if (levelKey < 0) then
-			levelSearch = levelSearch.."!";
+			levelSearch = levelSearch .. "!";
 			level = 0 - levelKey;
 		end
-		levelSearch = levelSearch..level..")";
+		levelSearch = levelSearch .. level .. ")";
 	end
 
 	local totalCharactersText = nil;
@@ -2870,8 +2919,8 @@ function CensusPlus_UpdateView()
 	--CensusPlusTotalCharacterXP:SetText(format(CENSUSPlus_TOTALCHARXP, g_TotalCharacterXP));
 	CensusPlus_UpdateGuildButtons();
 
-	if( CensusPlus_EnableProfiling ) then
-		CensusPlus_Msg( "PROFILE: Update Guilds " .. debugprofilestop() / 1000000000 );
+	if (CensusPlus_EnableProfiling) then
+		CensusPlus_Msg("PROFILE: Update Guilds " .. debugprofilestop() / 1000000000);
 		--debugprofilestart();
 	end
 
@@ -2894,19 +2943,19 @@ function CensusPlus_UpdateView()
 	-- Update race bars
 	for i = 1, numRaces, 1 do
 		local race = thisFactionRaces[i];
-		local buttonName = "CensusPlusRaceBar"..i;
+		local buttonName = "CensusPlusRaceBar" .. i;
 		local button = _G[buttonName];
 		local thisCount = g_RaceCount[i];
 		if ((thisCount ~= nil) and (thisCount > 0) and (maxCount > 0)) then
 			local height = floor((thisCount / maxCount) * CensusPlus_MAXBARHEIGHT);
-			if (height < 1 or height == nil ) then height = 1; end
+			if (height < 1 or height == nil) then height = 1; end
 			button:SetHeight(height);
 			button:Show();
 		else
 			button:Hide();
 		end
-		local normalTextureName= "Interface\\AddOns\\CensusPlusWotlk\\skins\\CensusPlus_" .. g_RaceClassList[race]
-		local legendName = "CensusPlusRaceLegend"..i;
+		local normalTextureName = "Interface\\AddOns\\CensusPlusWotlk\\skins\\CensusPlus_" .. g_RaceClassList[race]
+		local legendName = "CensusPlusRaceLegend" .. i;
 		local legend = _G[legendName]
 		legend:SetNormalTexture(normalTextureName);
 		if (CPp.RaceSelectedd == i) then
@@ -2916,8 +2965,8 @@ function CensusPlus_UpdateView()
 		end
 	end
 
-	if( CensusPlus_EnableProfiling ) then
-		CensusPlus_Msg( "PROFILE: Update Races " .. debugprofilestop() / 1000000000 );
+	if (CensusPlus_EnableProfiling) then
+		CensusPlus_Msg("PROFILE: Update Races " .. debugprofilestop() / 1000000000);
 		--debugprofilestart();
 	end
 
@@ -2941,20 +2990,20 @@ function CensusPlus_UpdateView()
 	for i = 1, numClasses, 1 do
 		local class = thisFactionClasss[i];
 
-		local buttonName = "CensusPlusClassBar"..i;
+		local buttonName = "CensusPlusClassBar" .. i;
 		local button = _G[buttonName]
 		local thisCount = g_ClassCount[i];
 		if ((thisCount ~= nil) and (thisCount > 0) and (maxCount > 0)) then
 			local height = floor((thisCount / maxCount) * CensusPlus_MAXBARHEIGHT);
-			if (height < 1 or height == nil ) then height = 1; end
+			if (height < 1 or height == nil) then height = 1; end
 			button:SetHeight(height);
 			button:Show();
 		else
 			button:Hide();
 		end
 
-		local normalTextureName="Interface\\AddOns\\CensusPlusWotlk\\skins\\CensusPlus_" .. g_RaceClassList[class]
-		local legendName = "CensusPlusClassLegend"..i;
+		local normalTextureName = "Interface\\AddOns\\CensusPlusWotlk\\skins\\CensusPlus_" .. g_RaceClassList[class]
+		local legendName = "CensusPlusClassLegend" .. i;
 		local legend = _G[legendName]
 		legend:SetNormalTexture(normalTextureName);
 		if (g_ClassSelected == i) then
@@ -2964,15 +3013,15 @@ function CensusPlus_UpdateView()
 		end
 	end
 
-	if( CensusPlus_EnableProfiling ) then
-		CensusPlus_Msg( "PROFILE: Update Classes " .. debugprofilestop() / 1000000000 );
+	if (CensusPlus_EnableProfiling) then
+		CensusPlus_Msg("PROFILE: Update Classes " .. debugprofilestop() / 1000000000);
 		--debugprofilestart();
 	end
 
 	-- Accumulate totals for each level
 	local maxCount = 0;
 	for i = 1, MAX_CHARACTER_LEVEL, 1 do
-	    if ((levelKey == nil) or (levelKey == i) or (levelKey < 0 and levelKey + i ~= 0)) then
+		if ((levelKey == nil) or (levelKey == i) or (levelKey < 0 and levelKey + i ~= 0)) then
 			CensusPlus_ResetAccumulator();
 			CensusPlus_ForAllCharacters(realmName, factionGroup, raceKey, classKey, guildKey, i, CensusPlus_Accumulator);
 			if (g_AccumulatorCount > maxCount) then
@@ -2985,15 +3034,15 @@ function CensusPlus_UpdateView()
 	end
 
 	-- Update level bars
-	for i = 1, MAX_CHARACTER_LEVEL_EXP, 1 do
-		local buttonName = "CensusPlusLevelBar"..i;
-		local buttonEmptyName = "CensusPlusLevelBarEmpty"..i;
+	for i = 1, MAX_CHARACTER_LEVEL, 1 do
+		local buttonName = "CensusPlusLevelBar" .. i;
+		local buttonEmptyName = "CensusPlusLevelBarEmpty" .. i;
 		local button = getglobal(buttonName);
 		local emptyButton = getglobal(buttonEmptyName);
 		local thisCount = g_LevelCount[i];
 		if ((thisCount ~= nil) and (thisCount > 0) and (maxCount > 0)) then
 			local height = floor((thisCount / maxCount) * CensusPlus_MAXBARHEIGHT);
-			if (height < 1 or height == nil ) then height = 1; end
+			if (height < 1 or height == nil) then height = 1; end
 			button:SetHeight(height);
 			button:Show();
 			if (emptyButton ~= nil) then
@@ -3008,12 +3057,12 @@ function CensusPlus_UpdateView()
 		end
 	end
 
-	if( CensusPlus_EnableProfiling ) then
-		CensusPlus_Msg( "PROFILE: Update Levels " .. debugprofilestop() / 1000000000 );
+	if (CensusPlus_EnableProfiling) then
+		CensusPlus_Msg("PROFILE: Update Levels " .. debugprofilestop() / 1000000000);
 		--debugprofilestart();
 	end
 
-	if( CP_PlayerListWindow:IsVisible() ) then
+	if (CP_PlayerListWindow:IsVisible()) then
 		CensusPlus_PlayerListOnShow();
 	end
 
@@ -3032,14 +3081,14 @@ function CensusPlus_ForAllCharacters(realmKey, factionKey, raceKey, classKey, gu
 							for className, classDatabase in pairs(raceDatabase) do
 								if ((classKey == nil) or (classKey == className)) then
 									for characterName, character in pairs(classDatabase) do
-									local characterGuild = character[2];
+										local characterGuild = character[2];
 										if ((guildKey == nil) or (guildKey == characterGuild)) then
 											local characterLevel = character[1];
-											if( characterLevel == nil ) then
+											if (characterLevel == nil) then
 												characterLevel = 0;
 											end
 											if ((levelKey == nil) or (levelKey == characterLevel) or (levelKey < 0 and levelKey + characterLevel ~= 0)) then
-												callback(characterName, characterLevel, characterGuild, raceName, className, character[3] );
+												callback(characterName, characterLevel, characterGuild, raceName, className, character[3]);
 											end
 										end
 									end
@@ -3055,7 +3104,7 @@ end
 
 -- Race legend clicked
 -- referenced by CensusPlusWotlk.xml
-function CensusPlus_OnClickRace(self )
+function CensusPlus_OnClickRace(self)
 	--  default click is "LeftButton" and up .. no RegisterForClicks used
 	local id = self:GetID()
 	if (id == CPp.RaceSelected) then
@@ -3090,7 +3139,9 @@ end
 function CensusPlus_OnClickLevel(self, CP_button)
 	-- both right and left buttons up registered.
 	local id = self:GetID()
-	if (((CP_button == "LeftButton") and (id == CPp.LevelSelected)) or ((CP_button == "RightButton") and (id + CPp.LevelSelected == 0))) then
+	if (
+		((CP_button == "LeftButton") and (id == CPp.LevelSelected)) or
+			((CP_button == "RightButton") and (id + CPp.LevelSelected == 0))) then
 		CPp.LevelSelected = 0
 	elseif (CP_button == "RightButton") then
 		CPp.LevelSelected = 0 - id
@@ -3158,7 +3209,7 @@ end
 
 -- Level tooltip
 -- referenced by CensusPlusWotlk.xml
-function CensusPlus_OnEnterLevel(self, motion )
+function CensusPlus_OnEnterLevel(self, motion)
 	if motion then
 		local id = self:GetID()
 		local count = g_LevelCount[id]
@@ -3183,7 +3234,7 @@ end
 
 -- Clicked a guild button
 -- referenced by CensusPlusWotlk.xml
-function CensusPlus_GuildButton_OnClick(self )
+function CensusPlus_GuildButton_OnClick(self)
 	local id = self:GetID();
 	local offset = FauxScrollFrame_GetOffset(CensusPlusGuildScrollFrame);
 	local newSelection = id + offset;
@@ -3225,7 +3276,7 @@ function CensusPlus_UpdateGuildButtons()
 			else
 				button:UnlockHighlight();
 			end
-		-- Hide the button
+			-- Hide the button
 		else
 			button:Hide()
 		end
@@ -3255,13 +3306,9 @@ function CENSUSPLUS_PRUNEData(nDays, sServer)
 			if ((factionKey == nil) or (factionKey == factionName)) then
 				for raceName, raceDatabase in pairs(factionDatabase) do
 					if ((raceKey == nil) or (raceKey == raceName)) then
-						for className, classDatabase in
-							pairs(raceDatabase)
-						do
+						for className, classDatabase in pairs(raceDatabase) do
 							if ((classKey == nil) or (classKey == className)) then
-								for characterName, character in
-									pairs(classDatabase)
-								do
+								for characterName, character in pairs(classDatabase) do
 									if (characterName ~= nil) then
 										--[[
 											if( sServer == 1 ) then
@@ -3330,10 +3377,8 @@ function CENSUSPLUS_PRUNETheData()
 		-- Remove the top job from the queue and send it
 		local pruneData = g_AccumulatedPruneData[num]
 
-		CensusPlus_Database["Servers"][pruneData.realm][pruneData.faction][pruneData.race][pruneData.class][pruneData.name]
-		= {}
-		CensusPlus_Database["Servers"][pruneData.realm][pruneData.faction][pruneData.race][pruneData.class][pruneData.name]
-		= nil
+		CensusPlus_Database["Servers"][pruneData.realm][pruneData.faction][pruneData.race][pruneData.class][pruneData.name] = {}
+		CensusPlus_Database["Servers"][pruneData.realm][pruneData.faction][pruneData.race][pruneData.class][pruneData.name] = nil
 
 		table.remove(g_AccumulatedPruneData)
 		num = #g_AccumulatedPruneData
@@ -3382,10 +3427,8 @@ function CENSUSPLUS_PRUNETimes()
 	while (num > 0) do
 		local pruneData = accumTimesData[num]
 
-		CensusPlus_Database["TimesPlus"][pruneData.realm][pruneData.faction][pruneData.entry]
-		= {}
-		CensusPlus_Database["TimesPlus"][pruneData.realm][pruneData.faction][pruneData.entry]
-		= nil
+		CensusPlus_Database["TimesPlus"][pruneData.realm][pruneData.faction][pruneData.entry] = {}
+		CensusPlus_Database["TimesPlus"][pruneData.realm][pruneData.faction][pruneData.entry] = nil
 		table.remove(accumTimesData)
 		num = #accumTimesData
 	end
@@ -3425,9 +3468,7 @@ function CENSUSPLUS_PRUNEDeadBranches()
 				if (factionName ~= nil) then
 					for raceName, raceDatabase in pairs(factionDatabase) do
 						if (raceName ~= nil) then
-							for className, classDatabase in
-								pairs(raceDatabase)
-							do
+							for className, classDatabase in pairs(raceDatabase) do
 								if (className ~= nil) then
 									PruneCount = 0
 									for _ in pairs(classDatabase) do
@@ -3516,22 +3557,22 @@ function CensusPlus_CheckTZ()
 end
 
 function ManualWho()
-  if (CPp.IsCensusPlusInProgress and not g_CurrentlyInBG) then
-    now = time()
-    local deltaManual = now - CPp.LastManualWho
-    if deltaManual > CensusPlus_UPDATEDELAY then
-      if (g_Verbose == true) then
-        print("ManualWho:", whoMsg)
-      end
-      CPp.LastManualWho = time()
-      if (whoquery_active) then
-        FriendsFrame:UnregisterEvent("WHO_LIST_UPDATE")
-        C_FriendList.SetWhoToUi(true)
-        CensusPlusWotlk:RegisterEvent("WHO_LIST_UPDATE")
-        C_FriendList.SendWho(whoMsg)
-      end
-    end
-  end
+	if (CPp.IsCensusPlusInProgress and not g_CurrentlyInBG) then
+		now = time()
+		local deltaManual = now - CPp.LastManualWho
+		if deltaManual > CensusPlus_UPDATEDELAY then
+			if (g_Verbose == true) then
+				print("ManualWho:", whoMsg)
+			end
+			CPp.LastManualWho = time()
+			if (whoquery_active) then
+				FriendsFrame:UnregisterEvent("WHO_LIST_UPDATE")
+				C_FriendList.SetWhoToUi(true)
+				CensusPlusWotlk:RegisterEvent("WHO_LIST_UPDATE")
+				C_FriendList.SendWho(whoMsg)
+			end
+		end
+	end
 end
 
 function CensusPlus_SendWho(msg)
@@ -3571,29 +3612,29 @@ function PTR_Color_ProblemNames_check(name)
 		local cp_ptr_name_check, _, _ = string.find(name, "  %(")
 		if (cp_ptr_name_check ~= nil) then
 			name =
-				string.sub(name, 1, cp_ptr_name_check - 1) .. string.sub(
-					name,
-					cp_ptr_name_check + 3,
-					cp_ptr_name_check + 4
-				)
+			string.sub(name, 1, cp_ptr_name_check - 1) .. string.sub(
+				name,
+				cp_ptr_name_check + 3,
+				cp_ptr_name_check + 4
+			)
 		end
 		local cp_ptr_name_check, _, _ = string.find(name, " %(")
 		if (cp_ptr_name_check ~= nil) then
 			name =
-				string.sub(name, 1, cp_ptr_name_check - 1) .. string.sub(
-					name,
-					cp_ptr_name_check + 2,
-					cp_ptr_name_check + 3
-				)
+			string.sub(name, 1, cp_ptr_name_check - 1) .. string.sub(
+				name,
+				cp_ptr_name_check + 2,
+				cp_ptr_name_check + 3
+			)
 		end
 		local cp_ptr_name_check, _, _ = string.find(name, "%(")
 		if (cp_ptr_name_check ~= nil) then
 			name =
-				string.sub(name, 1, cp_ptr_name_check - 1) .. string.sub(
-					name,
-					cp_ptr_name_check + 1,
-					cp_ptr_name_check + 2
-				)
+			string.sub(name, 1, cp_ptr_name_check - 1) .. string.sub(
+				name,
+				cp_ptr_name_check + 1,
+				cp_ptr_name_check + 2
+			)
 		end
 	end
 
@@ -3629,11 +3670,11 @@ function PTR_Color_ProblemRealmGuilds_check(name)
 		local cp_ptr_name_check, _, _ = string.find(name, "  %(")
 		if (cp_ptr_name_check ~= nil) then
 			name =
-				string.sub(name, 1, cp_ptr_name_check - 1) .. string.sub(
-					name,
-					cp_ptr_name_check + 3,
-					cp_ptr_name_check + 4
-				)
+			string.sub(name, 1, cp_ptr_name_check - 1) .. string.sub(
+				name,
+				cp_ptr_name_check + 3,
+				cp_ptr_name_check + 4
+			)
 			if (HortonBug == true) then
 				says("1 " .. name)
 			end
@@ -3641,11 +3682,11 @@ function PTR_Color_ProblemRealmGuilds_check(name)
 		local cp_ptr_name_check, _, _ = string.find(name, " %(")
 		if (cp_ptr_name_check ~= nil) then
 			name =
-				string.sub(name, 1, cp_ptr_name_check - 1) .. string.sub(
-					name,
-					cp_ptr_name_check + 2,
-					cp_ptr_name_check + 3
-				)
+			string.sub(name, 1, cp_ptr_name_check - 1) .. string.sub(
+				name,
+				cp_ptr_name_check + 2,
+				cp_ptr_name_check + 3
+			)
 			if (HortonBug == true) then
 				says("2 " .. name)
 			end
@@ -3653,11 +3694,11 @@ function PTR_Color_ProblemRealmGuilds_check(name)
 		local cp_ptr_name_check, _, _ = string.find(name, "%(")
 		if (cp_ptr_name_check ~= nil) then
 			name =
-				string.sub(name, 1, cp_ptr_name_check - 1) .. string.sub(
-					name,
-					cp_ptr_name_check + 1,
-					cp_ptr_name_check + 2
-				)
+			string.sub(name, 1, cp_ptr_name_check - 1) .. string.sub(
+				name,
+				cp_ptr_name_check + 1,
+				cp_ptr_name_check + 2
+			)
 			if (HortonBug == true) then
 				says("3 " .. name)
 			end
@@ -3666,11 +3707,10 @@ function PTR_Color_ProblemRealmGuilds_check(name)
 	return name
 end
 
-
 -- this function not correctly setup.. in fact the mini window isn't setup {acutally i5 is but hidden and off screen}
 function CensusPlus_Mini_OnMouseDown(
 self,
-	mCP_button -- referenced by CensusPlusWotlk.xml
+mCP_button -- referenced by CensusPlusWotlk.xml
 )
 	if ((not self.isLocked or (self.isLocked == 0)) and (mCP_button == "LeftButton")) then
 		self:StartMoving()
@@ -3749,12 +3789,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame CheckButton (Verbose)
 	CensusPlusCheckButton1 =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusCheckButton1",
-			CensusPlusOptions,
-			"OptionsCheckButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusCheckButton1",
+		CensusPlusOptions,
+		"OptionsCheckButtonTemplate"
+	)
 	CensusPlusCheckButton1:SetPoint(
 		"TOPLEFT",
 		CensusPlusOptionsWL,
@@ -3780,12 +3820,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - Verbose - enable)
 	CensusPlusOptionsRadioButton_C1a =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C1a",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C1a",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C1a:SetHeight(20)
 	CensusPlusOptionsRadioButton_C1a:SetWidth(20)
 	CensusPlusOptionsRadioButton_C1a:SetHitRectInsets(0, -5, 0, 0)
@@ -3832,12 +3872,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - Verbose - disable)
 	CensusPlusOptionsRadioButton_C1b =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C1b",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C1b",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C1b:SetHeight(20)
 	CensusPlusOptionsRadioButton_C1b:SetWidth(20)
 	CensusPlusOptionsRadioButton_C1b:SetHitRectInsets(0, -5, 0, 0)
@@ -3885,12 +3925,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - Verbose - remove)
 	CensusPlusOptionsRadioButton_C1c =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C1c",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C1c",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C1c:SetHeight(20)
 	CensusPlusOptionsRadioButton_C1c:SetWidth(20)
 	CensusPlusOptionsRadioButton_C1c:SetHitRectInsets(0, -5, 0, 0)
@@ -3938,16 +3978,16 @@ function CensusPlusBlizzardOptions()
 		CensusPlus_Verbose(self)
 	end)
 	CensusPlusOptionsRadioButton_C1c.tooltipText =
-		CENSUS_OPTIONS_CCO_REMOVE_OVERRIDE
+	CENSUS_OPTIONS_CCO_REMOVE_OVERRIDE
 
 	--Create Frame enable Stealth Mode
 	CensusPlusCheckButton2 =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusCheckButton2",
-			CensusPlusOptions,
-			"OptionsCheckButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusCheckButton2",
+		CensusPlusOptions,
+		"OptionsCheckButtonTemplate"
+	)
 	CensusPlusCheckButton2:SetPoint(
 		"TOPLEFT",
 		CensusPlusCheckButton1,
@@ -3972,12 +4012,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - Stealth - enable)
 	CensusPlusOptionsRadioButton_C2a =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C2a",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C2a",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C2a:SetHeight(20)
 	CensusPlusOptionsRadioButton_C2a:SetWidth(20)
 	CensusPlusOptionsRadioButton_C2a:SetHitRectInsets(0, -5, 0, 0)
@@ -4024,12 +4064,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - Stealth - disable)
 	CensusPlusOptionsRadioButton_C2b =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C2b",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C2b",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C2b:SetHeight(20)
 	CensusPlusOptionsRadioButton_C2b:SetWidth(20)
 	CensusPlusOptionsRadioButton_C2b:SetHitRectInsets(0, -5, 0, 0)
@@ -4077,12 +4117,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - Stealth - remove)
 	CensusPlusOptionsRadioButton_C2c =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C2c",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C2c",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C2c:SetHeight(20)
 	CensusPlusOptionsRadioButton_C2c:SetWidth(20)
 	CensusPlusOptionsRadioButton_C2c:SetHitRectInsets(0, -5, 0, 0)
@@ -4130,16 +4170,16 @@ function CensusPlusBlizzardOptions()
 		CensusPlus_Stealth(self)
 	end)
 	CensusPlusOptionsRadioButton_C2c.tooltipText =
-		CENSUS_OPTIONS_CCO_REMOVE_OVERRIDE
+	CENSUS_OPTIONS_CCO_REMOVE_OVERRIDE
 
 	--Create Frame enable Census Button
 	CensusPlusCheckButton3 =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusCheckButton3",
-			CensusPlusOptions,
-			"OptionsCheckButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusCheckButton3",
+		CensusPlusOptions,
+		"OptionsCheckButtonTemplate"
+	)
 	CensusPlusCheckButton3:SetPoint(
 		"TOPLEFT",
 		CensusPlusCheckButton2,
@@ -4166,12 +4206,12 @@ function CensusPlusBlizzardOptions()
 
 	-- Create Frame tri-selector button (CO - CensusPlusWotlk Button - enable)
 	CensusPlusOptionsRadioButton_C3a =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C3a",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C3a",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C3a:SetHeight(20)
 	CensusPlusOptionsRadioButton_C3a:SetWidth(20)
 	CensusPlusOptionsRadioButton_C3a:SetHitRectInsets(0, -5, 0, 0)
@@ -4199,7 +4239,7 @@ function CensusPlusBlizzardOptions()
 	end)
 	CensusPlusOptionsRadioButton_C3a:SetScript("OnClick", function(self)
 		local g_CO_CensusButtonShown =
-			CensusPlusOptionsRadioButton_C3a:GetChecked()
+		CensusPlusOptionsRadioButton_C3a:GetChecked()
 		if g_CO_CensusButtonShown then
 			CensusPlusOptionsRadioButton_C3b:SetChecked(false)
 			CensusPlusOptionsRadioButton_C3c:SetChecked(false)
@@ -4220,12 +4260,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - CensusPlusWotlk Button - disable)
 	CensusPlusOptionsRadioButton_C3b =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C3b",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C3b",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C3b:SetHeight(20)
 	CensusPlusOptionsRadioButton_C3b:SetWidth(20)
 	CensusPlusOptionsRadioButton_C3b:SetHitRectInsets(0, -5, 0, 0)
@@ -4253,7 +4293,7 @@ function CensusPlusBlizzardOptions()
 	end)
 	CensusPlusOptionsRadioButton_C3b:SetScript("OnClick", function(self)
 		local g_CO_CensusButtonShown =
-			CensusPlusOptionsRadioButton_C3b:GetChecked()
+		CensusPlusOptionsRadioButton_C3b:GetChecked()
 		if g_CO_CensusButtonShown then
 			CensusPlusOptionsRadioButton_C3a:SetChecked(false)
 			CensusPlusOptionsRadioButton_C3c:SetChecked(false)
@@ -4275,12 +4315,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - CensusPlusWotlk Button - remove)
 	CensusPlusOptionsRadioButton_C3c =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C3c",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C3c",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C3c:SetHeight(20)
 	CensusPlusOptionsRadioButton_C3c:SetWidth(20)
 	CensusPlusOptionsRadioButton_C3c:SetHitRectInsets(0, -5, 0, 0)
@@ -4311,7 +4351,7 @@ function CensusPlusBlizzardOptions()
 	end)
 	CensusPlusOptionsRadioButton_C3c:SetScript("OnClick", function(self)
 		local g_CO_CensusButtonShown =
-			CensusPlusOptionsRadioButton_C3c:GetChecked()
+		CensusPlusOptionsRadioButton_C3c:GetChecked()
 		if g_CO_CensusButtonShown then
 			CensusPlusOptionsRadioButton_C3b:SetChecked(false)
 			CensusPlusOptionsRadioButton_C3a:SetChecked(false)
@@ -4323,16 +4363,16 @@ function CensusPlusBlizzardOptions()
 		CensusPlus_CensusButtonShown(self)
 	end)
 	CensusPlusOptionsRadioButton_C3c.tooltipText =
-		CENSUS_OPTIONS_CCO_REMOVE_OVERRIDE
+	CENSUS_OPTIONS_CCO_REMOVE_OVERRIDE
 
 	--Create Frame CensusButton Animation
 	CensusPlusCheckButton4 =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusCheckButton4",
-			CensusPlusOptions,
-			"OptionsCheckButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusCheckButton4",
+		CensusPlusOptions,
+		"OptionsCheckButtonTemplate"
+	)
 	CensusPlusCheckButton4:SetPoint(
 		"TOPLEFT",
 		CensusPlusCheckButton3,
@@ -4354,16 +4394,16 @@ function CensusPlusBlizzardOptions()
 	end)
 	CensusPlusCheckButton4Text:SetText(CENSUSPLUS_CENSUSBUTTONANIMITEXT)
 	CensusPlusCheckButton4.tooltipText =
-		ENABLE .. " " .. CENSUSPLUS_CENSUSBUTTONANIMITEXT
+	ENABLE .. " " .. CENSUSPLUS_CENSUSBUTTONANIMITEXT
 
 	--Create Frame tri-selector button (CO - Census button animation - enable)
 	CensusPlusOptionsRadioButton_C4a =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C4a",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C4a",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C4a:SetHeight(20)
 	CensusPlusOptionsRadioButton_C4a:SetWidth(20)
 	CensusPlusOptionsRadioButton_C4a:SetHitRectInsets(0, -5, 0, 0)
@@ -4410,12 +4450,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - Census button animation - disable)
 	CensusPlusOptionsRadioButton_C4b =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C4b",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C4b",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C4b:SetHeight(20)
 	CensusPlusOptionsRadioButton_C4b:SetWidth(20)
 	CensusPlusOptionsRadioButton_C4b:SetHitRectInsets(0, -5, 0, 0)
@@ -4457,12 +4497,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - Census button animation - remove)
 	CensusPlusOptionsRadioButton_C4c =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C4c",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C4c",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C4c:SetHeight(20)
 	CensusPlusOptionsRadioButton_C4c:SetWidth(20)
 	CensusPlusOptionsRadioButton_C4c:SetHitRectInsets(0, -5, 0, 0)
@@ -4504,16 +4544,16 @@ function CensusPlusBlizzardOptions()
 		CensusPlus_CensusButtonAnimi(self)
 	end)
 	CensusPlusOptionsRadioButton_C4c.tooltipText =
-		CENSUS_OPTIONS_CCO_REMOVE_OVERRIDE
+	CENSUS_OPTIONS_CCO_REMOVE_OVERRIDE
 
 	-- Create Frame AutoCensus enable
 	CensusPlusCheckButton5 =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusCheckButton5",
-			CensusPlusOptions,
-			"OptionsCheckButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusCheckButton5",
+		CensusPlusOptions,
+		"OptionsCheckButtonTemplate"
+	)
 	CensusPlusCheckButton5:SetPoint(
 		"TOPLEFT",
 		CensusPlusCheckButton4,
@@ -4539,12 +4579,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - CENSUS_OPTIONS_AUTOCENSUS - enable)
 	CensusPlusOptionsRadioButton_C5a =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C5a",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C5a",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C5a:SetHeight(20)
 	CensusPlusOptionsRadioButton_C5a:SetWidth(20)
 	CensusPlusOptionsRadioButton_C5a:SetHitRectInsets(0, -5, 0, 0)
@@ -4596,12 +4636,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - CENSUS_OPTIONS_AUTOCENSUS - disable)
 	CensusPlusOptionsRadioButton_C5b =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C5b",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C5b",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C5b:SetHeight(20)
 	CensusPlusOptionsRadioButton_C5b:SetWidth(20)
 	CensusPlusOptionsRadioButton_C5b:SetHitRectInsets(0, -5, 0, 0)
@@ -4637,7 +4677,7 @@ function CensusPlusBlizzardOptions()
 			CensusPlus_PerCharInfo["AutoCensusTimer"] = 1800
 			CensusPlusSlider1:SetValue(30)
 			CPp.AutoStartText =
-				CPp.AutoStartTimer .. " " .. CENSUS_OPTIONS_AUTOSTART .. " " .. ADDON_DISABLED
+			CPp.AutoStartTimer .. " " .. CENSUS_OPTIONS_AUTOSTART .. " " .. ADDON_DISABLED
 		elseif not CensusPlusOptionsRadioButton_C5a:GetChecked() then
 			CensusPlusOptionsRadioButton_C5c:SetChecked(true)
 			CensusPlus_PerCharInfo["AutoCensus"] = nil
@@ -4651,12 +4691,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - CENSUS_OPTIONS_AUTOCENSUS - remove)
 	CensusPlusOptionsRadioButton_C5c =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C5c",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C5c",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C5c:SetHeight(20)
 	CensusPlusOptionsRadioButton_C5c:SetWidth(20)
 	CensusPlusOptionsRadioButton_C5c:SetHitRectInsets(0, -5, 0, 0)
@@ -4702,16 +4742,16 @@ function CensusPlusBlizzardOptions()
 		end
 	end)
 	CensusPlusOptionsRadioButton_C5c.tooltipText =
-		CENSUS_OPTIONS_CCO_REMOVE_OVERRIDE
+	CENSUS_OPTIONS_CCO_REMOVE_OVERRIDE
 
 	--Create Frame Timer Slider
 	CensusPlusSlider1 =
-		CreateFrame(
-			"Slider",
-			"CensusPlusSlider1",
-			CensusPlusOptions,
-			"OptionsSliderTemplate"
-		)
+	CreateFrame(
+		"Slider",
+		"CensusPlusSlider1",
+		CensusPlusOptions,
+		"OptionsSliderTemplate"
+	)
 	CensusPlusSlider1:SetWidth(100)
 	CensusPlusSlider1:SetHeight(20)
 	CensusPlusSlider1:SetOrientation("HORIZONTAL")
@@ -4752,12 +4792,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame Enable FinishSound
 	CensusPlusCheckButton6 =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusCheckButton6",
-			CensusPlusOptions,
-			"OptionsCheckButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusCheckButton6",
+		CensusPlusOptions,
+		"OptionsCheckButtonTemplate"
+	)
 	CensusPlusCheckButton6:SetPoint(
 		"TOPLEFT",
 		CensusPlusSlider1,
@@ -4779,12 +4819,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - CENSUS_OPTIONS_FinishSound- enable)
 	CensusPlusOptionsRadioButton_C6a =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C6a",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C6a",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C6a:SetHeight(20)
 	CensusPlusOptionsRadioButton_C6a:SetWidth(20)
 	CensusPlusOptionsRadioButton_C6a:SetHitRectInsets(0, -5, 0, 0)
@@ -4826,12 +4866,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - CENSUS_OPTIONS_FinishSound - disable)
 	CensusPlusOptionsRadioButton_C6b =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C6b",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C6b",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C6b:SetHeight(20)
 	CensusPlusOptionsRadioButton_C6b:SetWidth(20)
 	CensusPlusOptionsRadioButton_C6b:SetHitRectInsets(0, -5, 0, 0)
@@ -4873,12 +4913,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame tri-selector button (CO - CENSUS_OPTIONS_FinishSound- remove)
 	CensusPlusOptionsRadioButton_C6c =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusOptionsRadioButton_C6c",
-			CensusPlusOptions,
-			"UIRadioButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusOptionsRadioButton_C6c",
+		CensusPlusOptions,
+		"UIRadioButtonTemplate"
+	)
 	CensusPlusOptionsRadioButton_C6c:SetHeight(20)
 	CensusPlusOptionsRadioButton_C6c:SetWidth(20)
 	CensusPlusOptionsRadioButton_C6c:SetHitRectInsets(0, -5, 0, 0)
@@ -4920,11 +4960,11 @@ function CensusPlusBlizzardOptions()
 		CensusPlus_FinishSound(self)
 	end)
 	CensusPlusOptionsRadioButton_C6c.tooltipText =
-		CENSUS_OPTIONS_CCO_REMOVE_OVERRIDE
+	CENSUS_OPTIONS_CCO_REMOVE_OVERRIDE
 
 	--Create Frame SoundFilesHeader
 	CensusPlusOptionsSoundFilesHeader =
-		CensusPlusOptions:CreateFontString(nil, "ARTWORK")
+	CensusPlusOptions:CreateFontString(nil, "ARTWORK")
 	CensusPlusOptionsSoundFilesHeader:SetFontObject(GameFontWhite)
 	CensusPlusOptionsSoundFilesHeader:SetJustifyH("LEFT")
 	CensusPlusOptionsSoundFilesHeader:SetJustifyV("TOP")
@@ -4940,12 +4980,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame SoundFile select1
 	CensusPlusSoundFile1Button =
-		CreateFrame(
-			"Button",
-			"CensusPlusSoundFile1Button",
-			CensusPlusOptions,
-			"UIPanelButtonTemplate"
-		)
+	CreateFrame(
+		"Button",
+		"CensusPlusSoundFile1Button",
+		CensusPlusOptions,
+		"UIPanelButtonTemplate"
+	)
 	CensusPlusSoundFile1Button:SetWidth(25)
 	CensusPlusSoundFile1Button:SetHeight(25)
 	CensusPlusSoundFile1Button:SetPoint(
@@ -4958,10 +4998,10 @@ function CensusPlusBlizzardOptions()
 	CensusPlusSoundFile1Button:SetText("1")
 	CensusPlusSoundFile1Button:SetScript("OnClick", function(self)
 		local willplay =
-			PlaySoundFile(
-				"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete1.ogg",
-				"Master"
-			)
+		PlaySoundFile(
+			"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete1.ogg",
+			"Master"
+		)
 		if not willplay then
 			PlaySoundFile(
 				"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete1.mp3",
@@ -4979,16 +5019,16 @@ function CensusPlusBlizzardOptions()
 	--	PlaySoundFile("Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete1.ogg")
 	--end)
 	CensusPlusSoundFile1Button.tooltipText =
-		CENSUS_OPTIONS_SOUNDFILEDEFAULT .. "1"
+	CENSUS_OPTIONS_SOUNDFILEDEFAULT .. "1"
 
 	--Create Frame SoundFile select2
 	CensusPlusSoundFile2Button =
-		CreateFrame(
-			"Button",
-			"CensusPlusSoundFile2Button",
-			CensusPlusOptions,
-			"UIPanelButtonTemplate"
-		)
+	CreateFrame(
+		"Button",
+		"CensusPlusSoundFile2Button",
+		CensusPlusOptions,
+		"UIPanelButtonTemplate"
+	)
 	CensusPlusSoundFile2Button:SetWidth(25)
 	CensusPlusSoundFile2Button:SetHeight(25)
 	CensusPlusSoundFile2Button:SetPoint(
@@ -5001,10 +5041,10 @@ function CensusPlusBlizzardOptions()
 	CensusPlusSoundFile2Button:SetText("2")
 	CensusPlusSoundFile2Button:SetScript("OnClick", function(self)
 		local willplay =
-			PlaySoundFile(
-				"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete2.ogg",
-				"Master"
-			)
+		PlaySoundFile(
+			"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete2.ogg",
+			"Master"
+		)
 		if not willplay then
 			PlaySoundFile(
 				"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete2.mp3",
@@ -5022,16 +5062,16 @@ function CensusPlusBlizzardOptions()
 	--	PlaySoundFile("Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete2.ogg")
 	--end)
 	CensusPlusSoundFile2Button.tooltipText =
-		CENSUS_OPTIONS_SOUNDFILEDEFAULT .. "2"
+	CENSUS_OPTIONS_SOUNDFILEDEFAULT .. "2"
 
 	--Create Frame SoundFile select3
 	CensusPlusSoundFile3Button =
-		CreateFrame(
-			"Button",
-			"CensusPlusSoundFile2Button",
-			CensusPlusOptions,
-			"UIPanelButtonTemplate"
-		)
+	CreateFrame(
+		"Button",
+		"CensusPlusSoundFile2Button",
+		CensusPlusOptions,
+		"UIPanelButtonTemplate"
+	)
 	CensusPlusSoundFile3Button:SetWidth(25)
 	CensusPlusSoundFile3Button:SetHeight(25)
 	CensusPlusSoundFile3Button:SetPoint(
@@ -5044,10 +5084,10 @@ function CensusPlusBlizzardOptions()
 	CensusPlusSoundFile3Button:SetText("3")
 	CensusPlusSoundFile3Button:SetScript("OnClick", function(self)
 		local willplay =
-			PlaySoundFile(
-				"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete3.ogg",
-				"Master"
-			)
+		PlaySoundFile(
+			"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete3.ogg",
+			"Master"
+		)
 		if not willplay then
 			PlaySoundFile(
 				"Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete3.mp3",
@@ -5065,7 +5105,7 @@ function CensusPlusBlizzardOptions()
 	--	PlaySoundFile("Interface\\AddOns\\CensusPlusWotlk\\sounds\\CensusComplete3.ogg")
 	--end)
 	CensusPlusSoundFile3Button.tooltipText =
-		CENSUS_OPTIONS_SOUNDFILEDEFAULT .. "3"
+	CENSUS_OPTIONS_SOUNDFILEDEFAULT .. "3"
 
 	--Create another frame..
 	CensusPlusOptionsWMZ = CensusPlusOptions:CreateFontString(nil, "ARTWORK")
@@ -5084,12 +5124,12 @@ function CensusPlusBlizzardOptions()
 
 	--Create Frame Logarithmic  bars
 	CensusPlusCheckButton7 =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusCheckButton7",
-			CensusPlusOptions,
-			"OptionsCheckButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusCheckButton7",
+		CensusPlusOptions,
+		"OptionsCheckButtonTemplate"
+	)
 	CensusPlusCheckButton7:SetPoint(
 		"TOPLEFT",
 		CensusPlusOptionsWMZ,
@@ -5113,12 +5153,12 @@ function CensusPlusBlizzardOptions()
 	--Create CensusPlusWotlk.Background:alpha Slider
 	local g_CPWin_background_alpha = 0.5
 	CensusPlusSlider2 =
-		CreateFrame(
-			"Slider",
-			"CensusPlusSlider2",
-			CensusPlusOptions,
-			"OptionsSliderTemplate"
-		)
+	CreateFrame(
+		"Slider",
+		"CensusPlusSlider2",
+		CensusPlusOptions,
+		"OptionsSliderTemplate"
+	)
 	CensusPlusSlider2:SetWidth(100)
 	CensusPlusSlider2:SetHeight(20)
 	CensusPlusSlider2:SetOrientation("HORIZONTAL")
@@ -5145,7 +5185,7 @@ function CensusPlusBlizzardOptions()
 		CensusPlayerListBackground:SetAlpha(g_CPWin_background_alpha)
 	end)
 	CensusPlusSlider2.tooltipText =
-		CENSUS_OPTIONS_BACKGROUND_TRANSPARENCY_TOOLTIP --Creates a tooltip on mouseover.
+	CENSUS_OPTIONS_BACKGROUND_TRANSPARENCY_TOOLTIP --Creates a tooltip on mouseover.
 	_G[CensusPlusSlider2:GetName() .. "Low"]:SetText("0.1") --Sets the left-side slider text (default is "Low").
 	_G[CensusPlusSlider2:GetName() .. "High"]:SetText("1.0") --Sets the right-side slider text (default is "High").
 	_G[CensusPlusSlider2:GetName() .. "Text"]:SetText(CENSUSPLUS_TRANSPARENCY) --Sets the "title" text (top-centre of slider).
@@ -5168,12 +5208,12 @@ function CensusPlusBlizzardOptions()
 	CensusPlusOptionsExperimental:SetText("Semi automatic requests (requires UI reload)")
 
 	CensusPlusCheckButton8 =
-		CreateFrame(
-			"CheckButton",
-			"CensusPlusCheckButton8",
-			CensusPlusOptions,
-			"OptionsCheckButtonTemplate"
-		)
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusCheckButton8",
+		CensusPlusOptions,
+		"OptionsCheckButtonTemplate"
+	)
 	CensusPlusCheckButton8:SetPoint(
 		"TOPLEFT",
 		CensusPlusOptionsExperimental,
@@ -5192,6 +5232,88 @@ function CensusPlusBlizzardOptions()
 	end)
 	CensusPlusCheckButton8Text:SetText("Send who request on mouse clicks in world") --
 	CensusPlusCheckButton8.tooltipText = "Sends a who request each time the user clicks into the 3D world. At minimum every 5 seconds."
+
+	--Create another frame for zone search
+	CensusPlusOptionsZone = CensusPlusOptions:CreateFontString(nil, "ARTWORK")
+	CensusPlusOptionsZone:SetFontObject(GameFontWhite)
+	CensusPlusOptionsZone:SetJustifyH("LEFT")
+	CensusPlusOptionsZone:SetJustifyV("TOP")
+	CensusPlusOptionsZone:ClearAllPoints()
+	CensusPlusOptionsZone:SetPoint(
+		"TOPLEFT",
+		CensusPlusOptionsExperimental,
+		"BOTTOMLEFT",
+		-50,
+		-20
+	)
+	CensusPlusOptionsZone:SetText("Zone Search")
+
+	CensusPlusCheckButton9 =
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusCheckButton9",
+		CensusPlusOptions,
+		"OptionsCheckButtonTemplate"
+	)
+	CensusPlusCheckButton9:SetPoint(
+		"TOPLEFT",
+		CensusPlusOptionsZone,
+		"BOTTOMLEFT",
+		0,
+		-6
+	)
+	CensusPlusCheckButton9:SetChecked(true)
+	CensusPlusCheckButton9:SetScript("OnClick", function(self)
+		currentOption = CensusPlus_Database["Info"]["UseZoneSearch"]
+		if currentOption then
+			CensusPlus_Database["Info"]["UseZoneSearch"] = false
+		else
+			CensusPlus_Database["Info"]["UseZoneSearch"] = true
+		end
+	end)
+	CensusPlusCheckButton9Text:SetText("Zone Search") --
+	CensusPlusCheckButton9.tooltipText = "Expand search parameters to include zones (Will increase search time)"
+
+	--Create another frame for name search
+	CensusPlusOptionsName = CensusPlusOptions:CreateFontString(nil, "ARTWORK")
+	CensusPlusOptionsName:SetFontObject(GameFontWhite)
+	CensusPlusOptionsName:SetJustifyH("LEFT")
+	CensusPlusOptionsName:SetJustifyV("TOP")
+	CensusPlusOptionsName:ClearAllPoints()
+	CensusPlusOptionsName:SetPoint(
+		"TOPLEFT",
+		CensusPlusOptionsZone,
+		"BOTTOMLEFT",
+		-50,
+		-20
+	)
+	CensusPlusOptionsName:SetText("Name Search")
+
+	CensusPlusCheckButton10 =
+	CreateFrame(
+		"CheckButton",
+		"CensusPlusCheckButton10",
+		CensusPlusOptions,
+		"OptionsCheckButtonTemplate"
+	)
+	CensusPlusCheckButton10:SetPoint(
+		"TOPLEFT",
+		CensusPlusOptionsName,
+		"BOTTOMLEFT",
+		0,
+		-6
+	)
+	CensusPlusCheckButton10:SetChecked(true)
+	CensusPlusCheckButton10:SetScript("OnClick", function(self)
+		currentOption = CensusPlus_Database["Info"]["UseNameSearch"]
+		if currentOption then
+			CensusPlus_Database["Info"]["UseNameSearch"] = false
+		else
+			CensusPlus_Database["Info"]["UseNameSearch"] = true
+		end
+	end)
+	CensusPlusCheckButton10Text:SetText("Name Search") --
+	CensusPlusCheckButton10.tooltipText = "Expand search parameters to include names (Will increase search time)"
 
 end
 
@@ -5214,7 +5336,8 @@ function CensusPlus_ResetConfig() -- reset to defaults
 	CensusPlus_PerCharInfo["CensusButtonAnimi"] = nil
 	CensusPlus_Database["Info"]["CPWindow_Transparency"] = 0.5
 	CensusPlus_Database["Info"]["UseLogBars"] = true
-	CensusPlus_Database["Info"]["UseWorldFrameClicks"] = false
+	CensusPlus_Database["Info"]["UseWorldFrameClicks"] = true
+	CensusPlus_Database["Info"]["UseZoneSearch"] = true
 	print("ResetConfig")
 	CensusPlusSetCheckButtonState()
 end
@@ -5222,9 +5345,9 @@ end
 function CensusPlusSetCheckButtonState() -- set option check buttons and radio button states to match existing saved variables both AW and CCO - populate backup options tables
 	CensusPlusCheckButton1:SetChecked(CensusPlus_Database["Info"]["Verbose"])
 	CPp.Options_Holder["AccountWide"]["Verbose"] =
-		CensusPlus_Database["Info"]["Verbose"]
+	CensusPlus_Database["Info"]["Verbose"]
 	CPp.Options_Holder["CCOverrides"]["Verbose"] =
-		CensusPlus_PerCharInfo["Verbose"]
+	CensusPlus_PerCharInfo["Verbose"]
 	if (CensusPlus_PerCharInfo["Verbose"] == nil) then
 		CensusPlusOptionsRadioButton_C1a:SetChecked(false)
 		CensusPlusOptionsRadioButton_C1b:SetChecked(false)
@@ -5242,9 +5365,9 @@ function CensusPlusSetCheckButtonState() -- set option check buttons and radio b
 
 	CensusPlusCheckButton2:SetChecked(CensusPlus_Database["Info"]["Stealth"])
 	CPp.Options_Holder["AccountWide"]["Stealth"] =
-		CensusPlus_Database["Info"]["Stealth"]
+	CensusPlus_Database["Info"]["Stealth"]
 	CPp.Options_Holder["CCOverrides"]["Stealth"] =
-		CensusPlus_PerCharInfo["Stealth"]
+	CensusPlus_PerCharInfo["Stealth"]
 	if (CensusPlus_PerCharInfo["Stealth"] == nil) then
 		CensusPlusOptionsRadioButton_C2a:SetChecked(false)
 		CensusPlusOptionsRadioButton_C2b:SetChecked(false)
@@ -5264,9 +5387,9 @@ function CensusPlusSetCheckButtonState() -- set option check buttons and radio b
 		CensusPlus_Database["Info"]["CensusButtonShown"]
 	)
 	CPp.Options_Holder["AccountWide"]["CensusButtonShown"] =
-		CensusPlus_Database["Info"]["CensusButtonShown"]
+	CensusPlus_Database["Info"]["CensusButtonShown"]
 	CPp.Options_Holder["CCOverrides"]["CensusButtonShown"] =
-		CensusPlus_PerCharInfo["CensusButtonShown"]
+	CensusPlus_PerCharInfo["CensusButtonShown"]
 	if (CensusPlus_PerCharInfo["CensusButtonShown"] == nil) then
 		CensusPlusOptionsRadioButton_C3a:SetChecked(false)
 		CensusPlusOptionsRadioButton_C3b:SetChecked(false)
@@ -5286,9 +5409,9 @@ function CensusPlusSetCheckButtonState() -- set option check buttons and radio b
 		CensusPlus_Database["Info"]["CensusButtonAnimi"]
 	)
 	CPp.Options_Holder["AccountWide"]["CensusButtonAnimi"] =
-		CensusPlus_Database["Info"]["CensusButtonAnimi"]
+	CensusPlus_Database["Info"]["CensusButtonAnimi"]
 	CPp.Options_Holder["CCOverrides"]["CensusButtonAnimi"] =
-		CensusPlus_PerCharInfo["CensusButtonAnimi"]
+	CensusPlus_PerCharInfo["CensusButtonAnimi"]
 	if (CensusPlus_PerCharInfo["CensusButtonAnimi"] == nil) then
 		CensusPlusOptionsRadioButton_C4a:SetChecked(false)
 		CensusPlusOptionsRadioButton_C4b:SetChecked(false)
@@ -5306,9 +5429,9 @@ function CensusPlusSetCheckButtonState() -- set option check buttons and radio b
 
 	CensusPlusCheckButton5:SetChecked(CensusPlus_Database["Info"]["AutoCensus"])
 	CPp.Options_Holder["AccountWide"]["AutoCensus"] =
-		CensusPlus_Database["Info"]["AutoCensus"]
+	CensusPlus_Database["Info"]["AutoCensus"]
 	CPp.Options_Holder["CCOverrides"]["AutoCensus"] =
-		CensusPlus_PerCharInfo["AutoCensus"]
+	CensusPlus_PerCharInfo["AutoCensus"]
 	if (CensusPlus_PerCharInfo["AutoCensus"] == nil) then
 		CensusPlusOptionsRadioButton_C5a:SetChecked(false)
 		CensusPlusOptionsRadioButton_C5b:SetChecked(false)
@@ -5329,7 +5452,7 @@ function CensusPlusSetCheckButtonState() -- set option check buttons and radio b
 			CensusPlus_PerCharInfo["AutoCensusTimer"] / 60
 		)
 		CPp.Options_Holder["CCOverrides"]["AutoCensusTimer"] =
-			CensusPlus_PerCharInfo["AutoCensusTimer"]
+		CensusPlus_PerCharInfo["AutoCensusTimer"]
 		CPp.AutoStartTimer = CensusPlus_PerCharInfo["AutoCensusTimer"] / 60
 	end
 	if ((CensusPlus_PerCharInfo["AutoCensus"] == nil) and (CensusPlus_Database["Info"]["AutoCensus"] == true)) then
@@ -5337,7 +5460,7 @@ function CensusPlusSetCheckButtonState() -- set option check buttons and radio b
 			CensusPlus_Database["Info"]["AutoCensusTimer"] / 60
 		)
 		CPp.Options_Holder["AccountWide"]["AutoCensusTimer"] =
-			CensusPlus_Database["Info"]["AutoCensusTimer"]
+		CensusPlus_Database["Info"]["AutoCensusTimer"]
 		CPp.AutoStartTimer = CensusPlus_Database["Info"]["AutoCensusTimer"] / 60
 	end
 	if ((CensusPlus_Database["Info"]["AutoCensus"] == false) and not (CensusPlus_PerCharInfo["AutoCensus"] == true)) then
@@ -5348,7 +5471,7 @@ function CensusPlusSetCheckButtonState() -- set option check buttons and radio b
 		CensusPlus_Database["Info"]["CPWindow_Transparency"]
 	)
 	CPp.Options_Holder["AccountWide"]["CPWindow_Transparency"] =
-		CensusPlus_Database["Info"]["CPWindow_Transparency"]
+	CensusPlus_Database["Info"]["CPWindow_Transparency"]
 	CensusPlusBackground:SetAlpha(
 		CensusPlus_Database["Info"]["CPWindow_Transparency"]
 	)
@@ -5360,9 +5483,9 @@ function CensusPlusSetCheckButtonState() -- set option check buttons and radio b
 		CensusPlus_Database["Info"]["PlayFinishSound"]
 	)
 	CPp.Options_Holder["AccountWide"]["PlayFinishSound"] =
-		CensusPlus_Database["Info"]["PlayFinishSound"]
+	CensusPlus_Database["Info"]["PlayFinishSound"]
 	CPp.Options_Holder["CCOverrides"]["PlayFinishSound"] =
-		CensusPlus_PerCharInfo["PlayFinishSound"]
+	CensusPlus_PerCharInfo["PlayFinishSound"]
 	if (CensusPlus_PerCharInfo["PlayFinishSound"] == nil) then
 		CensusPlusOptionsRadioButton_C6a:SetChecked(false)
 		CensusPlusOptionsRadioButton_C6b:SetChecked(false)
@@ -5378,16 +5501,18 @@ function CensusPlusSetCheckButtonState() -- set option check buttons and radio b
 	end
 
 	CPp.Options_Holder["AccountWide"]["SoundFile"] =
-		CensusPlus_Database["Info"]["SoundFile"]
+	CensusPlus_Database["Info"]["SoundFile"]
 	CPp.Options_Holder["CCOverrides"]["SoundFile"] =
-		CensusPlus_PerCharInfo["SoundFile"]
+	CensusPlus_PerCharInfo["SoundFile"]
 
 	CPp.Options_Holder["AccountWide"]["UseLogBars"] =
-		CensusPlus_Database["Info"]["UseLogBars"]
+	CensusPlus_Database["Info"]["UseLogBars"]
 	CensusPlusCheckButton7:SetChecked(CensusPlus_Database["Info"]["UseLogBars"])
 	g_AW_LogBars = CensusPlus_Database["Info"]["UseLogBars"]
 
 	CensusPlusCheckButton8:SetChecked(CensusPlus_Database["Info"]["UseWorldFrameClicks"])
+
+	CensusPlusCheckButton9:SetChecked(CensusPlus_Database["Info"]["UseZoneSearch"]) -- Zone Search Button (CensusPlusCheckButton9)
 
 	--	CensusPlusCheckButton8:SetChecked(CensusPlus2["WMZ party4"])
 	--	CensusPlusCheckButton9:SetChecked(CensusPlus2["show decimals"])
@@ -5396,42 +5521,42 @@ end
 function CensusPlusRestoreSettings() -- reset any changes to saved settings back to previous saved in backups
 	-- account wide and CCO overrides
 	CensusPlus_Database["Info"]["Verbose"] =
-		CPp.Options_Holder["AccountWide"]["Verbose"]
+	CPp.Options_Holder["AccountWide"]["Verbose"]
 	CensusPlus_PerCharInfo["Verbose"] =
-		CPp.Options_Holder["CCOverrides"]["Verbose"]
+	CPp.Options_Holder["CCOverrides"]["Verbose"]
 	CensusPlus_Database["Info"]["Stealth"] =
-		CPp.Options_Holder["AccountWide"]["Stealth"]
+	CPp.Options_Holder["AccountWide"]["Stealth"]
 	CensusPlus_PerCharInfo["Stealth"] =
-		CPp.Options_Holder["CCOverrides"]["Stealth"]
+	CPp.Options_Holder["CCOverrides"]["Stealth"]
 	CensusPlus_Database["Info"]["CensusButtonShown"] =
-		CPp.Options_Holder["AccountWide"]["CensusButtonShown"]
+	CPp.Options_Holder["AccountWide"]["CensusButtonShown"]
 	CensusPlus_PerCharInfo["CensusButtonShown"] =
-		CPp.Options_Holder["CCOverrides"]["CensusButtonShown"]
+	CPp.Options_Holder["CCOverrides"]["CensusButtonShown"]
 	CensusPlus_Database["Info"]["CensusButtonAnimi"] =
-		CPp.Options_Holder["AccountWide"]["CensusButtonAnimi"]
+	CPp.Options_Holder["AccountWide"]["CensusButtonAnimi"]
 	CensusPlus_PerCharInfo["CensusButtonAnimi"] =
-		CPp.Options_Holder["CCOverrides"]["CensusButtonAnimi"]
+	CPp.Options_Holder["CCOverrides"]["CensusButtonAnimi"]
 	CensusPlus_Database["Info"]["AutoCensus"] =
-		CPp.Options_Holder["AccountWide"]["AutoCensus"]
+	CPp.Options_Holder["AccountWide"]["AutoCensus"]
 	CensusPlus_PerCharInfo["AutoCensus"] =
-		CPp.Options_Holder["CCOverrides"]["AutoCensus"]
+	CPp.Options_Holder["CCOverrides"]["AutoCensus"]
 	CensusPlus_Database["Info"]["AutoCensusTimer"] =
-		CPp.Options_Holder["AccountWide"]["AutoCensusTimer"]
+	CPp.Options_Holder["AccountWide"]["AutoCensusTimer"]
 	CensusPlus_PerCharInfo["AutoCensusTimer"] =
-		CPp.Options_Holder["CCOverrides"]["AutoCensusTimer"]
+	CPp.Options_Holder["CCOverrides"]["AutoCensusTimer"]
 	CensusPlus_Database["Info"]["PlayFinishSound"] =
-		CPp.Options_Holder["AccountWide"]["PlayFinishSound"]
+	CPp.Options_Holder["AccountWide"]["PlayFinishSound"]
 	CensusPlus_PerCharInfo["PlayFinishSound"] =
-		CPp.Options_Holder["CCOverrides"]["PlayFinishSound"]
+	CPp.Options_Holder["CCOverrides"]["PlayFinishSound"]
 	CensusPlus_Database["Info"]["SoundFile"] =
-		CPp.Options_Holder["AccountWide"]["SoundFile"]
+	CPp.Options_Holder["AccountWide"]["SoundFile"]
 	CensusPlus_PerCharInfo["SoundFile"] =
-		CPp.Options_Holder["CCOverrides"]["SoundFile"]
+	CPp.Options_Holder["CCOverrides"]["SoundFile"]
 	-- account wide only
 	CensusPlus_Database["Info"]["CPWindow_Transparency"] =
-		CPp.Options_Holder["AccountWide"]["CPWindow_Transparency"]
+	CPp.Options_Holder["AccountWide"]["CPWindow_Transparency"]
 	CensusPlus_Database["Info"]["UseLogBars"] =
-		CPp.Options_Holder["AccountWide"]["UseLogBars"]
+	CPp.Options_Holder["AccountWide"]["UseLogBars"]
 	CensusPlusCloseOptions()
 end
 
