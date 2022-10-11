@@ -1072,7 +1072,7 @@
 				</Size>
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="CensusPlusGuildButton1" relativePoint="TOPLEFT">
-						<Offset />
+						<Offset x="0" />
 					</Anchor>
 				</Anchors>
 				<Scripts>

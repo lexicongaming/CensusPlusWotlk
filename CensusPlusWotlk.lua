@@ -25,7 +25,7 @@ BINDING_HEADER_CensusPlusWotlk = 'CensusPlusWotlk'
 -- Constants
 local CensusPlus_Version_Major = "0"; -- changing this number will force a saved data purge
 local CensusPlus_Version_Minor = "9"; -- changing this number will force a saved data purge
-local CensusPlus_Version_Maint = "16"; -- changing this number will force a saved data purge
+local CensusPlus_Version_Maint = "17"; -- changing this number will force a saved data purge
 local CensusPlus_SubVersion = "";
 local CensusPlus_VERSION = CensusPlus_Version_Major .. "." .. CensusPlus_Version_Minor .. "." .. CensusPlus_Version_Maint;
 local CensusPlus_VERSION_FULL = CensusPlus_VERSION --.."."..CensusPlus_SubVersion ;
@@ -569,14 +569,13 @@ function CP_ProcessWhoEvent(query, result, complete)
 
 		if (minLevel < maxLevel) then
 			-- The level range is greater than a single level, so split it in half and submit the two jobs
-			local pivot = floor((minLevel + maxLevel) / 2)
-			local jobLower =
-			CensusPlus_CreateJob(minLevel, pivot, nil, nil, nil)
+			local pivot = math.floor((minLevel + maxLevel) / 2);
+			local jobLower = CensusPlus_CreateJob(minLevel, pivot, nil, nil, nil)
 			InsertJobIntoQueue(jobLower)
-			local jobUpper =
-			CensusPlus_CreateJob(pivot + 1, maxLevel, nil, nil, nil)
+			local jobUpper = CensusPlus_CreateJob(pivot + 1, maxLevel, nil, nil, nil)
 			InsertJobIntoQueue(jobUpper)
 		else
+
 			-- We cannot split the level range any more
 			local factionGroup = UnitFactionGroup("player")
 			local level = minLevel
@@ -586,41 +585,39 @@ function CP_ProcessWhoEvent(query, result, complete)
 				CensusPlus_GetFactionRaces(factionGroup)
 				local numRaces = #thisFactionRaces
 				for i = 1, numRaces, 1 do
-					if (CENSUSPLUS_LIGHTFORGED ~= thisFactionRaces[i]) and (CENSUSPLUS_HIGHMOUNTAIN ~= thisFactionRaces[i]) then
-						local job =
-						CensusPlus_CreateJob(
-							level,
-							level,
-							thisFactionRaces[i],
-							nil,
-							nil,
-							nil
-						)
-						InsertJobIntoQueue(job)
-					end
+					local job =
+					CensusPlus_CreateJob(
+						level,
+						level,
+						thisFactionRaces[i],
+						nil,
+						nil,
+						nil
+					)
+					InsertJobIntoQueue(job)
 				end
+
 			else
 				if (class == nil) then
 					-- This job does not specify class, so split it that way, making jobs for each class
 					local thisRaceClasses = GetRaceClasses(race)
 					local numClasses = #thisRaceClasses
 					for i = 1, numClasses, 1 do
-						if CENSUSPLUS_DEMONHUNTER ~= thisRaceClasses[i] then
-							local job =
-							CensusPlus_CreateJob(
-								level,
-								level,
-								race,
-								thisRaceClasses[i],
-								nil,
-								nil
-							)
-							InsertJobIntoQueue(job)
-						end
+						local job =
+						CensusPlus_CreateJob(
+							level,
+							level,
+							race,
+							thisRaceClasses[i],
+							nil,
+							nil
+						)
+						InsertJobIntoQueue(job)
 					end
+
 				else
 					useName = CensusPlus_Database["Info"]["UseNameSearch"];
-					if (letter == nil and useNAme) then
+					if (letter == nil and useName == true) then
 						-- There are too many characters with a single level, class and race
 						local letters = {}
 						if CP_letterselect == 0 then
@@ -647,7 +644,7 @@ function CP_ProcessWhoEvent(query, result, complete)
 						end
 					else
 						useZone = CensusPlus_Database["Info"]["UseZoneSearch"];
-						if (zoneLetter == nil and useZone) then
+						if (zoneLetter == nil and useZone == true) then
 							--
 							-- This job does not specify zone, so split it that way, making more jobs
 							--
@@ -1995,6 +1992,14 @@ function CensusPlus_InitializeVariables()
 		CensusPlus_Database["Info"]["UseWorldFrameClicks"] = true
 	end
 
+	if (CensusPlus_Database["Info"]["UseZoneSearch"] == nil) then
+		CensusPlus_Database["Info"]["UseZoneSearch"] = true
+	end
+
+	if (CensusPlus_Database["Info"]["UseNameSearch"] == nil) then
+		CensusPlus_Database["Info"]["UseNameSearch"] = true
+	end
+
 	--CensusPlusSetCheckButtonState()
 	CensusPlus_Msg(" v" .. CensusPlus_VERSION .. CENSUSPLUS_MSG1)
 	g_VariablesLoaded = true
@@ -2004,10 +2009,10 @@ function CensusPlus_InitializeVariables()
 
 	g_CensusPlusInitialized = true
 
-	--  If we are in a guild, attempt to gather the guild roster data
-	--	if (IsInGuild()) then
-	--		GuildRoster();
-	--	end
+	--If we are in a guild, attempt to gather the guild roster data
+	if (IsInGuild()) then
+		GuildRoster();
+	end
 
 	--  Prune times if we have too many
 	CENSUSPLUS_PRUNETimes()
@@ -2158,7 +2163,7 @@ function CensusPlus_OnUpdate()
 					g_WaitingForWhoUpdate = false
 				end
 			end
-			--return -- server hasn't returned query.. so wait for next frame update
+			return -- server hasn't returned query.. so wait for next frame update
 		end
 	end
 end
@@ -2269,7 +2274,7 @@ function CensusPlus_DoTimeCounts()
 end
 
 -- Add the contents of the guild results to the database
-local function CensusPlus_ProcessGuildResults()
+function CensusPlus_ProcessGuildResults()
 	if not g_VariablesLoaded then return end
 
 	--  Grab temp var
@@ -2358,20 +2363,20 @@ local function CensusPlus_ProcessGuildResults()
 			members[name] = {}
 		end
 
-		--CensusPlus_Msg( "Name =>" .. name );
-		--CensusPlus_Msg( "rank =>" .. rank );
-		--CensusPlus_Msg( "rankIndex =>" .. rankIndex );
-		--CensusPlus_Msg( "level =>" .. level );
-		--CensusPlus_Msg( "class =>" .. class );
+		CensusPlus_Msg( "Name =>" .. name );
+		CensusPlus_Msg( "rank =>" .. rank );
+		CensusPlus_Msg( "rankIndex =>" .. rankIndex );
+		CensusPlus_Msg( "level =>" .. level );
+		CensusPlus_Msg( "class =>" .. class );
 		members[name]["Rank"] = rank
 		members[name]["RankIndex"] = rankIndex
 		members[name]["Level"] = level
 		members[name]["Class"] = class
-		--members[name]["Zone"]= zone;
-		--members[name]["Note"]= CensusPlus_SafeSet( note );
-		--members[name]["OfficerNote"]= CensusPlus_SafeSet( officernote );
-		--members[name]["Online"]= online;
-		--members[name]["Status"]= CensusPlus_SafeSet( status );
+		members[name]["Zone"]= zone;
+		members[name]["Note"]= CensusPlus_SafeSet( note );
+		members[name]["OfficerNote"]= CensusPlus_SafeSet( officernote );
+		members[name]["Online"]= online;
+		members[name]["Status"]= CensusPlus_SafeSet( status );
 	end
 
 	SetGuildRosterShowOffline(showOfflineTemp)
@@ -5243,8 +5248,8 @@ function CensusPlusBlizzardOptions()
 		"TOPLEFT",
 		CensusPlusOptionsExperimental,
 		"BOTTOMLEFT",
-		-50,
-		-20
+		0,
+		-25
 	)
 	CensusPlusOptionsZone:SetText("Zone Search")
 
@@ -5284,8 +5289,8 @@ function CensusPlusBlizzardOptions()
 		"TOPLEFT",
 		CensusPlusOptionsZone,
 		"BOTTOMLEFT",
-		-50,
-		-20
+		0,
+		-25
 	)
 	CensusPlusOptionsName:SetText("Name Search")
 
@@ -5546,7 +5551,7 @@ function CensusPlusRestoreSettings() -- reset any changes to saved settings back
 	CensusPlus_Database["Info"]["AutoCensusTimer"] =
 	CPp.Options_Holder["AccountWide"]["AutoCensusTimer"]
 	CensusPlus_PerCharInfo["AutoCensusTimer"] =
-	CPp.Options_Holder["CCOverrides"]["AutoCensusTimer"]
+	CPp.Options_Holder["CCOverrides"]["AutoCcensusTimer"]
 	CensusPlus_Database["Info"]["PlayFinishSound"] =
 	CPp.Options_Holder["AccountWide"]["PlayFinishSound"]
 	CensusPlus_PerCharInfo["PlayFinishSound"] =
@@ -5555,14 +5560,14 @@ function CensusPlusRestoreSettings() -- reset any changes to saved settings back
 	CPp.Options_Holder["AccountWide"]["SoundFile"]
 	CensusPlus_PerCharInfo["SoundFile"] =
 	CPp.Options_Holder["CCOverrides"]["SoundFile"]
-	CensusPlus_Database["Info"]["UseZoneSearch"] =
-	CPp.Options_Holder["AccountWide"]["UseZoneSearch"]
-	CensusPlus_PerCharInfo["UseZoneSearch"] =
-	CPp.Options_Holder["CCOverrides"]["UseZoneSearch"]
-	CensusPlus_Database["Info"]["UseNameSearch"] =
-	CPp.Options_Holder["AccountWide"]["UseNameSearch"]
-	CensusPlus_PerCharInfo["UseNameSearch"] =
-	CPp.Options_Holder["CCOverrides"]["UseNameSearch"]
+	--CensusPlus_Database["Info"]["UseZoneSearch"] =
+	--CPp.Options_Holder["AccountWide"]["UseZoneSearch"]
+	--CensusPlus_PerCharInfo["UseZoneSearch"] =
+	--CPp.Options_Holder["CCOverrides"]["UseZoneSearch"]
+	--CensusPlus_Database["Info"]["UseNameSearch"] =
+	--CPp.Options_Holder["AccountWide"]["UseNameSearch"]
+	--CensusPlus_PerCharInfo["UseNameSearch"] =
+	--CPp.Options_Holder["CCOverrides"]["UseNameSearch"]
 	-- account wide only
 	CensusPlus_Database["Info"]["CPWindow_Transparency"] =
 	CPp.Options_Holder["AccountWide"]["CPWindow_Transparency"]
