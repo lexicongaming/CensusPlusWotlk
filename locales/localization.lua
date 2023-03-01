@@ -315,7 +315,8 @@ if ( GetLocale() == "ruRU" ) then
 	CENSUSPlusFemale["Тауренка"] = "Таурен";
 	CENSUSPLUS_TROLL = "Тролль";
 	CENSUSPLUS_UNDEAD = "Нежить";
-  CENSUSPLUS_BLOODELF = "Эльф крови";
+	CENSUSPLUS_BLOODELF = "Эльф крови";
+	CENSUSPlusFemale["Эльфийка крови"] = "Эльф крови";
 end
 
 -- zhCN
